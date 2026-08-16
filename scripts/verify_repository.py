@@ -48,7 +48,6 @@ def check_required_structure() -> None:
         STUDY / "reference_outcomes",
         STUDY / "scenario_matrix",
         STUDY / "scenarios",
-        STUDY / "scoring",
         STUDY / "sealed_inputs",
         STUDY / "sealed_results",
     )

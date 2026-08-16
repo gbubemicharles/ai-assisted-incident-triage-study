@@ -9,4 +9,4 @@ version: 1.3.7
 abstract: >-
   Frozen prototype and controlled evaluation artefacts developed for a
   prototype-based study of AI-assisted incident triage in cloud operations.
-repository-code: "https://github.com/digifgc/ai-assisted-incident-triage-study"
+repository-code: "https://github.com/gbubemicharles/ai-assisted-incident-triage-study"
