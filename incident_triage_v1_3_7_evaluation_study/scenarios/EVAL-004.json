@@ -1,0 +1,88 @@
+{
+  "incident_id": "EVAL-004",
+  "title": "Inventory reservation processing slower for warehouse users",
+  "reported_affected_service_ids": [
+    "SVC-INVENTORY"
+  ],
+  "alert_or_symptom": "The Inventory Service remains available, but warehouse stock-reservation requests are processing more slowly than normal and a small proportion are timing out.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Inventory Service performance dashboard",
+      "observation": "The p95 response time for stock-reservation requests increased from a normal baseline of 900 milliseconds to 4.8 seconds between 11:10 and 11:40.",
+      "observed_at": "2026-07-25T11:40:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Inventory reservation throughput monitor",
+      "observation": "Reservation throughput fell to 58 percent of the normal level. Of 8,240 reservation requests, 93.5 percent completed successfully and 6.5 percent timed out.",
+      "observed_at": "2026-07-25T11:41:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Inventory Service availability monitor",
+      "observation": "Health checks remained successful and inventory lookup, stock-view and adjustment functions continued to operate throughout the affected interval.",
+      "observed_at": "2026-07-25T11:42:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "user_report",
+      "source_name": "Warehouse operations summary",
+      "observation": "Thirty-eight warehouse users report slower stock reservations. Users can submit smaller reservation batches through the approved operating procedure, which is allowing priority orders to continue.",
+      "observed_at": "2026-07-25T11:43:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "change_record",
+      "source_name": "Application deployment register",
+      "observation": "An Inventory Service reporting-library update was deployed approximately three hours before the degradation was detected. No evidence currently demonstrates that the update affected reservation processing.",
+      "observed_at": "2026-07-25T11:44:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "No application exception, database failure, compute failure, network failure, dependency failure or configuration error has been directly identified.",
+      "observed_at": "2026-07-25T11:45:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "subset_of_users",
+    "user_impact_description": "Thirty-eight warehouse users are experiencing slower stock-reservation processing and occasional timeouts, while most requests and other inventory functions continue to succeed.",
+    "business_function_affected": "Warehouse stock reservation for order fulfilment",
+    "affected_user_estimate": 38,
+    "geographic_scope": "Two United Kingdom fulfilment centres",
+    "workaround_status": "available",
+    "workaround_description": "Warehouse users can submit smaller reservation batches using the approved operating procedure, allowing priority orders to continue.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Inventory Service is a Tier 2 important service.",
+    "Inventory lookup, stock-view and stock-adjustment functions remain available.",
+    "Customer ordering continues, and no incorrect stock value or data corruption has been confirmed."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "application deployment",
+      "description": "A reporting-library update was deployed to the Inventory Service approximately three hours before the degradation was detected.",
+      "occurred_at": "2026-07-25T08:10:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [
+    "The directly responsible performance bottleneck has not been identified.",
+    "It is not known whether the recent reporting-library update is related to the degradation.",
+    "The current latency contribution and health of the Inventory Service dependencies have not been independently established.",
+    "The expected duration and recovery time are unknown."
+  ],
+  "additional_context": [
+    "No complete service outage, data loss, corruption or serious security exposure has been reported.",
+    "The approved smaller-batch procedure is currently maintaining priority warehouse operations."
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "incident_id": "DEV-005",
+  "title": "Widespread customer sign-in failures",
+  "reported_affected_service_ids": [
+    "SVC-AUTH"
+  ],
+  "alert_or_symptom": "Most new customer sign-in attempts are failing, while customers with existing authenticated sessions remain signed in.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Authentication token issuance success rate",
+      "observation": "Successful token issuance fell from 99.7 percent to 8.4 percent at 11:18 across the United Kingdom and Ireland storefronts.",
+      "observed_at": "2026-07-23T11:18:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Identity and Access Service log",
+      "observation": "New sign-in requests are ending with a generic authentication timeout after 30 seconds. The log entry does not identify a failing downstream component or configuration item.",
+      "observed_at": "2026-07-23T11:19:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Application Compute Cluster, Transaction Database Cluster, Public API Gateway and DNS, CDN and Load-Balancing Platform are healthy and operating normally.",
+      "observed_at": "2026-07-23T11:20:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "user_report",
+      "source_name": "Customer support incident summary",
+      "observation": "Customers with existing authenticated sessions can continue using the service, but most signed-out customers cannot establish a new session.",
+      "observed_at": "2026-07-23T11:21:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "service_wide",
+    "user_impact_description": "Most signed-out customers cannot authenticate, although existing sessions continue to function.",
+    "business_function_affected": "Customer authentication and account access",
+    "affected_user_estimate": 9400,
+    "geographic_scope": "United Kingdom and Ireland storefronts",
+    "workaround_status": "unknown",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Identity and Access Service supports customer authentication for the public storefronts.",
+    "No specific dependency, platform or configuration failure has been identified."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "It has not been confirmed whether every authentication path and client type is affected.",
+    "No approved sign-in workaround has yet been confirmed for signed-out customers."
+  ],
+  "additional_context": [
+    "No data loss, account compromise or serious security exposure has been observed."
+  ]
+}

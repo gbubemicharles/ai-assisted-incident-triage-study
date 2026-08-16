@@ -1,0 +1,104 @@
+{
+  "incident_id": "EVAL-012",
+  "title": "Customer reports describe an API outage after deployment, but telemetry shows partial degradation",
+  "reported_affected_service_ids": [
+    "SVC-API"
+  ],
+  "alert_or_symptom": "Customer-support reports describe the Public API Gateway as being down following a recent deployment, although platform telemetry continues to record successful requests.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "user_report",
+      "source_name": "Customer-support incident summary",
+      "observation": "Some customers describe the digital service as completely down and state that the problem began shortly after the Public API Gateway observability package was deployed.",
+      "observed_at": "2026-07-25T19:20:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Public API Gateway request-outcome dashboard",
+      "observation": "Of 84,600 API requests between 19:00 and 19:20, 8.7 percent timed out or returned transient gateway errors while 91.3 percent completed successfully.",
+      "observed_at": "2026-07-25T19:21:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "metric",
+      "source_name": "Public API Gateway latency dashboard",
+      "observation": "The API gateway p95 response time increased from a normal baseline of 720 milliseconds to 6.9 seconds. Successful requests continued throughout the affected interval.",
+      "observed_at": "2026-07-25T19:22:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Cross-channel digital-service monitoring",
+      "observation": "Web and mobile synthetic transactions continued to complete, although some experienced elevated latency or transient failure. No interval of complete API unavailability was detected.",
+      "observed_at": "2026-07-25T19:23:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "change_record",
+      "source_name": "Public API Gateway deployment record",
+      "observation": "An observability-package update was deployed to the Public API Gateway at 18:32. The deployment changed diagnostic logging and tracing instrumentation but was not intended to alter request routing or transaction processing.",
+      "observed_at": "2026-07-25T19:24:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "trace",
+      "source_name": "Pre-deployment and post-deployment trace comparison",
+      "observation": "The available traces show elevated request duration across several request paths, but no exception, route failure or processing stage consistently associated with the new observability package has been identified.",
+      "observed_at": "2026-07-25T19:25:00"
+    },
+    {
+      "evidence_id": "E7",
+      "source_type": "status",
+      "source_name": "Supporting-platform health summary",
+      "observation": "DNS, load balancing, compute, database, messaging and storage high-level health checks remain successful. Their individual latency contributions have not yet been independently established.",
+      "observed_at": "2026-07-25T19:26:00"
+    },
+    {
+      "evidence_id": "E8",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The evidence establishes partial API performance degradation rather than a complete outage. The temporal relationship with the observability deployment does not establish that the deployment caused the incident.",
+      "observed_at": "2026-07-25T19:27:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "service_wide",
+    "user_impact_description": "Customers across the United Kingdom and Ireland may experience slow responses or transient API failures, but most requests and digital transactions continue to complete successfully.",
+    "business_function_affected": "Customer-facing digital browsing and transaction requests",
+    "affected_user_estimate": 2400,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "limited",
+    "workaround_description": "Customers may succeed by waiting and trying later, but repeated submission of transactional requests is discouraged and no workaround restores normal response performance.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Public API Gateway is a Tier 1 business-critical platform service.",
+    "The gateway remains materially available and continues to process most requests successfully.",
+    "The recent deployment changed observability instrumentation rather than intended request-processing behaviour.",
+    "No supporting platform has been directly established as failed."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "observability-package deployment",
+      "description": "A diagnostic logging and tracing update was deployed to the Public API Gateway approximately 28 minutes before the incident was reported.",
+      "occurred_at": "2026-07-25T18:32:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [
+    "The directly responsible performance bottleneck or technical condition.",
+    "Whether the recent observability deployment has any technical relationship to the degradation.",
+    "The independently verified latency contribution of the API gateway and its supporting dependencies.",
+    "The expected duration and recovery time for normal API performance.",
+    "Whether any failed transactional requests created partial records or duplicate-processing risk."
+  ],
+  "additional_context": [
+    "No complete outage, data loss, corruption or serious security exposure has been confirmed.",
+    "No rollback or production configuration change has been approved."
+  ]
+}

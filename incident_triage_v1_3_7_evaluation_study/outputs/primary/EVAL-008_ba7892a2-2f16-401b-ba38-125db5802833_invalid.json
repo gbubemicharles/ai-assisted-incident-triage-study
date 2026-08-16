@@ -1,0 +1,669 @@
+{
+  "run_id": "ba7892a2-2f16-401b-ba38-125db5802833",
+  "recorded_at_utc": "2026-07-25T18:51:00.241645+00:00",
+  "status": "invalid",
+  "incident": {
+    "incident_id": "EVAL-008",
+    "title": "Internal test hostname fails DNS resolution",
+    "reported_affected_service_ids": [
+      "PLT-EDGE"
+    ],
+    "alert_or_symptom": "An internal pre-release testing hostname no longer resolves through the organisation's authoritative DNS, while all production customer hostnames remain available.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "alert",
+        "source_name": "Internal DNS synthetic monitor",
+        "observation": "The hostname preview-internal.example.test returned NXDOMAIN on all twelve internal resolution checks between 15:02 and 15:12.",
+        "observed_at": "2026-07-25T15:12:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "log",
+        "source_name": "Authoritative DNS query logs",
+        "observation": "Queries for preview-internal.example.test reached the authoritative DNS service and were answered with NXDOMAIN. The requested hostname is not present in the currently served zone data.",
+        "observed_at": "2026-07-25T15:13:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "status",
+        "source_name": "Production edge-platform health summary",
+        "observation": "Production customer DNS records, CDN distributions and load-balancer health checks remain available and within normal operating thresholds.",
+        "observed_at": "2026-07-25T15:14:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "user_report",
+        "source_name": "Digital engineering test team",
+        "observation": "Six engineers cannot access the internal preview environment through its normal hostname. They can continue urgent validation using the approved direct internal load-balancer address.",
+        "observed_at": "2026-07-25T15:15:00"
+      },
+      {
+        "evidence_id": "E5",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The directly observed failure is DNS resolution for one internal test hostname. The reason the hostname is absent from the served zone data has not yet been established.",
+        "observed_at": "2026-07-25T15:16:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "unavailable",
+      "impact_scope": "isolated",
+      "user_impact_description": "Six engineers cannot reach one internal preview environment through its normal DNS hostname. Production customer services and hostnames are unaffected.",
+      "business_function_affected": "Internal pre-release application validation",
+      "affected_user_estimate": 6,
+      "geographic_scope": "Internal United Kingdom engineering network",
+      "workaround_status": "available",
+      "workaround_description": "The approved direct internal load-balancer address can be used for urgent preview validation while DNS resolution is investigated.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The affected hostname is used only for an internal pre-release test environment.",
+      "The test environment does not process production customer transactions.",
+      "All production DNS records, CDN distributions and load balancers remain healthy.",
+      "No customer-facing service impact has been reported."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [
+      "Why the internal test hostname is absent from the currently served authoritative DNS zone data.",
+      "Whether the record was removed, expired or omitted during an earlier approved DNS-zone process.",
+      "The expected time for the hostname to be restored through the normal change-controlled process."
+    ],
+    "additional_context": [
+      "No production outage, customer impact, data loss, corruption or serious security exposure has been identified.",
+      "The workaround is approved for internal testing only and does not require any production change."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-008",
+    "incident_summary": "An internal pre-release testing hostname fails DNS resolution, while production services remain unaffected.",
+    "summary_source_refs": [
+      "KB:CAT-AVAILABILITY",
+      "KB:PLT-EDGE"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "The incident affects a single internal test environment and has an available workaround. No business-critical service is impacted, and there is no confirmed data loss or security exposure.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "KB:CAT-AVAILABILITY",
+        "KB:PLT-EDGE",
+        "E4",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "The failure is directly associated with DNS resolution for an internal test hostname, indicating a service availability issue.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-EDGE",
+      "additional_area_ids": [],
+      "rationale": "The DNS platform is the directly affected component, as evidenced by the failure in authoritative DNS query logs and synthetic monitor alerts.",
+      "source_refs": [
+        "KB:PLT-EDGE",
+        "E1",
+        "E2",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "rationale": "The Network and Edge Team is responsible for the DNS platform, as indicated by their primary resolver group assignment.",
+      "source_refs": [
+        "KB:RG-NETWORK",
+        "E1",
+        "E2",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps to understand when the issue started.",
+        "rationale": "This will help identify any recent changes or patterns that may have led to the failure.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify any recent changes or anomalies.",
+        "rationale": "This will provide insights into potential causes of the DNS resolution failure.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that may have impacted the authoritative DNS service.",
+        "rationale": "This will help determine if any recent activities could be related to the observed failure.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies, such as the authoritative DNS service and any associated infrastructure components.",
+        "rationale": "This will ensure that no other services are impacted or contributing to the failure.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "Why the internal test hostname is absent from the currently served authoritative DNS zone data.",
+        "why_needed": "To understand the root cause of the failure and ensure a comprehensive resolution.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Details on recent changes or processes related to the DNS zone configuration."
+      },
+      {
+        "missing_information": "Whether the record was removed, expired or omitted during an earlier approved DNS-zone process.",
+        "why_needed": "To determine if this is a historical issue that needs addressing now.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Documentation of recent DNS zone management activities."
+      },
+      {
+        "missing_information": "The expected time for the hostname to be restored through the normal change-controlled process.",
+        "why_needed": "To provide a timeline for resolution and inform stakeholders.",
+        "affected_decisions": [
+          "severity"
+        ],
+        "requested_evidence": "Details on the standard change management procedures."
+      }
+    ],
+    "uncertainty_statement": "The current severity is provisional due to missing information about the root cause of the failure. Further investigation will refine this assessment.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-008",
+    "incident_summary": "An internal pre-release testing hostname fails DNS resolution, while production services remain unaffected. The reported impact covers Internal United Kingdom engineering network.",
+    "summary_source_refs": [
+      "E1",
+      "E4",
+      "E5",
+      "KB:PLT-EDGE"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:PLT-EDGE",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-EDGE",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:PLT-EDGE",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-NETWORK",
+        "KB:PLT-EDGE"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-002",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-009"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-005",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-005"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-004",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-004"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "Why the internal test hostname is absent from the currently served authoritative DNS zone data.",
+        "why_needed": "To understand the root cause of the failure and ensure a comprehensive resolution.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Details on recent changes or processes related to the DNS zone configuration."
+      },
+      {
+        "missing_information": "Whether the record was removed, expired or omitted during an earlier approved DNS-zone process.",
+        "why_needed": "To determine if this is a historical issue that needs addressing now.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Documentation of recent DNS zone management activities."
+      },
+      {
+        "missing_information": "The expected time for the hostname to be restored through the normal change-controlled process.",
+        "why_needed": "To provide a timeline for resolution and inform stakeholders.",
+        "affected_decisions": [
+          "severity"
+        ],
+        "requested_evidence": "Details on the standard change management procedures."
+      }
+    ],
+    "uncertainty_statement": "The current severity is provisional associated with missing information about the underlying cause of the failure. Further investigation will refine this assessment.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-008\",\n  \"incident_summary\": \"An internal pre-release testing hostname fails DNS resolution, while production services remain unaffected.\",\n  \"summary_source_refs\": [\"KB:CAT-AVAILABILITY\", \"KB:PLT-EDGE\"],\n  \"severity\": {\n    \"level\": \"Medium\",\n    \"rationale\": \"The incident affects a single internal test environment and has an available workaround. No business-critical service is impacted, and there is no confirmed data loss or security exposure.\",\n    \"source_refs\": [\"KB:SEVERITY:Medium\", \"KB:CAT-AVAILABILITY\", \"KB:PLT-EDGE\", \"E4\", \"E5\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-AVAILABILITY\",\n    \"rationale\": \"The failure is directly associated with DNS resolution for an internal test hostname, indicating a service availability issue.\",\n    \"source_refs\": [\"KB:CAT-AVAILABILITY\", \"E1\", \"E2\", \"E5\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"PLT-EDGE\",\n    \"additional_area_ids\": [],\n    \"rationale\": \"The DNS platform is the directly affected component, as evidenced by the failure in authoritative DNS query logs and synthetic monitor alerts.\",\n    \"source_refs\": [\"KB:PLT-EDGE\", \"E1\", \"E2\", \"E5\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-NETWORK\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The Network and Edge Team is responsible for the DNS platform, as indicated by their primary resolver group assignment.\",\n    \"source_refs\": [\"KB:RG-NETWORK\", \"E1\", \"E2\", \"E5\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Review the triggering alerts and their timestamps to understand when the issue started.\",\n      \"rationale\": \"This will help identify any recent changes or patterns that may have led to the failure.\",\n      \"source_refs\": [\"KB:ACT-002\", \"E1\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service to identify any recent changes or anomalies.\",\n      \"rationale\": \"This will provide insights into potential causes of the DNS resolution failure.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E1\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events that may have impacted the authoritative DNS service.\",\n      \"rationale\": \"This will help determine if any recent activities could be related to the observed failure.\",\n      \"source_refs\": [\"KB:ACT-004\", \"E1\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies, such as the authoritative DNS service and any associated infrastructure components.\",\n      \"rationale\": \"This will ensure that no other services are impacted or contributing to the failure.\",\n      \"source_refs\": [\"KB:ACT-005\", \"E1\"],\n      \"common_action_id\": \"ACT-005\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"Why the internal test hostname is absent from the currently served authoritative DNS zone data.\",\n      \"why_needed\": \"To understand the root cause of the failure and ensure a comprehensive resolution.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Details on recent changes or processes related to the DNS zone configuration.\"\n    },\n    {\n      \"missing_information\": \"Whether the record was removed, expired or omitted during an earlier approved DNS-zone process.\",\n      \"why_needed\": \"To determine if this is a historical issue that needs addressing now.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Documentation of recent DNS zone management activities.\"\n    },\n    {\n      \"missing_information\": \"The expected time for the hostname to be restored through the normal change-controlled process.\",\n      \"why_needed\": \"To provide a timeline for resolution and inform stakeholders.\",\n      \"affected_decisions\": [\"severity\"],\n      \"requested_evidence\": \"Details on the standard change management procedures.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The current severity is provisional due to missing information about the root cause of the failure. Further investigation will refine this assessment.\",\n  \"advisory_only\": true,\n  \"definitive_root_cause_established\": false\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "Medium",
+        "rationale": "The incident affects a single internal test environment and has an available workaround. No business-critical service is impacted, and there is no confirmed data loss or security exposure.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "KB:CAT-AVAILABILITY",
+          "KB:PLT-EDGE",
+          "E4",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "High",
+        "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:PLT-EDGE",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "The failure is directly associated with DNS resolution for an internal test hostname, indicating a service availability issue.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "PLT-EDGE",
+        "additional_area_ids": [],
+        "rationale": "The DNS platform is the directly affected component, as evidenced by the failure in authoritative DNS query logs and synthetic monitor alerts.",
+        "source_refs": [
+          "KB:PLT-EDGE",
+          "E1",
+          "E2",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "PLT-EDGE",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:PLT-EDGE",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-NETWORK",
+        "coordination_group_ids": [],
+        "rationale": "The Network and Edge Team is responsible for the DNS platform, as indicated by their primary resolver group assignment.",
+        "source_refs": [
+          "KB:RG-NETWORK",
+          "E1",
+          "E2",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-NETWORK",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-NETWORK",
+          "KB:PLT-EDGE"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "An internal pre-release testing hostname fails DNS resolution, while production services remain unaffected.",
+      "revised": "An internal pre-release testing hostname fails DNS resolution, while production services remain unaffected. The reported impact covers Internal United Kingdom engineering network.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-AVAILABILITY",
+        "KB:PLT-EDGE"
+      ],
+      "revised": [
+        "E1",
+        "E4",
+        "E5",
+        "KB:PLT-EDGE"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Review the triggering alerts and their timestamps to understand when the issue started.",
+        "rationale": "This will help identify any recent changes or patterns that may have led to the failure.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-002",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify any recent changes or anomalies.",
+        "rationale": "This will provide insights into potential causes of the DNS resolution failure.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that may have impacted the authoritative DNS service.",
+        "rationale": "This will help determine if any recent activities could be related to the observed failure.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-004",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies, such as the authoritative DNS service and any associated infrastructure components.",
+        "rationale": "This will ensure that no other services are impacted or contributing to the failure.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-005",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-005"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-005"
+        ],
+        "runbook_id": "RB-005",
+        "common_action_id": "ACT-009"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The current severity is provisional due to missing information about the root cause of the failure. Further investigation will refine this assessment.",
+      "revised": "The current severity is provisional associated with missing information about the underlying cause of the failure. Further investigation will refine this assessment.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [
+    "Runbook RB-005 is not compatible with category CAT-AVAILABILITY."
+  ],
+  "elapsed_seconds": 449.1853354999912,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T18:51:00.0982275Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 449067337400,
+    "load_duration": 19987091200,
+    "prompt_eval_count": 3816,
+    "prompt_eval_duration": 17664318000,
+    "eval_count": 1049,
+    "eval_duration": 411223162000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-009",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:PLT-EDGE",
+    "KB:RB-005",
+    "KB:RG-INFRA",
+    "KB:RG-NETWORK",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium"
+  ],
+  "selected_runbook_ids": [
+    "RB-005"
+  ]
+}

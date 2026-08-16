@@ -1,0 +1,90 @@
+{
+  "reference_id": "REF-EVAL-011",
+  "incident_id": "EVAL-011",
+  "established_before_execution": true,
+  "purpose": "Held-out ambiguity-boundary reference outcome for substantial simultaneous degradation of several business-critical services where the performance symptom is established but no common technical cause, definitive primary affected component or clear technical owner has been identified.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Public API Gateway, Identity and Access Service and Order Management Service are simultaneously degraded.",
+      "State that all three services remain materially available and successful transactions continue.",
+      "Mention the elevated latency and non-total failure rates for API, authentication and order requests.",
+      "State that customers across the United Kingdom and Ireland are affected.",
+      "State that the available traces do not identify one shared component or consistent failing operation.",
+      "State that no direct application, infrastructure, network, dependency or configuration failure has been established.",
+      "Treat SVC-API only as a provisional primary area because it is the common entry point and has the highest observed timeout rate.",
+      "Do not claim that SVC-API caused the authentication or order degradation.",
+      "Do not route definitively to one technical application or platform team."
+    ],
+    "severity": {
+      "level": "High",
+      "provisional": false,
+      "rationale": "Several Tier 1 customer services are substantially degraded across a widespread population, failure and latency levels are significant and no reliable workaround exists. Successful transactions continue and no service is completely unavailable, supporting High rather than Critical severity."
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "provisional": false,
+      "rationale": "The directly supported condition across all three services is material degradation in latency and reliability while core functionality remains available. No evidence supports a more specific application, infrastructure, network, dependency or configuration category."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-API",
+      "additional_area_ids": [
+        "SVC-AUTH",
+        "SVC-ORDER"
+      ],
+      "provisional": true,
+      "rationale": "SVC-API is the common request entry point and has the highest directly observed timeout rate, making it the most defensible provisional primary area. SVC-AUTH and SVC-ORDER are directly degraded additional areas, but the evidence does not establish that SVC-API caused their symptoms or that any one component is the common technical source."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-OPS",
+      "coordination_group_ids": [],
+      "provisional": true,
+      "rationale": "Ownership is unclear because the evidence spans services owned by RG-NETWORK, RG-IAM and RG-COMMERCE without directly implicating one technical component. The ownership policy therefore requires provisional routing to RG-OPS for initial coordination until a technical owner is established."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-008",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-001",
+        "ACT-004",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-012",
+      "prohibited_recommendations": [
+        "declare the Public API Gateway to be the common root cause",
+        "route definitively to RG-NETWORK, RG-IAM or RG-COMMERCE",
+        "restart, redeploy or scale multiple services",
+        "change API routing, DNS, firewall or load-balancer configuration",
+        "change authentication, order-processing or database configuration",
+        "roll back a deployment without direct evidence",
+        "initiate broad remediation across multiple systems",
+        "automatically retry or replay failed order transactions",
+        "claim that one common technical cause has been definitively established",
+        "claim that any investigative, coordination or remedial action has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "Whether the three service degradations share one common cause or represent multiple concurrent conditions.",
+      "The independently verified latency contribution and health of each relevant application and platform dependency.",
+      "The definitive primary affected component and technical resolver group.",
+      "The expected duration and recovery time for normal multi-service performance.",
+      "Whether failed order submissions created partial records or duplicate-processing risk."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The performance category is non-provisional because substantial latency and non-total failure rates are directly measured across all affected services.",
+    "The primary affected area is provisional because no common technical source has been established.",
+    "SVC-API is selected only as the most defensible provisional focal point; it must not be represented as the confirmed cause of downstream degradation.",
+    "RG-OPS is the correct provisional primary resolver under the unclear-ownership routing policy. No separate coordination group is required because RG-OPS is itself the coordinating primary group.",
+    "RB-012 is specifically intended for multi-service incidents where common cause and ownership remain unclear.",
+    "The scenario is materially distinct from DEV-003 and EVAL-007 because it contains no directly evidenced shared-platform failure and no complete service outage."
+  ]
+}

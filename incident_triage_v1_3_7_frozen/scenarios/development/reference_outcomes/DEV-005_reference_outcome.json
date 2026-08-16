@@ -1,0 +1,67 @@
+{
+  "reference_id": "REF-DEV-005",
+  "incident_id": "DEV-005",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing symptom-category fallback when a business-critical service function is unavailable but no more specific technical cause is directly supported.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that most new customer sign-in attempts are failing across the United Kingdom and Ireland storefronts.",
+      "State that existing authenticated sessions continue to function.",
+      "Do not state or imply a confirmed downstream, platform, credential or configuration cause."
+    ],
+    "severity": {
+      "level": "High",
+      "provisional": true,
+      "rationale": "A business-critical authentication function is unavailable to most signed-out customers across two storefront regions, but the incident is confined to one service and existing sessions continue to operate. The workaround position remains unknown."
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "provisional": true,
+      "rationale": "The directly supported condition is loss of an essential service function, while no more specific application, infrastructure, dependency or configuration failure has been identified."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-AUTH",
+      "additional_area_ids": [],
+      "provisional": true,
+      "rationale": "The Identity and Access Service is the visible affected technical area; all named supporting components are explicitly healthy."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-IAM",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-IAM owns the Identity and Access Service. RG-OPS coordination is not required because the impact is limited to one service and is not Critical."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-007"
+      ],
+      "expected_primary_runbook_id": "RB-001",
+      "prohibited_recommendations": [
+        "restart the authentication service",
+        "rotate credentials or certificates",
+        "change identity-provider configuration",
+        "disable security controls",
+        "declare a credential or dependency failure without evidence"
+      ]
+    },
+    "information_gaps": [
+      "It has not been confirmed whether every authentication path and client type is affected.",
+      "No approved sign-in workaround has yet been confirmed for signed-out customers."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario deliberately withholds a specific technical cause so that CAT-AVAILABILITY is the correct bounded classification.",
+    "Healthy supporting components must not be selected as affected areas.",
+    "The two reported unknowns must be preserved as information gaps.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

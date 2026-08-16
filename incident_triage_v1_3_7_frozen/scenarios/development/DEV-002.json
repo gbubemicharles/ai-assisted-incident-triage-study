@@ -1,0 +1,70 @@
+{
+  "incident_id": "DEV-002",
+  "title": "Elevated order-processing latency",
+  "reported_affected_service_ids": [
+    "SVC-ORDER"
+  ],
+  "alert_or_symptom": "Order searches and status updates remain available but are responding much more slowly than normal.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Order service request latency",
+      "observation": "Order-service p95 response latency increased from 420 milliseconds to 8.6 seconds at 14:05, while the request success rate remained at 99.1 percent.",
+      "observed_at": "2026-07-23T14:05:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Transaction database query latency",
+      "observation": "Transaction database p95 query latency increased from 80 milliseconds to 5.9 seconds; the database remains available.",
+      "observed_at": "2026-07-23T14:06:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "trace",
+      "source_name": "Order request traces",
+      "observation": "Slow order traces spend approximately 87 percent of elapsed time waiting for database queries, while application processing time remains within its normal range.",
+      "observed_at": "2026-07-23T14:07:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Application Compute Cluster, Inventory Service and Message Broker are healthy and operating normally.",
+      "observed_at": "2026-07-23T14:08:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "subset_of_users",
+    "user_impact_description": "Approximately 18 percent of order-management requests take between 8 and 12 seconds, but requests generally complete successfully.",
+    "business_function_affected": "Order creation and order-status retrieval",
+    "affected_user_estimate": null,
+    "geographic_scope": "United Kingdom storefront",
+    "workaround_status": "available",
+    "workaround_description": "Users can retry delayed order searches; requests generally complete on retry.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Order Management Service depends on the Transaction Database Cluster.",
+    "Order-service application instances remain healthy."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "database maintenance",
+      "description": "A routine database statistics refresh completed at 13:50.",
+      "occurred_at": "2026-07-23T13:50:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [
+    "The specific database query, lock or resource condition associated with the increased latency has not been identified.",
+    "The expected duration of the degradation is not yet known."
+  ],
+  "additional_context": [
+    "No failed orders, duplicate orders, data loss or security exposure have been observed."
+  ]
+}

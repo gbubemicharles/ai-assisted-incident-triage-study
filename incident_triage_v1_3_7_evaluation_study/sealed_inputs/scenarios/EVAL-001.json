@@ -1,0 +1,64 @@
+{
+  "incident_id": "EVAL-001",
+  "title": "Customer web portal completely unavailable",
+  "reported_affected_service_ids": [
+    "SVC-WEB"
+  ],
+  "alert_or_symptom": "Customers cannot load or use the customer web portal.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Regional synthetic browser monitoring",
+      "observation": "All 240 customer-portal checks from United Kingdom and Ireland monitoring locations failed between 08:02 and 08:12, with no successful page load recorded.",
+      "observed_at": "2026-07-25T08:12:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "status",
+      "source_name": "Portal HTTP availability monitor",
+      "observation": "Requests to the customer-portal entry point returned HTTP 503 from every monitored location. The response contained no component-specific diagnostic information.",
+      "observed_at": "2026-07-25T08:13:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "user_report",
+      "source_name": "Customer support incident summary",
+      "observation": "Customers report that the portal home page, sign-in entry page and checkout pages are inaccessible.",
+      "observed_at": "2026-07-25T08:14:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "No application, edge, storage, API, authentication, compute, database or configuration failure has yet been directly identified.",
+      "observed_at": "2026-07-25T08:15:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "widespread",
+    "user_impact_description": "Customers across the United Kingdom and Ireland cannot access the web portal or complete online purchases.",
+    "business_function_affected": "Customer online shopping and checkout",
+    "affected_user_estimate": 28000,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "none",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Customer Web Portal is a Tier 1 business-critical customer-facing service.",
+    "The portal depends on the edge platform, object storage, Public API Gateway and Identity and Access Service.",
+    "No alternative customer channel has been approved as a workaround."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The directly responsible technical component or failure condition has not been identified.",
+    "The current health of each portal dependency has not yet been independently confirmed.",
+    "The expected duration of the outage is unknown."
+  ],
+  "additional_context": [
+    "No data loss, corruption or serious security exposure has been reported."
+  ]
+}

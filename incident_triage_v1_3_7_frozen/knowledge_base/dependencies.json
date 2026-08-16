@@ -1,0 +1,148 @@
+{
+  "dependencies": [
+    {
+      "dependent": "SVC-WEB",
+      "dependency": "PLT-EDGE",
+      "type": "hard",
+      "impact_if_unavailable": "Customers may be unable to access the portal."
+    },
+    {
+      "dependent": "SVC-WEB",
+      "dependency": "PLT-STORAGE",
+      "type": "hard",
+      "impact_if_unavailable": "Frontend application assets may fail to load."
+    },
+    {
+      "dependent": "SVC-WEB",
+      "dependency": "SVC-API",
+      "type": "hard",
+      "impact_if_unavailable": "The portal cannot retrieve or submit business data."
+    },
+    {
+      "dependent": "SVC-WEB",
+      "dependency": "SVC-AUTH",
+      "type": "hard",
+      "impact_if_unavailable": "Users cannot authenticate."
+    },
+    {
+      "dependent": "SVC-API",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "Application endpoints become unavailable."
+    },
+    {
+      "dependent": "SVC-API",
+      "dependency": "SVC-AUTH",
+      "type": "hard",
+      "impact_if_unavailable": "Protected requests cannot be validated."
+    },
+    {
+      "dependent": "SVC-API",
+      "dependency": "SVC-ORDER",
+      "type": "hard",
+      "impact_if_unavailable": "Order-related operations fail."
+    },
+    {
+      "dependent": "SVC-API",
+      "dependency": "SVC-PAYMENT",
+      "type": "hard",
+      "impact_if_unavailable": "Payment-related operations fail."
+    },
+    {
+      "dependent": "SVC-API",
+      "dependency": "SVC-INVENTORY",
+      "type": "hard",
+      "impact_if_unavailable": "Inventory-related operations fail."
+    },
+    {
+      "dependent": "SVC-AUTH",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "The authentication application cannot run."
+    },
+    {
+      "dependent": "SVC-AUTH",
+      "dependency": "PLT-DATABASE",
+      "type": "hard",
+      "impact_if_unavailable": "User and token information cannot be retrieved."
+    },
+    {
+      "dependent": "SVC-ORDER",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "The order-processing application cannot run."
+    },
+    {
+      "dependent": "SVC-ORDER",
+      "dependency": "PLT-DATABASE",
+      "type": "hard",
+      "impact_if_unavailable": "Orders cannot be stored or retrieved."
+    },
+    {
+      "dependent": "SVC-ORDER",
+      "dependency": "SVC-INVENTORY",
+      "type": "hard",
+      "impact_if_unavailable": "Stock cannot be checked or reserved."
+    },
+    {
+      "dependent": "SVC-ORDER",
+      "dependency": "PLT-MESSAGING",
+      "type": "soft",
+      "impact_if_unavailable": "Order events and notifications may be delayed."
+    },
+    {
+      "dependent": "SVC-PAYMENT",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "The payment-processing application cannot run."
+    },
+    {
+      "dependent": "SVC-PAYMENT",
+      "dependency": "PLT-DATABASE",
+      "type": "hard",
+      "impact_if_unavailable": "Payment status cannot be stored reliably."
+    },
+    {
+      "dependent": "SVC-PAYMENT",
+      "dependency": "EXT-PAYMENT",
+      "type": "hard",
+      "impact_if_unavailable": "Card authorisation cannot be completed."
+    },
+    {
+      "dependent": "SVC-PAYMENT",
+      "dependency": "PLT-MESSAGING",
+      "type": "soft",
+      "impact_if_unavailable": "Payment events may be delayed."
+    },
+    {
+      "dependent": "SVC-INVENTORY",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "The inventory application cannot run."
+    },
+    {
+      "dependent": "SVC-INVENTORY",
+      "dependency": "PLT-DATABASE",
+      "type": "hard",
+      "impact_if_unavailable": "Stock information cannot be retrieved or updated."
+    },
+    {
+      "dependent": "SVC-NOTIFY",
+      "dependency": "PLT-COMPUTE",
+      "type": "hard",
+      "impact_if_unavailable": "The notification-processing application cannot run."
+    },
+    {
+      "dependent": "SVC-NOTIFY",
+      "dependency": "PLT-MESSAGING",
+      "type": "hard",
+      "impact_if_unavailable": "Notification events cannot be consumed."
+    },
+    {
+      "dependent": "SVC-NOTIFY",
+      "dependency": "EXT-COMMS",
+      "type": "hard",
+      "impact_if_unavailable": "Email and SMS messages cannot be delivered."
+    }
+  ]
+}

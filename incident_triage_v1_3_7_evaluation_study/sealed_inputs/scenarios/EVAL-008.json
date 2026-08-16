@@ -1,0 +1,73 @@
+{
+  "incident_id": "EVAL-008",
+  "title": "Internal test hostname fails DNS resolution",
+  "reported_affected_service_ids": [
+    "PLT-EDGE"
+  ],
+  "alert_or_symptom": "An internal pre-release testing hostname no longer resolves through the organisation's authoritative DNS, while all production customer hostnames remain available.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "alert",
+      "source_name": "Internal DNS synthetic monitor",
+      "observation": "The hostname preview-internal.example.test returned NXDOMAIN on all twelve internal resolution checks between 15:02 and 15:12.",
+      "observed_at": "2026-07-25T15:12:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Authoritative DNS query logs",
+      "observation": "Queries for preview-internal.example.test reached the authoritative DNS service and were answered with NXDOMAIN. The requested hostname is not present in the currently served zone data.",
+      "observed_at": "2026-07-25T15:13:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Production edge-platform health summary",
+      "observation": "Production customer DNS records, CDN distributions and load-balancer health checks remain available and within normal operating thresholds.",
+      "observed_at": "2026-07-25T15:14:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "user_report",
+      "source_name": "Digital engineering test team",
+      "observation": "Six engineers cannot access the internal preview environment through its normal hostname. They can continue urgent validation using the approved direct internal load-balancer address.",
+      "observed_at": "2026-07-25T15:15:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The directly observed failure is DNS resolution for one internal test hostname. The reason the hostname is absent from the served zone data has not yet been established.",
+      "observed_at": "2026-07-25T15:16:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "isolated",
+    "user_impact_description": "Six engineers cannot reach one internal preview environment through its normal DNS hostname. Production customer services and hostnames are unaffected.",
+    "business_function_affected": "Internal pre-release application validation",
+    "affected_user_estimate": 6,
+    "geographic_scope": "Internal United Kingdom engineering network",
+    "workaround_status": "available",
+    "workaround_description": "The approved direct internal load-balancer address can be used for urgent preview validation while DNS resolution is investigated.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The affected hostname is used only for an internal pre-release test environment.",
+    "The test environment does not process production customer transactions.",
+    "All production DNS records, CDN distributions and load balancers remain healthy.",
+    "No customer-facing service impact has been reported."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "Why the internal test hostname is absent from the currently served authoritative DNS zone data.",
+    "Whether the record was removed, expired or omitted during an earlier approved DNS-zone process.",
+    "The expected time for the hostname to be restored through the normal change-controlled process."
+  ],
+  "additional_context": [
+    "No production outage, customer impact, data loss, corruption or serious security exposure has been identified.",
+    "The workaround is approved for internal testing only and does not require any production change."
+  ]
+}

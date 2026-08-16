@@ -1,0 +1,695 @@
+{
+  "run_id": "d58be983-e456-4ec0-a0f9-dc77de49a04c",
+  "recorded_at_utc": "2026-07-25T17:23:03.912422+00:00",
+  "status": "invalid",
+  "incident": {
+    "incident_id": "EVAL-002",
+    "title": "Automated dispatch notifications unavailable for one fulfilment centre",
+    "reported_affected_service_ids": [
+      "SVC-NOTIFY"
+    ],
+    "alert_or_symptom": "Automated dispatch notifications for orders processed by the North Fulfilment Centre cannot be sent, while notification traffic for other business units remains available.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "metric",
+        "source_name": "North Fulfilment Centre notification monitor",
+        "observation": "All 186 automated dispatch-notification requests submitted for the North Fulfilment Centre between 09:05 and 09:20 failed with a generic HTTP 503 response, with no successful dispatch notification recorded.",
+        "observed_at": "2026-07-25T09:20:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "status",
+        "source_name": "Notification Service business-flow dashboard",
+        "observation": "Customer order confirmations and operational notifications for all other fulfilment centres continued to process successfully during the same period.",
+        "observed_at": "2026-07-25T09:21:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "user_report",
+        "source_name": "North Fulfilment Centre operations lead",
+        "observation": "Twenty-three operations staff cannot send automated dispatch notifications. Staff are using the approved manual customer-contact procedure for priority dispatches.",
+        "observed_at": "2026-07-25T09:22:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The directly responsible technical component or failure condition has not been identified. The generic response does not establish where the notification request is failing.",
+        "observed_at": "2026-07-25T09:23:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "unavailable",
+      "impact_scope": "subset_of_users",
+      "user_impact_description": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts. Other notification workflows and order processing remain available.",
+      "business_function_affected": "Automated customer dispatch notifications for one fulfilment centre",
+      "affected_user_estimate": 23,
+      "geographic_scope": "North Fulfilment Centre, United Kingdom",
+      "workaround_status": "available",
+      "workaround_description": "Operations staff can use the approved manual customer-contact procedure for priority dispatches.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Notification Service is a Tier 3 standard service.",
+      "The affected dispatch-notification workflow supports one of several United Kingdom fulfilment centres.",
+      "Customer ordering, payment and warehouse dispatch processing continue to operate."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [
+      "The directly responsible technical component or failure condition has not been identified.",
+      "It is not known at which stage the affected notification requests are failing.",
+      "The expected restoration time for automated dispatch notifications is unknown."
+    ],
+    "additional_context": [
+      "No order-processing interruption, data loss, corruption or serious security exposure has been reported.",
+      "The approved manual procedure is currently keeping priority customer contacts within the operational service target."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-002",
+    "incident_summary": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts.",
+    "summary_source_refs": [
+      "KB:CAT-AVAILABILITY",
+      "KB:SVC-NOTIFY"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "The service is unavailable for a subset of users, affecting automated dispatch notifications at one fulfilment centre. No data loss or serious security exposure has been reported.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "The service is completely unavailable for automated dispatch notifications at the North Fulfilment Centre, impacting a specific subset of users.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [
+        "PLT-COMPUTE",
+        "PLT-MESSAGING",
+        "EXT-COMMS"
+      ],
+      "rationale": "The Notification Service is the primary component affected, with dependencies on compute and messaging services. The external communication provider may also be involved.",
+      "source_refs": [
+        "KB:SVC-NOTIFY",
+        "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+        "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+        "KB:DEP:SVC-NOTIFY:EXT-COMMS"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "rationale": "The Messaging and Communications Team is primarily responsible for the Notification Service, while Cloud Operations Coordination should be involved due to the critical nature of the incident.",
+      "source_refs": [
+        "KB:RG-MESSAGING",
+        "KB:RG-OPS"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Verify the extent of the outage and ensure accurate reporting.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Identify when the issue began and any preceding events that might have triggered it.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-002"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Analyze system data to pinpoint where the failure is occurring within the Notification Service.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Check the status of compute, messaging and external communication services to ensure they are not contributing to the issue.",
+        "source_refs": [
+          "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+          "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+          "KB:DEP:SVC-NOTIFY:EXT-COMMS"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      {
+        "action": "Check whether a documented and approved workaround exists.",
+        "rationale": "Determine if there is an existing plan to mitigate the issue while the root cause is being investigated.",
+        "source_refs": [
+          "E3",
+          "KB:ACT-007"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-007"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The directly responsible technical component or failure condition has not been identified.",
+        "why_needed": "To accurately diagnose the root cause and implement a resolution.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs, metrics, and traces from the Notification Service and its dependencies."
+      },
+      {
+        "missing_information": "It is not known at which stage the affected notification requests are failing.",
+        "why_needed": "To narrow down the scope of the issue within the Notification Service.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Specific logs and metrics indicating where in the process the notifications are failing."
+      },
+      {
+        "missing_information": "The expected restoration time for automated dispatch notifications is unknown.",
+        "why_needed": "To provide a timeline for resolution and manage user expectations.",
+        "affected_decisions": [
+          "severity"
+        ],
+        "requested_evidence": "Estimates from the technical team on when they expect to resolve the issue."
+      }
+    ],
+    "uncertainty_statement": "The severity and category are provisionally assigned based on available evidence. Further investigation is required to confirm these classifications.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-002",
+    "incident_summary": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts. The reported impact covers North Fulfilment Centre, United Kingdom.",
+    "summary_source_refs": [
+      "E3",
+      "E1",
+      "E2",
+      "KB:SVC-NOTIFY"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-MESSAGING",
+        "KB:SVC-NOTIFY"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3",
+          "KB:ACT-001",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-002",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-005",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-005"
+      },
+      {
+        "action": "Check whether a documented and approved workaround exists.",
+        "rationale": "Determine whether a documented and approved workaround is available for response planning.",
+        "source_refs": [
+          "E3",
+          "KB:ACT-007",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-007"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The directly responsible technical component or failure condition has not been identified.",
+        "why_needed": "To accurately diagnose the root cause and implement a resolution.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs, metrics, and traces from the Notification Service and its dependencies."
+      },
+      {
+        "missing_information": "It is not known at which stage the affected notification requests are failing.",
+        "why_needed": "To narrow down the scope of the issue within the Notification Service.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Specific logs and metrics indicating where in the process the notifications are failing."
+      },
+      {
+        "missing_information": "The expected restoration time for automated dispatch notifications is unknown.",
+        "why_needed": "To provide a timeline for resolution and manage user expectations.",
+        "affected_decisions": [
+          "severity"
+        ],
+        "requested_evidence": "Estimates from the technical team on when they expect to resolve the issue."
+      }
+    ],
+    "uncertainty_statement": "The severity and category are provisionally assigned based on available evidence. Further investigation is required to confirm these classifications.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-002\",\n  \"incident_summary\": \"Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts.\",\n  \"summary_source_refs\": [\"KB:CAT-AVAILABILITY\", \"KB:SVC-NOTIFY\"],\n  \"severity\": {\n    \"level\": \"High\",\n    \"rationale\": \"The service is unavailable for a subset of users, affecting automated dispatch notifications at one fulfilment centre. No data loss or serious security exposure has been reported.\",\n    \"source_refs\": [\"KB:SEVERITY:High\", \"KB:SVC-NOTIFY\", \"E1\", \"E2\", \"E3\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-AVAILABILITY\",\n    \"rationale\": \"The service is completely unavailable for automated dispatch notifications at the North Fulfilment Centre, impacting a specific subset of users.\",\n    \"source_refs\": [\"KB:CAT-AVAILABILITY\", \"E1\", \"E2\", \"E3\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-NOTIFY\",\n    \"additional_area_ids\": [\"PLT-COMPUTE\", \"PLT-MESSAGING\", \"EXT-COMMS\"],\n    \"rationale\": \"The Notification Service is the primary component affected, with dependencies on compute and messaging services. The external communication provider may also be involved.\",\n    \"source_refs\": [\"KB:SVC-NOTIFY\", \"KB:DEP:SVC-NOTIFY:PLT-COMPUTE\", \"KB:DEP:SVC-NOTIFY:PLT-MESSAGING\", \"KB:DEP:SVC-NOTIFY:EXT-COMMS\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-MESSAGING\",\n    \"coordination_group_ids\": [\"RG-OPS\"],\n    \"rationale\": \"The Messaging and Communications Team is primarily responsible for the Notification Service, while Cloud Operations Coordination should be involved due to the critical nature of the incident.\",\n    \"source_refs\": [\"KB:RG-MESSAGING\", \"KB:RG-OPS\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Confirm the current service impact, affected users and geographical scope.\",\n      \"rationale\": \"Verify the extent of the outage and ensure accurate reporting.\",\n      \"source_refs\": [\"E1\", \"E2\", \"E3\"],\n      \"common_action_id\": \"ACT-001\"\n    },\n    {\n      \"action\": \"Review the triggering alerts and their timestamps.\",\n      \"rationale\": \"Identify when the issue began and any preceding events that might have triggered it.\",\n      \"source_refs\": [\"E4\", \"KB:ACT-002\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service.\",\n      \"rationale\": \"Analyze system data to pinpoint where the failure is occurring within the Notification Service.\",\n      \"source_refs\": [\"E1\", \"KB:ACT-003\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies.\",\n      \"rationale\": \"Check the status of compute, messaging and external communication services to ensure they are not contributing to the issue.\",\n      \"source_refs\": [\"KB:DEP:SVC-NOTIFY:PLT-COMPUTE\", \"KB:DEP:SVC-NOTIFY:PLT-MESSAGING\", \"KB:DEP:SVC-NOTIFY:EXT-COMMS\"],\n      \"common_action_id\": \"ACT-005\"\n    },\n    {\n      \"action\": \"Check whether a documented and approved workaround exists.\",\n      \"rationale\": \"Determine if there is an existing plan to mitigate the issue while the root cause is being investigated.\",\n      \"source_refs\": [\"E3\", \"KB:ACT-007\"],\n      \"common_action_id\": \"ACT-007\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The directly responsible technical component or failure condition has not been identified.\",\n      \"why_needed\": \"To accurately diagnose the root cause and implement a resolution.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Detailed logs, metrics, and traces from the Notification Service and its dependencies.\"\n    },\n    {\n      \"missing_information\": \"It is not known at which stage the affected notification requests are failing.\",\n      \"why_needed\": \"To narrow down the scope of the issue within the Notification Service.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Specific logs and metrics indicating where in the process the notifications are failing.\"\n    },\n    {\n      \"missing_information\": \"The expected restoration time for automated dispatch notifications is unknown.\",\n      \"why_needed\": \"To provide a timeline for resolution and manage user expectations.\",\n      \"affected_decisions\": [\"severity\"],\n      \"requested_evidence\": \"Estimates from the technical team on when they expect to resolve the issue.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The severity and category are provisionally assigned based on available evidence. Further investigation is required to confirm these classifications.\",\n  \"advisory_only\": true\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "High",
+        "rationale": "The service is unavailable for a subset of users, affecting automated dispatch notifications at one fulfilment centre. No data loss or serious security exposure has been reported.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "High",
+        "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "The service is completely unavailable for automated dispatch notifications at the North Fulfilment Centre, impacting a specific subset of users.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-NOTIFY",
+        "additional_area_ids": [
+          "PLT-COMPUTE",
+          "PLT-MESSAGING",
+          "EXT-COMMS"
+        ],
+        "rationale": "The Notification Service is the primary component affected, with dependencies on compute and messaging services. The external communication provider may also be involved.",
+        "source_refs": [
+          "KB:SVC-NOTIFY",
+          "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+          "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+          "KB:DEP:SVC-NOTIFY:EXT-COMMS"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-NOTIFY",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-MESSAGING",
+        "coordination_group_ids": [
+          "RG-OPS"
+        ],
+        "rationale": "The Messaging and Communications Team is primarily responsible for the Notification Service, while Cloud Operations Coordination should be involved due to the critical nature of the incident.",
+        "source_refs": [
+          "KB:RG-MESSAGING",
+          "KB:RG-OPS"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-MESSAGING",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-MESSAGING",
+          "KB:SVC-NOTIFY"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts.",
+      "revised": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts. The reported impact covers North Fulfilment Centre, United Kingdom.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-AVAILABILITY",
+        "KB:SVC-NOTIFY"
+      ],
+      "revised": [
+        "E3",
+        "E1",
+        "E2",
+        "KB:SVC-NOTIFY"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Verify the extent of the outage and ensure accurate reporting.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "revised": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3",
+          "KB:ACT-001",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-001"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Identify when the issue began and any preceding events that might have triggered it.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-002"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-002",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Analyze system data to pinpoint where the failure is occurring within the Notification Service.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Check the status of compute, messaging and external communication services to ensure they are not contributing to the issue.",
+        "source_refs": [
+          "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+          "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+          "KB:DEP:SVC-NOTIFY:EXT-COMMS"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-005",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-005"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[4]",
+      "original": {
+        "action": "Check whether a documented and approved workaround exists.",
+        "rationale": "Determine if there is an existing plan to mitigate the issue while the root cause is being investigated.",
+        "source_refs": [
+          "E3",
+          "KB:ACT-007"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-007"
+      },
+      "revised": {
+        "action": "Check whether a documented and approved workaround exists.",
+        "rationale": "Determine whether a documented and approved workaround is available for response planning.",
+        "source_refs": [
+          "E3",
+          "KB:ACT-007",
+          "KB:RB-008"
+        ],
+        "runbook_id": "RB-008",
+        "common_action_id": "ACT-007"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    }
+  ],
+  "validation_errors": [
+    "Runbook RB-008 is not compatible with category CAT-AVAILABILITY."
+  ],
+  "elapsed_seconds": 460.7115624000435,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T17:23:03.8152768Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 460622540200,
+    "load_duration": 19962428200,
+    "prompt_eval_count": 4109,
+    "prompt_eval_duration": 20439477000,
+    "eval_count": 1184,
+    "eval_duration": 419929313000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-007",
+    "KB:ACT-008",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-NOTIFY:EXT-COMMS",
+    "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+    "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+    "KB:EXT-COMMS",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-MESSAGING",
+    "KB:RB-008",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-NOTIFY"
+  ],
+  "selected_runbook_ids": [
+    "RB-008"
+  ]
+}

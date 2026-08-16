@@ -1,0 +1,417 @@
+{
+  "$defs": {
+    "AffectedAreaAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "primary_area_id": {
+          "$ref": "#/$defs/ServiceComponentID",
+          "description": "Most directly implicated technical service, platform or dependency. Place visibly impacted services in additional_area_ids when different."
+        },
+        "additional_area_ids": {
+          "items": {
+            "$ref": "#/$defs/ServiceComponentID"
+          },
+          "maxItems": 4,
+          "title": "Additional Area Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 550,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "provisional": {
+          "title": "Provisional",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "primary_area_id",
+        "additional_area_ids",
+        "rationale",
+        "source_refs",
+        "provisional"
+      ],
+      "title": "AffectedAreaAssessment",
+      "type": "object"
+    },
+    "CategoryAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/IncidentCategoryCode"
+        },
+        "rationale": {
+          "description": "Explain why the category fits without asserting a confirmed cause.",
+          "maxLength": 550,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "provisional": {
+          "title": "Provisional",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "rationale",
+        "source_refs",
+        "provisional"
+      ],
+      "title": "CategoryAssessment",
+      "type": "object"
+    },
+    "DecisionField": {
+      "enum": [
+        "incident_summary",
+        "severity",
+        "incident_category",
+        "affected_area",
+        "resolver_group",
+        "initial_actions"
+      ],
+      "title": "DecisionField",
+      "type": "string"
+    },
+    "IncidentCategoryCode": {
+      "enum": [
+        "CAT-AVAILABILITY",
+        "CAT-PERFORMANCE",
+        "CAT-APPLICATION",
+        "CAT-INFRA-NETWORK",
+        "CAT-DEPENDENCY-CONFIG"
+      ],
+      "title": "IncidentCategoryCode",
+      "type": "string"
+    },
+    "InformationGap": {
+      "additionalProperties": false,
+      "properties": {
+        "missing_information": {
+          "maxLength": 350,
+          "minLength": 1,
+          "title": "Missing Information",
+          "type": "string"
+        },
+        "why_needed": {
+          "maxLength": 450,
+          "minLength": 1,
+          "title": "Why Needed",
+          "type": "string"
+        },
+        "affected_decisions": {
+          "items": {
+            "$ref": "#/$defs/DecisionField"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Affected Decisions",
+          "type": "array"
+        },
+        "requested_evidence": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Requested Evidence",
+          "type": "string"
+        }
+      },
+      "required": [
+        "missing_information",
+        "why_needed",
+        "affected_decisions",
+        "requested_evidence"
+      ],
+      "title": "InformationGap",
+      "type": "object"
+    },
+    "InitialAction": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "rationale": {
+          "maxLength": 450,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_refs": {
+          "description": "Include relevant incident evidence plus the exact KB:RB-* or KB:ACT-* reference represented by the identifier fields.",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 2,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "runbook_id": {
+          "anyOf": [
+            {
+              "pattern": "^RB-[0-9]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Runbook Id"
+        },
+        "common_action_id": {
+          "anyOf": [
+            {
+              "pattern": "^ACT-[0-9]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Common Action Id"
+        }
+      },
+      "required": [
+        "action",
+        "rationale",
+        "source_refs"
+      ],
+      "title": "InitialAction",
+      "type": "object"
+    },
+    "ResolverGroupID": {
+      "enum": [
+        "RG-OPS",
+        "RG-DIGITAL",
+        "RG-NETWORK",
+        "RG-IAM",
+        "RG-COMMERCE",
+        "RG-PAYMENTS",
+        "RG-DATA",
+        "RG-INFRA",
+        "RG-MESSAGING"
+      ],
+      "title": "ResolverGroupID",
+      "type": "string"
+    },
+    "RoutingRecommendation": {
+      "additionalProperties": false,
+      "properties": {
+        "primary_resolver_group_id": {
+          "$ref": "#/$defs/ResolverGroupID"
+        },
+        "coordination_group_ids": {
+          "items": {
+            "$ref": "#/$defs/ResolverGroupID"
+          },
+          "maxItems": 3,
+          "title": "Coordination Group Ids",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 550,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "provisional": {
+          "title": "Provisional",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "primary_resolver_group_id",
+        "coordination_group_ids",
+        "rationale",
+        "source_refs",
+        "provisional"
+      ],
+      "title": "RoutingRecommendation",
+      "type": "object"
+    },
+    "ServiceComponentID": {
+      "enum": [
+        "SVC-WEB",
+        "SVC-API",
+        "SVC-AUTH",
+        "SVC-ORDER",
+        "SVC-PAYMENT",
+        "SVC-INVENTORY",
+        "SVC-NOTIFY",
+        "PLT-COMPUTE",
+        "PLT-DATABASE",
+        "PLT-MESSAGING",
+        "PLT-EDGE",
+        "PLT-STORAGE",
+        "EXT-PAYMENT",
+        "EXT-COMMS"
+      ],
+      "title": "ServiceComponentID",
+      "type": "string"
+    },
+    "SeverityAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "$ref": "#/$defs/SeverityLevel"
+        },
+        "rationale": {
+          "maxLength": 550,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "provisional": {
+          "title": "Provisional",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "level",
+        "rationale",
+        "source_refs",
+        "provisional"
+      ],
+      "title": "SeverityAssessment",
+      "type": "object"
+    },
+    "SeverityLevel": {
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "title": "SeverityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "incident_id": {
+      "minLength": 1,
+      "title": "Incident Id",
+      "type": "string"
+    },
+    "incident_summary": {
+      "description": "One to three concise sentences covering visible impact, key evidence and the directly implicated area without asserting a root cause.",
+      "maxLength": 750,
+      "minLength": 1,
+      "title": "Incident Summary",
+      "type": "string"
+    },
+    "summary_source_refs": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "title": "Summary Source Refs",
+      "type": "array"
+    },
+    "severity": {
+      "$ref": "#/$defs/SeverityAssessment"
+    },
+    "incident_category": {
+      "$ref": "#/$defs/CategoryAssessment"
+    },
+    "affected_area": {
+      "$ref": "#/$defs/AffectedAreaAssessment"
+    },
+    "routing": {
+      "$ref": "#/$defs/RoutingRecommendation"
+    },
+    "initial_actions": {
+      "items": {
+        "$ref": "#/$defs/InitialAction"
+      },
+      "maxItems": 5,
+      "minItems": 2,
+      "title": "Initial Actions",
+      "type": "array"
+    },
+    "information_gaps": {
+      "items": {
+        "$ref": "#/$defs/InformationGap"
+      },
+      "maxItems": 6,
+      "title": "Information Gaps",
+      "type": "array"
+    },
+    "uncertainty_statement": {
+      "maxLength": 550,
+      "minLength": 1,
+      "title": "Uncertainty Statement",
+      "type": "string"
+    },
+    "advisory_only": {
+      "const": true,
+      "default": true,
+      "title": "Advisory Only",
+      "type": "boolean"
+    },
+    "definitive_root_cause_established": {
+      "const": false,
+      "default": false,
+      "title": "Definitive Root Cause Established",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "incident_id",
+    "incident_summary",
+    "summary_source_refs",
+    "severity",
+    "incident_category",
+    "affected_area",
+    "routing",
+    "initial_actions",
+    "information_gaps",
+    "uncertainty_statement"
+  ],
+  "title": "TriageOutput",
+  "type": "object"
+}

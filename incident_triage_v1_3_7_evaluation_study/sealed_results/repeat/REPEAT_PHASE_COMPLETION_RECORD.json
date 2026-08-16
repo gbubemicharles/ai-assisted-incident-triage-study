@@ -1,0 +1,40 @@
+﻿{
+    "phase":  "predetermined_repeat",
+    "phase_status":  "closed",
+    "closed_at_utc":  "2026-07-26T11:21:50.2435393Z",
+    "candidate_version":  "v1.3.7",
+    "total_repeat_runs":  12,
+    "valid_repeat_runs":  3,
+    "invalid_repeat_runs":  9,
+    "repeat_structural_validity_rate":  0.25,
+    "repeat_invalidity_rate":  0.75,
+    "primary_repeat_status_agreement_count":  12,
+    "primary_repeat_status_agreement_rate":  1,
+    "total_validation_errors":  12,
+    "total_guardrail_changes":  145,
+    "total_elapsed_seconds":  5817.530894,
+    "primary_phase":  {
+                          "total_primary_runs":  12,
+                          "valid_primary_runs":  3,
+                          "invalid_primary_runs":  9,
+                          "structural_validity_rate":  0.25
+                      },
+    "interpretation_boundary":  [
+                                    "Repeat runs assess stability only.",
+                                    "Primary runs remain the effectiveness results.",
+                                    "Repeat results do not replace or rescore primary results.",
+                                    "Structural validity does not establish semantic correctness."
+                                ],
+    "hashes":  {
+                   "repeat_execution_ledger_sha256":  "9d8cd60333cdbec46f32da9ac59a7ab71a4bf1a534b2c0d7e64c1e84d9fb0bec",
+                   "repeat_output_manifest_sha256":  "b6f6134cdb1c2624b56703b7fb2b29323832fe239219272b169c0770d3f77b01",
+                   "primary_execution_ledger_sha256":  "25848bc60848089120fde2eb660ef5f6950d7ae42e0235d690bc4e8801971498",
+                   "primary_output_manifest_sha256":  "60389f622e74821717976f3104d4c739d8c4fd6feeb6b47a08a747de1105b87a",
+                   "primary_completion_record_sha256":  "f706bd02eaa77a0b5b019d65e718512df7b276dfba70b0d12bfff6dd3be575b5",
+                   "frozen_archive_sha256":  "bcd179c135619638412ed372f662c5a91033444aaba2c7d59666cbab7a2928c8",
+                   "evaluation_input_manifest_sha256":  "173597eeabfcdd924867130499eee48765f4e641fdc7f93c49f99570bda014ba",
+                   "evaluation_input_seal_record_sha256":  "8730d2924e5eb4dd606262c0b9f319177e0e6d4cb06055680a429d4cb19a3ec6",
+                   "schema_validation_report_sha256":  "7c785437dcf4b7a3310a4ecb0bd32762b6ff43f8df0ced9626c49dd45728a8fe",
+                   "knowledge_base_sha256":  "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099"
+               }
+}

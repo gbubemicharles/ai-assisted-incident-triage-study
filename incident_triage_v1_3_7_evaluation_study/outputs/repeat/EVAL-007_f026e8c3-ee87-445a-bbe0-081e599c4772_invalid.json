@@ -1,0 +1,826 @@
+{
+  "run_id": "f026e8c3-ee87-445a-bbe0-081e599c4772",
+  "recorded_at_utc": "2026-07-26T09:52:55.946590+00:00",
+  "status": "invalid",
+  "incident": {
+    "incident_id": "EVAL-007",
+    "title": "Shared compute-host failure disrupts multiple critical services",
+    "reported_affected_service_ids": [
+      "SVC-WEB",
+      "SVC-AUTH",
+      "SVC-PAYMENT"
+    ],
+    "alert_or_symptom": "The customer web portal, user authentication and payment processing became unavailable simultaneously after most Application Compute Cluster worker nodes failed.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "status",
+        "source_name": "Application Compute Cluster health",
+        "observation": "Eight of ten worker nodes changed to NotReady between 14:02 and 14:03. The cluster reports insufficient remaining capacity to schedule the affected application workloads.",
+        "observed_at": "2026-07-25T14:03:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "alert",
+        "source_name": "Compute-host infrastructure monitoring",
+        "observation": "The underlying hosts supporting the eight failed worker nodes report host-unavailable and virtual-machine-termination events. The events occurred before the affected application replicas became unavailable.",
+        "observed_at": "2026-07-25T14:04:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "status",
+        "source_name": "Workload scheduling status",
+        "observation": "Customer Web Portal, Identity and Access Service and Payment Processing Service replicas are unavailable because their workloads cannot run on the remaining compute capacity.",
+        "observed_at": "2026-07-25T14:05:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "metric",
+        "source_name": "Critical-service transaction monitoring",
+        "observation": "Portal transaction success fell to 0 percent, token issuance success fell to 0.5 percent and payment-processing success fell to 0.9 percent after the compute-host failures.",
+        "observed_at": "2026-07-25T14:06:00"
+      },
+      {
+        "evidence_id": "E5",
+        "source_type": "status",
+        "source_name": "Related platform health summary",
+        "observation": "The DNS, CDN and Load-Balancing Platform, Transaction Database Cluster, Message Broker and Object Storage Platform remain healthy and reachable.",
+        "observed_at": "2026-07-25T14:07:00"
+      },
+      {
+        "evidence_id": "E6",
+        "source_type": "user_report",
+        "source_name": "Customer-support incident summary",
+        "observation": "Customers across the United Kingdom and Ireland cannot load the portal, sign in or complete payment. No approved alternative customer channel is available.",
+        "observed_at": "2026-07-25T14:08:00"
+      },
+      {
+        "evidence_id": "E7",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The shared Application Compute Cluster host failure directly explains the simultaneous loss of the affected workloads. The precise physical or hypervisor-level mechanism responsible for the host failures has not yet been determined.",
+        "observed_at": "2026-07-25T14:09:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "unavailable",
+      "impact_scope": "multi_service",
+      "user_impact_description": "Customers across the United Kingdom and Ireland cannot access the web portal, authenticate or complete payment because multiple critical application workloads cannot run on the remaining compute capacity.",
+      "business_function_affected": "Customer digital access, authentication and payment processing",
+      "affected_user_estimate": 48500,
+      "geographic_scope": "United Kingdom and Ireland",
+      "workaround_status": "none",
+      "workaround_description": null,
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Application Compute Cluster is a Tier 1 shared infrastructure platform.",
+      "The Customer Web Portal, Identity and Access Service and Payment Processing Service are Tier 1 critical services hosted on the cluster.",
+      "The affected workloads require cluster compute capacity to run.",
+      "The edge, database, messaging and storage platforms remain healthy."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [
+      "The precise physical, virtualisation or hypervisor-level mechanism that caused the compute hosts to become unavailable.",
+      "Whether the failed hosts can safely return to service or replacement capacity will be required.",
+      "The expected restoration time for sufficient compute capacity and the affected services.",
+      "Whether any in-flight authentication or payment requests require subsequent integrity verification."
+    ],
+    "additional_context": [
+      "No data loss, corruption, duplicate payment or serious security exposure has been confirmed.",
+      "The incident affects multiple independently owned critical application services through one directly evidenced shared compute-platform failure."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-007",
+    "incident_summary": "Simultaneous loss of web portal, authentication and payment processing services is directly associated with a shared compute-host failure in the Application Compute Cluster.",
+    "summary_source_refs": [
+      "KB:CAT-AVAILABILITY",
+      "KB:SVC-WEB",
+      "KB:SVC-AUTH",
+      "KB:SVC-PAYMENT"
+    ],
+    "severity": {
+      "level": "Critical",
+      "rationale": "Complete outage of multiple business-critical services without a known workaround.",
+      "source_refs": [
+        "KB:SEVERITY:Critical",
+        "KB:CAT-AVAILABILITY",
+        "KB:ACT-001",
+        "KB:ACT-002",
+        "KB:ACT-003"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "Complete or near-complete inability to access a service or essential service function where the evidence does not support a more specific technical category.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "KB:SVC-WEB",
+        "KB:SVC-AUTH",
+        "KB:SVC-PAYMENT"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-COMPUTE",
+      "additional_area_ids": [
+        "SVC-WEB",
+        "SVC-AUTH",
+        "SVC-PAYMENT"
+      ],
+      "rationale": "The Application Compute Cluster failure directly impacts the affected services.",
+      "source_refs": [
+        "KB:DEP:SVC-WEB:PLT-EDGE",
+        "KB:DEP:SVC-WEB:PLT-STORAGE",
+        "KB:DEP:SVC-WEB:SVC-API",
+        "KB:DEP:SVC-WEB:SVC-AUTH",
+        "KB:DEP:SVC-AUTH:PLT-COMPUTE"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-INFRA",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "rationale": "The failure is directly associated with the Application Compute Cluster, which is managed by RG-INFRA. RG-OPS will coordinate due to the critical nature of the incident.",
+      "source_refs": [
+        "KB:PLT-COMPUTE",
+        "KB:RG-DIGITAL",
+        "KB:RG-NETWORK",
+        "KB:RG-IAM",
+        "KB:RG-PAYMENTS"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Verify the extent of the outage to ensure accurate triage and response prioritization.",
+        "source_refs": [
+          "KB:ACT-001",
+          "KB:SVC-WEB",
+          "KB:SVC-AUTH",
+          "KB:SVC-PAYMENT"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Identify when the failures began to understand the timeline of events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Gather detailed information to understand the root cause of the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-003",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Determine if any recent activities could have triggered the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-004",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Ensure that other critical services are not indirectly affected by the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-005",
+          "KB:E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The precise physical, virtualisation or hypervisor-level mechanism that caused the compute hosts to become unavailable.",
+        "why_needed": "To understand the root cause of the failure and inform remediation efforts.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Technical logs, host monitoring data, virtualisation platform diagnostics"
+      },
+      {
+        "missing_information": "Whether the failed hosts can safely return to service or replacement capacity will be required.",
+        "why_needed": "To determine the next steps in restoring services and preventing future outages.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Host health checks, virtualisation platform status"
+      },
+      {
+        "missing_information": "The expected restoration time for sufficient compute capacity and the affected services.",
+        "why_needed": "To provide a timeline for service recovery and communicate with stakeholders.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Host repair or replacement timelines, cluster capacity planning"
+      },
+      {
+        "missing_information": "Whether any in-flight authentication or payment requests require subsequent integrity verification.",
+        "why_needed": "To ensure the security and integrity of ongoing transactions.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Transaction logs, application-level audit trails"
+      }
+    ],
+    "uncertainty_statement": "The exact cause of the compute-host failures has not yet been determined. Further investigation is required to establish a definitive root cause and inform remediation efforts.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-007",
+    "incident_summary": "Simultaneous loss of web portal, authentication and payment processing services is directly associated with a shared compute-host failure in the Application Compute Cluster. The reported impact covers United Kingdom and Ireland.",
+    "summary_source_refs": [
+      "E7",
+      "E4",
+      "E6",
+      "KB:SVC-WEB"
+    ],
+    "severity": {
+      "level": "Critical",
+      "rationale": "Critical severity is supported by widespread or multi-service impact to a business-critical function with no effective workaround.",
+      "source_refs": [
+        "KB:SEVERITY:Critical",
+        "KB:SVC-WEB",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-WEB",
+      "additional_area_ids": [
+        "SVC-AUTH",
+        "SVC-PAYMENT"
+      ],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-WEB",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DIGITAL",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-DIGITAL",
+        "KB:SVC-WEB"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-001",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-003",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-009"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-005",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-005"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The precise physical, virtualisation or hypervisor-level mechanism that caused the compute hosts to become unavailable.",
+        "why_needed": "To understand the root cause of the failure and inform remediation efforts.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Technical logs, host monitoring data, virtualisation platform diagnostics"
+      },
+      {
+        "missing_information": "Whether the failed hosts can safely return to service or replacement capacity will be required.",
+        "why_needed": "To determine the next steps in restoring services and preventing future outages.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Host health checks, virtualisation platform status"
+      },
+      {
+        "missing_information": "The expected restoration time for sufficient compute capacity and the affected services.",
+        "why_needed": "To provide a timeline for service recovery and communicate with stakeholders.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Host repair or replacement timelines, cluster capacity planning"
+      },
+      {
+        "missing_information": "Whether any in-flight authentication or payment requests require subsequent integrity verification.",
+        "why_needed": "To ensure the security and integrity of ongoing transactions.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Transaction logs, application-level audit trails"
+      }
+    ],
+    "uncertainty_statement": "The exact cause of the compute-host failures has not yet been determined. Further investigation is required to establish a definitive underlying cause and inform remediation efforts.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-007\",\n  \"incident_summary\": \"Simultaneous loss of web portal, authentication and payment processing services is directly associated with a shared compute-host failure in the Application Compute Cluster.\",\n  \"summary_source_refs\": [\"KB:CAT-AVAILABILITY\", \"KB:SVC-WEB\", \"KB:SVC-AUTH\", \"KB:SVC-PAYMENT\"],\n  \"severity\": {\n    \"level\": \"Critical\",\n    \"rationale\": \"Complete outage of multiple business-critical services without a known workaround.\",\n    \"source_refs\": [\"KB:SEVERITY:Critical\", \"KB:CAT-AVAILABILITY\", \"KB:ACT-001\", \"KB:ACT-002\", \"KB:ACT-003\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-AVAILABILITY\",\n    \"rationale\": \"Complete or near-complete inability to access a service or essential service function where the evidence does not support a more specific technical category.\",\n    \"source_refs\": [\"KB:CAT-AVAILABILITY\", \"KB:SVC-WEB\", \"KB:SVC-AUTH\", \"KB:SVC-PAYMENT\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"PLT-COMPUTE\",\n    \"additional_area_ids\": [\"SVC-WEB\", \"SVC-AUTH\", \"SVC-PAYMENT\"],\n    \"rationale\": \"The Application Compute Cluster failure directly impacts the affected services.\",\n    \"source_refs\": [\"KB:DEP:SVC-WEB:PLT-EDGE\", \"KB:DEP:SVC-WEB:PLT-STORAGE\", \"KB:DEP:SVC-WEB:SVC-API\", \"KB:DEP:SVC-WEB:SVC-AUTH\", \"KB:DEP:SVC-AUTH:PLT-COMPUTE\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-INFRA\",\n    \"coordination_group_ids\": [\"RG-OPS\"],\n    \"rationale\": \"The failure is directly associated with the Application Compute Cluster, which is managed by RG-INFRA. RG-OPS will coordinate due to the critical nature of the incident.\",\n    \"source_refs\": [\"KB:PLT-COMPUTE\", \"KB:RG-DIGITAL\", \"KB:RG-NETWORK\", \"KB:RG-IAM\", \"KB:RG-PAYMENTS\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Confirm the current service impact, affected users and geographical scope.\",\n      \"rationale\": \"Verify the extent of the outage to ensure accurate triage and response prioritization.\",\n      \"source_refs\": [\"KB:ACT-001\", \"KB:SVC-WEB\", \"KB:SVC-AUTH\", \"KB:SVC-PAYMENT\"],\n      \"common_action_id\": \"ACT-001\"\n    },\n    {\n      \"action\": \"Review the triggering alerts and their timestamps.\",\n      \"rationale\": \"Identify when the failures began to understand the timeline of events.\",\n      \"source_refs\": [\"KB:ACT-002\", \"KB:E1\", \"KB:E2\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service.\",\n      \"rationale\": \"Gather detailed information to understand the root cause of the compute-host failures.\",\n      \"source_refs\": [\"KB:ACT-003\", \"KB:E1\", \"KB:E2\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events.\",\n      \"rationale\": \"Determine if any recent activities could have triggered the compute-host failures.\",\n      \"source_refs\": [\"KB:ACT-004\", \"KB:E1\", \"KB:E2\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies.\",\n      \"rationale\": \"Ensure that other critical services are not indirectly affected by the compute-host failures.\",\n      \"source_refs\": [\"KB:ACT-005\", \"KB:E3\"],\n      \"common_action_id\": \"ACT-005\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The precise physical, virtualisation or hypervisor-level mechanism that caused the compute hosts to become unavailable.\",\n      \"why_needed\": \"To understand the root cause of the failure and inform remediation efforts.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Technical logs, host monitoring data, virtualisation platform diagnostics\"\n    },\n    {\n      \"missing_information\": \"Whether the failed hosts can safely return to service or replacement capacity will be required.\",\n      \"why_needed\": \"To determine the next steps in restoring services and preventing future outages.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Host health checks, virtualisation platform status\"\n    },\n    {\n      \"missing_information\": \"The expected restoration time for sufficient compute capacity and the affected services.\",\n      \"why_needed\": \"To provide a timeline for service recovery and communicate with stakeholders.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Host repair or replacement timelines, cluster capacity planning\"\n    },\n    {\n      \"missing_information\": \"Whether any in-flight authentication or payment requests require subsequent integrity verification.\",\n      \"why_needed\": \"To ensure the security and integrity of ongoing transactions.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Transaction logs, application-level audit trails\"\n    }\n  ],\n  \"uncertainty_statement\": \"The exact cause of the compute-host failures has not yet been determined. Further investigation is required to establish a definitive root cause and inform remediation efforts.\",\n  \"advisory_only\": true\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "Critical",
+        "rationale": "Complete outage of multiple business-critical services without a known workaround.",
+        "source_refs": [
+          "KB:SEVERITY:Critical",
+          "KB:CAT-AVAILABILITY",
+          "KB:ACT-001",
+          "KB:ACT-002",
+          "KB:ACT-003"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "Critical",
+        "rationale": "Critical severity is supported by widespread or multi-service impact to a business-critical function with no effective workaround.",
+        "source_refs": [
+          "KB:SEVERITY:Critical",
+          "KB:SVC-WEB",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "Complete or near-complete inability to access a service or essential service function where the evidence does not support a more specific technical category.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "KB:SVC-WEB",
+          "KB:SVC-AUTH",
+          "KB:SVC-PAYMENT"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "Service Unavailability is selected because essential functionality is unavailable and no more specific technical category is directly supported.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "PLT-COMPUTE",
+        "additional_area_ids": [
+          "SVC-WEB",
+          "SVC-AUTH",
+          "SVC-PAYMENT"
+        ],
+        "rationale": "The Application Compute Cluster failure directly impacts the affected services.",
+        "source_refs": [
+          "KB:DEP:SVC-WEB:PLT-EDGE",
+          "KB:DEP:SVC-WEB:PLT-STORAGE",
+          "KB:DEP:SVC-WEB:SVC-API",
+          "KB:DEP:SVC-WEB:SVC-AUTH",
+          "KB:DEP:SVC-AUTH:PLT-COMPUTE"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-WEB",
+        "additional_area_ids": [
+          "SVC-AUTH",
+          "SVC-PAYMENT"
+        ],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-WEB",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-INFRA",
+        "coordination_group_ids": [
+          "RG-OPS"
+        ],
+        "rationale": "The failure is directly associated with the Application Compute Cluster, which is managed by RG-INFRA. RG-OPS will coordinate due to the critical nature of the incident.",
+        "source_refs": [
+          "KB:PLT-COMPUTE",
+          "KB:RG-DIGITAL",
+          "KB:RG-NETWORK",
+          "KB:RG-IAM",
+          "KB:RG-PAYMENTS"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-DIGITAL",
+        "coordination_group_ids": [
+          "RG-OPS"
+        ],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-DIGITAL",
+          "KB:SVC-WEB"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "Simultaneous loss of web portal, authentication and payment processing services is directly associated with a shared compute-host failure in the Application Compute Cluster.",
+      "revised": "Simultaneous loss of web portal, authentication and payment processing services is directly associated with a shared compute-host failure in the Application Compute Cluster. The reported impact covers United Kingdom and Ireland.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-AVAILABILITY",
+        "KB:SVC-WEB",
+        "KB:SVC-AUTH",
+        "KB:SVC-PAYMENT"
+      ],
+      "revised": [
+        "E7",
+        "E4",
+        "E6",
+        "KB:SVC-WEB"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Verify the extent of the outage to ensure accurate triage and response prioritization.",
+        "source_refs": [
+          "KB:ACT-001",
+          "KB:SVC-WEB",
+          "KB:SVC-AUTH",
+          "KB:SVC-PAYMENT"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "revised": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-001",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-001"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Identify when the failures began to understand the timeline of events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Gather detailed information to understand the root cause of the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-003",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-003",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Determine if any recent activities could have triggered the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-004",
+          "KB:E1",
+          "KB:E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": null,
+      "reason": "Action was removed because it is not recommended or conditional in the selected primary runbook.",
+      "rule_id": "GR-ACTION-005"
+    },
+    {
+      "field": "initial_actions[4]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Ensure that other critical services are not indirectly affected by the compute-host failures.",
+        "source_refs": [
+          "KB:ACT-005",
+          "KB:E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-005",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-005"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-009"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Escalate for cross-team coordination where multiple critical services are affected.",
+        "rationale": "Coordinate the response where the confirmed impact is Critical or spans multiple services.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-008",
+          "KB:RB-012"
+        ],
+        "runbook_id": "RB-012",
+        "common_action_id": "ACT-008"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The exact cause of the compute-host failures has not yet been determined. Further investigation is required to establish a definitive root cause and inform remediation efforts.",
+      "revised": "The exact cause of the compute-host failures has not yet been determined. Further investigation is required to establish a definitive underlying cause and inform remediation efforts.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [
+    "Critical or multi-service impact requires the approved coordination action ACT-008."
+  ],
+  "elapsed_seconds": 554.6367946999962,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-26T09:52:55.8735736Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 554595536900,
+    "load_duration": 440024800,
+    "prompt_eval_count": 5677,
+    "prompt_eval_duration": 24969036000,
+    "eval_count": 1320,
+    "eval_duration": 528666007000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-008",
+    "KB:ACT-009",
+    "KB:ACT-010",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-AUTH:PLT-COMPUTE",
+    "KB:DEP:SVC-AUTH:PLT-DATABASE",
+    "KB:DEP:SVC-PAYMENT:EXT-PAYMENT",
+    "KB:DEP:SVC-PAYMENT:PLT-COMPUTE",
+    "KB:DEP:SVC-PAYMENT:PLT-DATABASE",
+    "KB:DEP:SVC-PAYMENT:PLT-MESSAGING",
+    "KB:DEP:SVC-WEB:PLT-EDGE",
+    "KB:DEP:SVC-WEB:PLT-STORAGE",
+    "KB:DEP:SVC-WEB:SVC-API",
+    "KB:DEP:SVC-WEB:SVC-AUTH",
+    "KB:EXT-PAYMENT",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-DATABASE",
+    "KB:PLT-EDGE",
+    "KB:PLT-MESSAGING",
+    "KB:PLT-STORAGE",
+    "KB:RB-001",
+    "KB:RB-012",
+    "KB:RG-DATA",
+    "KB:RG-DIGITAL",
+    "KB:RG-IAM",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-NETWORK",
+    "KB:RG-OPS",
+    "KB:RG-PAYMENTS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-API",
+    "KB:SVC-AUTH",
+    "KB:SVC-PAYMENT",
+    "KB:SVC-WEB"
+  ],
+  "selected_runbook_ids": [
+    "RB-012",
+    "RB-001"
+  ]
+}

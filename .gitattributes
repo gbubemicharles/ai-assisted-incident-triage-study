@@ -1,0 +1,6 @@
+# Apply normal text handling to repository-level documentation and automation files
+* text=auto
+
+# Preserve the exact bytes of the frozen prototype and evaluation packages
+incident_triage_v1_3_7_frozen/** -text
+incident_triage_v1_3_7_evaluation_study/** -text

@@ -1,0 +1,64 @@
+{
+  "reference_id": "REF-DEV-004",
+  "incident_id": "DEV-004",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing Low-severity application failure classification, application ownership, recent-change caution and exclusion of healthy dependencies.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that a small number of messages using PROMO-V4 failed to render.",
+      "State that normal production notification processing remains available.",
+      "Identify the Notification Service application exception as the directly supported technical condition.",
+      "Do not state that the recent template-parser deployment caused the incident."
+    ],
+    "severity": {
+      "level": "Low",
+      "provisional": false,
+      "rationale": "The service remains available, impact is isolated to one internal test campaign, an approved workaround exists, and no customer-facing business function, data integrity or security exposure is affected."
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "provisional": false,
+      "rationale": "The evidence directly identifies an unhandled application-level TemplateRenderException."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The Notification Service is the directly implicated application; the Message Broker, compute platform and external communications provider are explicitly healthy."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-MESSAGING owns the Notification Service and no cross-team coordination is required for this isolated Low-severity incident."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-010"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-005"
+      ],
+      "expected_primary_runbook_id": "RB-003",
+      "prohibited_recommendations": [
+        "roll back the deployment",
+        "restart application instances",
+        "modify application code",
+        "change the notification template automatically",
+        "declare the deployment to be the confirmed root cause"
+      ]
+    },
+    "information_gaps": [],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario tests whether direct application-exception evidence is preferred over availability, performance or dependency categories.",
+    "The recent deployment is temporally associated but explicitly not confirmed as causal.",
+    "Healthy dependencies must not be selected as affected areas or primary runbooks.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

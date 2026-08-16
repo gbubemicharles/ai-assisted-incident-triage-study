@@ -1,0 +1,134 @@
+{
+  "classification_principle": "Select the most specific incident category directly supported by the available evidence. Where no specific technical category is established, classify according to the dominant service symptom.",
+  "categories": [
+    {
+      "code": "CAT-AVAILABILITY",
+      "name": "Service Unavailability",
+      "definition": "Complete or near-complete inability to access a service or essential service function where the evidence does not support a more specific technical category.",
+      "include_indicators": [
+        "service endpoint unavailable",
+        "essential function inaccessible",
+        "all or nearly all requests failing",
+        "repeated health-check failure",
+        "no successful transactions"
+      ],
+      "exclude_when": [
+        "direct application-failure evidence exists",
+        "direct infrastructure-or-network evidence exists",
+        "direct dependency-or-configuration evidence exists",
+        "service remains materially usable"
+      ]
+    },
+    {
+      "code": "CAT-PERFORMANCE",
+      "name": "Performance Degradation",
+      "definition": "A service remains available but operates materially below its expected level of latency, throughput, capacity or reliability.",
+      "include_indicators": [
+        "elevated latency",
+        "reduced throughput",
+        "intermittent timeouts",
+        "increased but non-total error rate",
+        "queue growth",
+        "service degradation while core functionality remains available"
+      ],
+      "exclude_when": [
+        "essential service function is completely unavailable",
+        "direct application-failure evidence exists",
+        "direct infrastructure-or-network evidence exists",
+        "direct dependency-or-configuration evidence exists"
+      ]
+    },
+    {
+      "code": "CAT-APPLICATION",
+      "name": "Application Failure",
+      "definition": "A failure directly associated with application code, runtime, internal processing logic, software deployment or application-level execution.",
+      "include_indicators": [
+        "unhandled exception",
+        "application crash or restart loop",
+        "application deployment defect",
+        "application-level HTTP 500 errors",
+        "failed business logic",
+        "application runtime or library failure"
+      ],
+      "exclude_when": [
+        "the application is only displaying symptoms of a confirmed infrastructure or network failure",
+        "an external or internal dependency is directly responsible",
+        "invalid or missing configuration is directly responsible",
+        "only a general outage symptom is available"
+      ]
+    },
+    {
+      "code": "CAT-INFRA-NETWORK",
+      "name": "Infrastructure or Network Failure",
+      "definition": "A failure directly associated with compute, storage, host, platform, load-balancing, DNS, routing, firewall or network-connectivity components.",
+      "include_indicators": [
+        "compute node unavailable",
+        "storage resource failure",
+        "DNS resolution failure",
+        "routing or firewall failure",
+        "packet loss or network partition",
+        "load-balancer failure",
+        "host or cluster failure"
+      ],
+      "exclude_when": [
+        "application code is directly responsible",
+        "an external service dependency is directly responsible",
+        "invalid credentials, certificates or application settings are directly responsible",
+        "only a general service symptom is available"
+      ]
+    },
+    {
+      "code": "CAT-DEPENDENCY-CONFIG",
+      "name": "Dependency or Configuration Failure",
+      "definition": "A failure directly associated with an internal or external dependency, or with incorrect, missing, expired or incompatible configuration.",
+      "include_indicators": [
+        "internal or external dependency unavailable",
+        "invalid or expired credentials",
+        "expired certificate or token",
+        "incorrect endpoint or environment variable",
+        "missing configuration",
+        "service version incompatibility",
+        "third-party service failure"
+      ],
+      "exclude_when": [
+        "application code is directly responsible",
+        "underlying infrastructure or networking is directly responsible",
+        "only a general outage or degradation symptom is available"
+      ]
+    }
+  ],
+  "decision_rules": [
+    {
+      "priority": 1,
+      "rule": "Use the most specific technical category directly supported by the incident evidence."
+    },
+    {
+      "priority": 2,
+      "rule": "If no specific technical category is supported, use Service Unavailability or Performance Degradation according to the dominant service symptom."
+    },
+    {
+      "priority": 3,
+      "rule": "Assign one primary category and identify ambiguity or missing evidence separately."
+    },
+    {
+      "priority": 4,
+      "rule": "Do not infer a confirmed root cause from symptoms alone."
+    },
+    {
+      "priority": 5,
+      "rule": "Do not determine category from severity."
+    },
+    {
+      "priority": 6,
+      "rule": "Use the affected-area field to identify the specific service, component or technical domain."
+    }
+  ],
+  "classification_rules": {
+    "single_primary_category": true,
+    "allow_reference_alternatives": true,
+    "category_is_provisional": true,
+    "require_direct_evidence_for_specific_technical_category": true,
+    "identify_ambiguity_in_information_gaps": true,
+    "do_not_claim_definitive_root_cause": true
+  }
+}

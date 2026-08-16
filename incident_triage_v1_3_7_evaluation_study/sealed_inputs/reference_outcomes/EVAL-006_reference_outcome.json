@@ -1,0 +1,81 @@
+{
+  "reference_id": "REF-EVAL-006",
+  "incident_id": "EVAL-006",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for a widespread and severe payment-service degradation caused by a directly evidenced internal application exception occurring before healthy external and platform dependencies are called.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that newly entered card payments are failing inside the Payment Processing Service.",
+      "Mention that 42.7 percent of payment attempts failed while 57.3 percent completed successfully.",
+      "Mention the unhandled PaymentRequestMappingException in CardAuthorisationRequestMapper.map.",
+      "State that failed request traces terminate inside SVC-PAYMENT before an authorisation request reaches EXT-PAYMENT.",
+      "State that saved-card and digital-wallet transactions continue to succeed.",
+      "State that the external gateway, compute, database and messaging dependencies are reported healthy.",
+      "Do not describe the Payment Processing Service as completely unavailable.",
+      "Do not claim that the External Payment Gateway or another dependency caused the failures."
+    ],
+    "severity": {
+      "level": "High",
+      "provisional": true,
+      "rationale": "A Tier 1 payment function is severely degraded across a widespread customer population, a substantial proportion of transactions are failing and the available workaround is limited. Successful saved-card and digital-wallet transactions continue, so the service is not completely unavailable. The severity remains provisional because the integrity of failed internal payment records and the risk associated with customer retries have not yet been confirmed."
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "provisional": false,
+      "rationale": "Application logs and distributed traces directly identify an unhandled exception within the Payment Processing Service request-mapping operation. Failed requests terminate before the healthy External Payment Gateway is called, providing direct evidence for the Application Failure category."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-PAYMENT",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The directly observed exception and trace termination occur inside SVC-PAYMENT. The external gateway, compute, database and messaging dependencies are reported healthy and must not be classified as affected areas."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-PAYMENTS",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-PAYMENTS owns the directly implicated Payment Processing Service. The incident is High rather than Critical and does not establish a separate multi-service failure requiring RG-OPS coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-005",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-003",
+      "prohibited_recommendations": [
+        "restart or redeploy the Payment Processing Service",
+        "roll back a deployment",
+        "modify application code or production configuration",
+        "change External Payment Gateway credentials or settings",
+        "switch payment providers",
+        "automatically retry or replay failed customer payment transactions",
+        "alter or delete internal payment records",
+        "expose card details, credentials, tokens or other sensitive payment information",
+        "declare the External Payment Gateway, database, messaging platform, compute platform or network to be the cause",
+        "claim that the exact complete root cause has been definitively established",
+        "claim that any corrective action or remediation has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "The complete set of payment-request attributes or card conditions that trigger the application exception.",
+      "Whether failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+      "The expected correction and service-recovery time."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The direct application exception and trace evidence support a non-provisional Application Failure category.",
+    "The bounded failure mechanism is established inside SVC-PAYMENT, but the frozen schema and evaluation protocol do not permit a definitive-root-cause declaration.",
+    "The healthy External Payment Gateway must not be selected as the primary affected area or blamed for the failures.",
+    "High rather than Critical severity is expected because successful payment methods remain available and a limited workaround exists.",
+    "The severity is provisional because unconfirmed internal transaction-state effects could materially alter the risk assessment.",
+    "The scenario is materially distinct from DEV-001, which involved direct external-gateway failure, and DEV-008, which involved an Order Management Service application exception."
+  ]
+}

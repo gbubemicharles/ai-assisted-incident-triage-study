@@ -1,0 +1,585 @@
+{
+  "run_id": "0c175555-6134-47fe-912e-61e6d3308076",
+  "recorded_at_utc": "2026-07-25T12:39:33.752284+00:00",
+  "status": "valid",
+  "incident": {
+    "incident_id": "DEV-006",
+    "title": "Mobile sign-in failures linked to expired signing certificate",
+    "reported_affected_service_ids": [
+      "SVC-AUTH"
+    ],
+    "alert_or_symptom": "Mobile-app customers cannot establish new authenticated sessions, while browser sign-in and existing sessions continue to operate.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "metric",
+        "source_name": "Mobile authentication success rate",
+        "observation": "Mobile-app token issuance success fell from 99.6 percent to 3.2 percent at 07:05, while browser token issuance remained above 99 percent.",
+        "observed_at": "2026-07-24T07:05:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "log",
+        "source_name": "Identity and Access Service certificate-validation log",
+        "observation": "Mobile authentication requests are rejected with 'signing certificate AUTH-SIGN-02 expired at 2026-07-24T07:00:00Z'.",
+        "observed_at": "2026-07-24T07:06:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "status",
+        "source_name": "Authentication certificate-store status",
+        "observation": "Certificate AUTH-SIGN-02 is marked expired and no replacement certificate is active for the mobile authentication path.",
+        "observed_at": "2026-07-24T07:07:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "status",
+        "source_name": "Related component health",
+        "observation": "The Application Compute Cluster, Transaction Database Cluster, Public API Gateway and DNS, CDN and Load-Balancing Platform are healthy and operating normally.",
+        "observed_at": "2026-07-24T07:08:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "partially_degraded",
+      "impact_scope": "subset_of_users",
+      "user_impact_description": "Customers using the mobile application cannot sign in, but browser sign-in and existing authenticated sessions continue to function.",
+      "business_function_affected": "Mobile customer authentication",
+      "affected_user_estimate": 3600,
+      "geographic_scope": "United Kingdom storefront",
+      "workaround_status": "available",
+      "workaround_description": "Affected customers can sign in through the browser storefront using the same account.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The mobile and browser authentication paths are served by the Identity and Access Service but use separate signing certificates.",
+      "The browser authentication certificate remains valid."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [],
+    "additional_context": [
+      "No account compromise, data loss or serious security exposure has been observed.",
+      "The evidence identifies the expired certificate condition but does not establish why certificate renewal or activation did not occur."
+    ]
+  },
+  "model_output": {
+    "incident_id": "DEV-006",
+    "incident_summary": "Mobile authentication is failing due to an expired signing certificate, while browser sign-in remains unaffected.",
+    "summary_source_refs": [
+      "KB:CAT-AVAILABILITY",
+      "E2",
+      "E3"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "The incident impacts a subset of users and is associated with an expired certificate, which is a critical configuration issue. However, the service remains partially available through browser sign-in.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "E2",
+        "E3",
+        "KB:CAT-AVAILABILITY",
+        "KB:CAT-DEPENDENCY-CONFIG"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "The primary symptom is service unavailability for a subset of users, specifically those using the mobile application.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-AUTH",
+      "additional_area_ids": [
+        "PLT-COMPUTE",
+        "PLT-DATABASE"
+      ],
+      "rationale": "The authentication service is directly impacted, and the compute cluster and database are dependencies.",
+      "source_refs": [
+        "KB:DEP:SVC-AUTH:PLT-COMPUTE",
+        "KB:DEP:SVC-AUTH:PLT-DATABASE",
+        "E4",
+        "KB:SVC-AUTH",
+        "KB:PLT-COMPUTE"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-IAM",
+      "coordination_group_ids": [],
+      "rationale": "The primary resolver group is RG-IAM, as they are responsible for the authentication service.",
+      "source_refs": [
+        "KB:RG-IAM",
+        "KB:SVC-AUTH"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Examine relevant logs and metrics to identify any recent changes or issues related to certificate management.",
+        "rationale": "Review the triggering alerts and their timestamps for any recent events that might have affected the certificate.",
+        "source_refs": [
+          "KB:ACT-002",
+          "KB:ACT-003"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that could have impacted the signing certificate.",
+        "rationale": "Identify any recent activities that might have led to the certificate expiration.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Confirm the current service owner and resolver group for further coordination.",
+        "rationale": "Ensure that the correct team is aware of the issue and can take appropriate action.",
+        "source_refs": [
+          "KB:ACT-006",
+          "KB:SVC-AUTH"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      },
+      {
+        "action": "Review the Identity and Access Service certificate-validation logs for any additional insights into the issue.",
+        "rationale": "Further investigate the logs to understand the root cause of the certificate expiration.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The reason for the failure to renew or activate a replacement certificate.",
+        "why_needed": "To understand if there was an operational issue or if the renewal process needs improvement.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Logs from certificate management and renewal processes."
+      }
+    ],
+    "uncertainty_statement": "The severity is provisionally classified as High due to partial service unavailability, but the exact impact on business-critical operations remains uncertain until more evidence is gathered.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "DEV-006",
+    "incident_summary": "Mobile authentication is failing associated with an expired signing certificate, while browser sign-in remains unaffected.",
+    "summary_source_refs": [
+      "E2",
+      "E3",
+      "E1",
+      "KB:SVC-AUTH"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "KB:SVC-AUTH",
+        "E1",
+        "E2"
+      ],
+      "provisional": false
+    },
+    "incident_category": {
+      "code": "CAT-DEPENDENCY-CONFIG",
+      "rationale": "Dependency or Configuration Failure is selected because the evidence identifies an invalid, missing, expired or incompatible configuration item.",
+      "source_refs": [
+        "KB:CAT-DEPENDENCY-CONFIG",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-AUTH",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-AUTH",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-IAM",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-IAM",
+        "KB:SVC-AUTH"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-003",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-004",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-004"
+      }
+    ],
+    "information_gaps": [],
+    "uncertainty_statement": "The supplied evidence supports the initial triage decisions, but a definitive root cause has not been established.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"DEV-006\",\n  \"incident_summary\": \"Mobile authentication is failing due to an expired signing certificate, while browser sign-in remains unaffected.\",\n  \"summary_source_refs\": [\"KB:CAT-AVAILABILITY\", \"E2\", \"E3\"],\n  \"severity\": {\n    \"level\": \"High\",\n    \"rationale\": \"The incident impacts a subset of users and is associated with an expired certificate, which is a critical configuration issue. However, the service remains partially available through browser sign-in.\",\n    \"source_refs\": [\"KB:SEVERITY:High\", \"E2\", \"E3\", \"KB:CAT-AVAILABILITY\", \"KB:CAT-DEPENDENCY-CONFIG\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-AVAILABILITY\",\n    \"rationale\": \"The primary symptom is service unavailability for a subset of users, specifically those using the mobile application.\",\n    \"source_refs\": [\"KB:CAT-AVAILABILITY\", \"E1\", \"E2\", \"E3\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-AUTH\",\n    \"additional_area_ids\": [\"PLT-COMPUTE\", \"PLT-DATABASE\"],\n    \"rationale\": \"The authentication service is directly impacted, and the compute cluster and database are dependencies.\",\n    \"source_refs\": [\"KB:DEP:SVC-AUTH:PLT-COMPUTE\", \"KB:DEP:SVC-AUTH:PLT-DATABASE\", \"E4\", \"KB:SVC-AUTH\", \"KB:PLT-COMPUTE\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-IAM\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The primary resolver group is RG-IAM, as they are responsible for the authentication service.\",\n    \"source_refs\": [\"KB:RG-IAM\", \"KB:SVC-AUTH\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Examine relevant logs and metrics to identify any recent changes or issues related to certificate management.\",\n      \"rationale\": \"Review the triggering alerts and their timestamps for any recent events that might have affected the certificate.\",\n      \"source_refs\": [\"KB:ACT-002\", \"KB:ACT-003\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events that could have impacted the signing certificate.\",\n      \"rationale\": \"Identify any recent activities that might have led to the certificate expiration.\",\n      \"source_refs\": [\"KB:ACT-004\", \"E2\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Confirm the current service owner and resolver group for further coordination.\",\n      \"rationale\": \"Ensure that the correct team is aware of the issue and can take appropriate action.\",\n      \"source_refs\": [\"KB:ACT-006\", \"KB:SVC-AUTH\"],\n      \"common_action_id\": \"ACT-006\"\n    },\n    {\n      \"action\": \"Review the Identity and Access Service certificate-validation logs for any additional insights into the issue.\",\n      \"rationale\": \"Further investigate the logs to understand the root cause of the certificate expiration.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E2\"],\n      \"common_action_id\": \"ACT-003\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The reason for the failure to renew or activate a replacement certificate.\",\n      \"why_needed\": \"To understand if there was an operational issue or if the renewal process needs improvement.\",\n      \"affected_decisions\": [\"severity\", \"incident_category\"],\n      \"requested_evidence\": \"Logs from certificate management and renewal processes.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The severity is provisionally classified as High due to partial service unavailability, but the exact impact on business-critical operations remains uncertain until more evidence is gathered.\",\n  \"advisory_only\": true,\n  \"definitive_root_cause_established\": false\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "High",
+        "rationale": "The incident impacts a subset of users and is associated with an expired certificate, which is a critical configuration issue. However, the service remains partially available through browser sign-in.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "E2",
+          "E3",
+          "KB:CAT-AVAILABILITY",
+          "KB:CAT-DEPENDENCY-CONFIG"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "Medium",
+        "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "KB:SVC-AUTH",
+          "E1",
+          "E2"
+        ],
+        "provisional": false
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "The primary symptom is service unavailability for a subset of users, specifically those using the mobile application.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-DEPENDENCY-CONFIG",
+        "rationale": "Dependency or Configuration Failure is selected because the evidence identifies an invalid, missing, expired or incompatible configuration item.",
+        "source_refs": [
+          "KB:CAT-DEPENDENCY-CONFIG",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-AUTH",
+        "additional_area_ids": [
+          "PLT-COMPUTE",
+          "PLT-DATABASE"
+        ],
+        "rationale": "The authentication service is directly impacted, and the compute cluster and database are dependencies.",
+        "source_refs": [
+          "KB:DEP:SVC-AUTH:PLT-COMPUTE",
+          "KB:DEP:SVC-AUTH:PLT-DATABASE",
+          "E4",
+          "KB:SVC-AUTH",
+          "KB:PLT-COMPUTE"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-AUTH",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-AUTH",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-IAM",
+        "coordination_group_ids": [],
+        "rationale": "The primary resolver group is RG-IAM, as they are responsible for the authentication service.",
+        "source_refs": [
+          "KB:RG-IAM",
+          "KB:SVC-AUTH"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-IAM",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-IAM",
+          "KB:SVC-AUTH"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "Mobile authentication is failing due to an expired signing certificate, while browser sign-in remains unaffected.",
+      "revised": "Mobile authentication is failing associated with an expired signing certificate, while browser sign-in remains unaffected.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-AVAILABILITY",
+        "E2",
+        "E3"
+      ],
+      "revised": [
+        "E2",
+        "E3",
+        "E1",
+        "KB:SVC-AUTH"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Examine relevant logs and metrics to identify any recent changes or issues related to certificate management.",
+        "rationale": "Review the triggering alerts and their timestamps for any recent events that might have affected the certificate.",
+        "source_refs": [
+          "KB:ACT-002",
+          "KB:ACT-003"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that could have impacted the signing certificate.",
+        "rationale": "Identify any recent activities that might have led to the certificate expiration.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-004",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Confirm the current service owner and resolver group for further coordination.",
+        "rationale": "Ensure that the correct team is aware of the issue and can take appropriate action.",
+        "source_refs": [
+          "KB:ACT-006",
+          "KB:SVC-AUTH"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      },
+      "revised": null,
+      "reason": "Redundant ownership-confirmation action was removed because routing is conclusive.",
+      "rule_id": "GR-ACTION-003"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Review the Identity and Access Service certificate-validation logs for any additional insights into the issue.",
+        "rationale": "Further investigate the logs to understand the root cause of the certificate expiration.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-003",
+          "KB:RB-009"
+        ],
+        "runbook_id": "RB-009",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "information_gaps",
+      "original": {
+        "missing_information": "The reason for the failure to renew or activate a replacement certificate.",
+        "why_needed": "To understand if there was an operational issue or if the renewal process needs improvement.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Logs from certificate management and renewal processes."
+      },
+      "revised": null,
+      "reason": "An ungrounded or investigation-only gap was removed because it does not materially affect the bounded triage decisions.",
+      "rule_id": "GR-GAP-002"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The severity is provisionally classified as High due to partial service unavailability, but the exact impact on business-critical operations remains uncertain until more evidence is gathered.",
+      "revised": "The supplied evidence supports the initial triage decisions, but a definitive root cause has not been established.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [],
+  "elapsed_seconds": 330.9760086000024,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T12:39:33.7064886Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 330939581600,
+    "load_duration": 12929802000,
+    "prompt_eval_count": 3845,
+    "prompt_eval_duration": 18017441000,
+    "eval_count": 925,
+    "eval_duration": 299798688000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-006",
+    "KB:ACT-009",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-AUTH:PLT-COMPUTE",
+    "KB:DEP:SVC-AUTH:PLT-DATABASE",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-DATABASE",
+    "KB:RB-009",
+    "KB:RG-DATA",
+    "KB:RG-IAM",
+    "KB:RG-INFRA",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-AUTH"
+  ],
+  "selected_runbook_ids": [
+    "RB-009"
+  ]
+}

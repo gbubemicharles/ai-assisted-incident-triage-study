@@ -1,0 +1,63 @@
+{
+  "reference_id": "REF-DEV-006",
+  "incident_id": "DEV-006",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing direct credential and certificate evidence after generic token wording was deliberately excluded from credential-runbook activation in earlier refinements.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that mobile-app sign-in is failing while browser sign-in and existing sessions continue to operate.",
+      "Identify the expired AUTH-SIGN-02 certificate as the directly supported technical condition without claiming why renewal failed.",
+      "Do not classify healthy compute, database, API or edge platforms as affected."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": false,
+      "rationale": "The incident affects a known subset of users, the service remains available through the browser path, and a practical workaround is available."
+    },
+    "incident_category": {
+      "code": "CAT-DEPENDENCY-CONFIG",
+      "provisional": false,
+      "rationale": "The evidence directly identifies an expired signing certificate and a missing active replacement on the affected authentication path."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-AUTH",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The Identity and Access Service is the directly implicated technical area; all named supporting platforms are explicitly healthy."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-IAM",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-IAM owns the Identity and Access Service and no cross-team coordination is required for this contained Medium-severity incident."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-009",
+      "prohibited_recommendations": [
+        "rotate or replace the certificate automatically",
+        "disable certificate validation",
+        "change authentication configuration automatically",
+        "restart the Identity and Access Service",
+        "declare why renewal failed as a confirmed root cause"
+      ]
+    },
+    "information_gaps": [],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario must activate RB-009 because the evidence explicitly states that a named certificate is expired and no replacement is active.",
+    "The words token and certificate are supported by direct failure evidence here, unlike DEV-005's generic token-issuance symptom.",
+    "The reason renewal failed is an investigation question, not a material initial triage information gap.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

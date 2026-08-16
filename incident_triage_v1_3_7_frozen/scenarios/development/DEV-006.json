@@ -1,0 +1,60 @@
+{
+  "incident_id": "DEV-006",
+  "title": "Mobile sign-in failures linked to expired signing certificate",
+  "reported_affected_service_ids": [
+    "SVC-AUTH"
+  ],
+  "alert_or_symptom": "Mobile-app customers cannot establish new authenticated sessions, while browser sign-in and existing sessions continue to operate.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Mobile authentication success rate",
+      "observation": "Mobile-app token issuance success fell from 99.6 percent to 3.2 percent at 07:05, while browser token issuance remained above 99 percent.",
+      "observed_at": "2026-07-24T07:05:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Identity and Access Service certificate-validation log",
+      "observation": "Mobile authentication requests are rejected with 'signing certificate AUTH-SIGN-02 expired at 2026-07-24T07:00:00Z'.",
+      "observed_at": "2026-07-24T07:06:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Authentication certificate-store status",
+      "observation": "Certificate AUTH-SIGN-02 is marked expired and no replacement certificate is active for the mobile authentication path.",
+      "observed_at": "2026-07-24T07:07:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Application Compute Cluster, Transaction Database Cluster, Public API Gateway and DNS, CDN and Load-Balancing Platform are healthy and operating normally.",
+      "observed_at": "2026-07-24T07:08:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "subset_of_users",
+    "user_impact_description": "Customers using the mobile application cannot sign in, but browser sign-in and existing authenticated sessions continue to function.",
+    "business_function_affected": "Mobile customer authentication",
+    "affected_user_estimate": 3600,
+    "geographic_scope": "United Kingdom storefront",
+    "workaround_status": "available",
+    "workaround_description": "Affected customers can sign in through the browser storefront using the same account.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The mobile and browser authentication paths are served by the Identity and Access Service but use separate signing certificates.",
+    "The browser authentication certificate remains valid."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [],
+  "additional_context": [
+    "No account compromise, data loss or serious security exposure has been observed.",
+    "The evidence identifies the expired certificate condition but does not establish why certificate renewal or activation did not occur."
+  ]
+}

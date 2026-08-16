@@ -1,0 +1,88 @@
+{
+  "reference_id": "REF-EVAL-009",
+  "incident_id": "EVAL-009",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for a directly evidenced database-level access-configuration failure that rejects newly opened Order Management Service connections while the database cluster and existing sessions remain available.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that new Order Management Service database connections are being rejected.",
+      "Mention that 62.4 percent of order requests failed while 37.6 percent completed successfully.",
+      "Mention the SQLSTATE 28000 CONNECT-privilege denial.",
+      "State that authentication succeeds but the active database access policy does not grant the Order Service role access to the transactional order database.",
+      "State that existing database sessions continue to work.",
+      "State that the Transaction Database Cluster and transactions from other services remain healthy.",
+      "Mention that the revised access-policy set does not contain the expected grant.",
+      "Do not describe the database cluster as unavailable.",
+      "Do not classify the Order Management Service application as the directly responsible technical area."
+    ],
+    "severity": {
+      "level": "High",
+      "provisional": false,
+      "rationale": "A Tier 1 customer-order function is severely degraded across a widespread population, most order requests are failing and the available workaround is limited. Some requests continue to succeed through existing sessions and the service is not completely unavailable, supporting High rather than Critical severity."
+    },
+    "incident_category": {
+      "code": "CAT-DEPENDENCY-CONFIG",
+      "provisional": false,
+      "rationale": "Database logs and access-audit evidence directly establish a missing CONNECT grant in the active database access policy. This is a database-level configuration and dependency-access failure rather than an application, infrastructure or unexplained availability incident."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-DATABASE",
+      "additional_area_ids": [
+        "SVC-ORDER"
+      ],
+      "provisional": false,
+      "rationale": "The directly implicated technical condition is the access policy enforced by the Transaction Database Cluster. The Order Management Service is an additional affected service because its new database sessions are rejected, while other database-dependent services remain healthy."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DATA",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-DATA owns the Transaction Database Cluster and its database-level access policy. The incident is High rather than Critical and does not establish a separate multi-service failure requiring RG-OPS coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-005",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-006",
+      "prohibited_recommendations": [
+        "grant or modify database privileges automatically",
+        "modify the active database access policy",
+        "change the Order Service database role or credentials",
+        "display credentials, connection strings, tokens or secret values",
+        "restart or fail over the Transaction Database Cluster",
+        "restart or redeploy the Order Management Service",
+        "automatically retry or replay failed order transactions",
+        "alter or delete order records",
+        "describe the database cluster as unavailable",
+        "declare that the administrative reason for the missing access grant has been definitively established",
+        "claim that the access policy or service has already been corrected"
+      ]
+    },
+    "information_gaps": [
+      "Why the expected Order Service CONNECT grant is absent from the active access-policy set and what configuration was formally approved.",
+      "The number of Order Service instances and connection pools that may lose usable existing sessions before recovery.",
+      "Whether failed order attempts created partial records or could cause duplicate processing if customers retry.",
+      "The expected time for an approved correction and full service recovery."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The database access failure itself is directly established, so the category and primary affected area are non-provisional.",
+    "The database platform remains healthy; the failure concerns access configuration rather than infrastructure availability.",
+    "SVC-ORDER is an additional affected area but is not the directly responsible technical component.",
+    "The missing access grant is directly associated with the incident, while the administrative reason it was omitted remains unknown.",
+    "The bounded configuration evidence does not authorise automatic privilege or access-policy changes.",
+    "The scenario is materially distinct from DEV-006, which involved an invalid authentication-service token rather than database-level access policy affecting the Order Management Service."
+  ]
+}

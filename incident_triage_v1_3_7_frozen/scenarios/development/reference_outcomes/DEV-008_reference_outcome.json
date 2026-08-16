@@ -1,0 +1,70 @@
+{
+  "reference_id": "REF-DEV-008",
+  "incident_id": "DEV-008",
+  "established_before_execution": true,
+  "purpose": "Final formative development reference outcome for testing a High-severity application failure in the Order Management Service, Commerce-team ownership, single-service coordination policy, healthy-dependency exclusion and information-gap preservation.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that a large proportion of customer order submissions are failing across the United Kingdom and Ireland storefronts.",
+      "Identify the unhandled PromotionValidationException in the Order Management Service as the directly supported technical condition.",
+      "State or preserve that failures occur before database, inventory and messaging dependency calls.",
+      "Do not state that the recent promotion-rule deployment caused the incident."
+    ],
+    "severity": {
+      "level": "High",
+      "provisional": true,
+      "rationale": "A revenue-critical business function is severely degraded across one service and two storefront regions, most order submissions fail, and no workaround is available. The incident is not Critical because it is not a complete or multi-service outage and browsing, authentication and existing-order retrieval remain available."
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "provisional": false,
+      "rationale": "The evidence directly identifies an unhandled application exception inside the Order Management Service before any dependency call."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-ORDER",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The Order Management Service is the directly implicated application. The database, inventory, messaging, compute and API components are explicitly healthy or not reached by the failed requests."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-COMMERCE",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-COMMERCE owns the Order Management Service. RG-OPS coordination is not required because the incident is High rather than Critical and affects one service."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-003",
+      "prohibited_recommendations": [
+        "roll back the deployment automatically",
+        "restart Order Management Service instances",
+        "change application code or validation rules",
+        "disable promotion validation",
+        "modify database records directly",
+        "declare the recent deployment to be the confirmed root cause"
+      ]
+    },
+    "information_gaps": [
+      "Whether the business-to-business order API is affected by the same application failure.",
+      "The expected duration of the order-submission degradation."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario tests a different application owner from DEV-004 and verifies that single-service High severity does not automatically trigger RG-OPS.",
+    "Direct application-exception evidence must override generic availability or performance symptoms.",
+    "Healthy or unreached dependencies must not be listed as affected areas.",
+    "The two reported unknowns must be preserved and ACT-009 must remain within the five-action limit.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

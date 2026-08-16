@@ -1,0 +1,83 @@
+{
+  "reference_id": "REF-EVAL-004",
+  "incident_id": "EVAL-004",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for contained Inventory Service performance degradation where most requests remain successful, an effective operating workaround is available and a recent deployment is temporally associated but not causally established.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Inventory Service remains available but stock-reservation processing is slower and some requests are timing out.",
+      "Mention that p95 latency increased from 900 milliseconds to 4.8 seconds.",
+      "Mention that throughput fell to 58 percent of normal while 93.5 percent of reservation requests still completed successfully.",
+      "State that 38 warehouse users across two fulfilment centres are affected.",
+      "Mention that an approved smaller-batch workaround is available and priority operations continue.",
+      "Mention the recent reporting-library update only as an unconfirmed potentially relevant change.",
+      "Do not claim that the recent deployment caused the degradation.",
+      "Do not describe the Inventory Service as completely unavailable."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": false,
+      "rationale": "The degradation affects a contained subset of warehouse users and one Inventory Service function. Most requests remain successful, other inventory capabilities continue to operate and an effective approved workaround allows priority fulfilment activity to continue. The observed impact therefore supports Medium severity."
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "provisional": false,
+      "rationale": "The service remains available while latency, throughput and timeout performance have materially deteriorated. No direct application, infrastructure, network, dependency or configuration failure has been established."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-INVENTORY",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "Performance measurements directly identify the Inventory Service stock-reservation flow as degraded. No underlying compute, database, network or dependency component has been directly implicated."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-COMMERCE",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-COMMERCE owns the Inventory Service. The incident is contained to one service and has manageable Medium-severity impact, so additional incident coordination is not required."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-001",
+        "ACT-005",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-002",
+      "prohibited_recommendations": [
+        "automatically scale Inventory Service or supporting resources",
+        "restart the Inventory Service or its dependencies",
+        "roll back the reporting-library update",
+        "modify application or infrastructure configuration",
+        "change performance-alert thresholds to suppress alerts",
+        "resubmit or alter warehouse transactions automatically",
+        "assume that the recent deployment is the definitive root cause",
+        "assume that compute utilisation, the database, networking or another dependency is the definitive root cause",
+        "describe the service as completely unavailable",
+        "claim that any investigative or remedial action has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "The directly responsible performance bottleneck.",
+      "Whether the recent reporting-library update is technically related to the degradation.",
+      "The independently verified health and latency contribution of relevant compute and database dependencies.",
+      "The expected duration and recovery time for normal reservation performance."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario tests whether the framework applies Medium severity to a contained, manageable degradation rather than escalating solely because an important service is involved.",
+    "The service remains materially available because 93.5 percent of requests succeed and other inventory functions remain operational.",
+    "The temporal proximity of the deployment is insufficient to establish causation.",
+    "The correct runbook is the performance-degradation runbook rather than the application-exception runbook.",
+    "The scenario is materially distinct from DEV-002 because it concerns application-service throughput, a contained warehouse workflow, an effective workaround and an unconfirmed recent deployment rather than direct database-platform degradation."
+  ]
+}

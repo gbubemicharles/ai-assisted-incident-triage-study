@@ -1,0 +1,642 @@
+{
+  "run_id": "84ef4692-f0ac-4b10-800f-f1fb6cb70fb3",
+  "recorded_at_utc": "2026-07-25T11:29:05.336197+00:00",
+  "status": "valid",
+  "incident": {
+    "incident_id": "DEV-002",
+    "title": "Elevated order-processing latency",
+    "reported_affected_service_ids": [
+      "SVC-ORDER"
+    ],
+    "alert_or_symptom": "Order searches and status updates remain available but are responding much more slowly than normal.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "metric",
+        "source_name": "Order service request latency",
+        "observation": "Order-service p95 response latency increased from 420 milliseconds to 8.6 seconds at 14:05, while the request success rate remained at 99.1 percent.",
+        "observed_at": "2026-07-23T14:05:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "metric",
+        "source_name": "Transaction database query latency",
+        "observation": "Transaction database p95 query latency increased from 80 milliseconds to 5.9 seconds; the database remains available.",
+        "observed_at": "2026-07-23T14:06:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "trace",
+        "source_name": "Order request traces",
+        "observation": "Slow order traces spend approximately 87 percent of elapsed time waiting for database queries, while application processing time remains within its normal range.",
+        "observed_at": "2026-07-23T14:07:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "status",
+        "source_name": "Related component health",
+        "observation": "The Application Compute Cluster, Inventory Service and Message Broker are healthy and operating normally.",
+        "observed_at": "2026-07-23T14:08:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "partially_degraded",
+      "impact_scope": "subset_of_users",
+      "user_impact_description": "Approximately 18 percent of order-management requests take between 8 and 12 seconds, but requests generally complete successfully.",
+      "business_function_affected": "Order creation and order-status retrieval",
+      "affected_user_estimate": null,
+      "geographic_scope": "United Kingdom storefront",
+      "workaround_status": "available",
+      "workaround_description": "Users can retry delayed order searches; requests generally complete on retry.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Order Management Service depends on the Transaction Database Cluster.",
+      "Order-service application instances remain healthy."
+    ],
+    "recent_changes": [
+      {
+        "change_id": "C1",
+        "change_type": "database maintenance",
+        "description": "A routine database statistics refresh completed at 13:50.",
+        "occurred_at": "2026-07-23T13:50:00",
+        "confirmed_related_to_incident": false
+      }
+    ],
+    "reported_unknowns": [
+      "The specific database query, lock or resource condition associated with the increased latency has not been identified.",
+      "The expected duration of the degradation is not yet known."
+    ],
+    "additional_context": [
+      "No failed orders, duplicate orders, data loss or security exposure have been observed."
+    ]
+  },
+  "model_output": {
+    "incident_id": "DEV-002",
+    "incident_summary": "Order Management Service is experiencing elevated latency, with approximately 18 percent of requests taking between 8 and 12 seconds.",
+    "summary_source_refs": [
+      "KB:CAT-PERFORMANCE",
+      "E1",
+      "E3"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "The service remains available but operates below its expected performance level, with a significant portion of requests experiencing delays. There is no confirmed data loss or security exposure.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "E1",
+        "E3",
+        "E4",
+        "C1"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "rationale": "The service remains available but is operating below its expected performance level, with a significant portion of requests experiencing delays.",
+      "source_refs": [
+        "KB:CAT-PERFORMANCE",
+        "E1",
+        "E3",
+        "E4"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-DATABASE",
+      "additional_area_ids": [
+        "SVC-ORDER"
+      ],
+      "rationale": "The increased latency is primarily associated with database queries, and the order-processing application remains healthy.",
+      "source_refs": [
+        "KB:CAT-PERFORMANCE",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DATA",
+      "coordination_group_ids": [],
+      "rationale": "The primary resolver group for the affected service is RG-DATA, which has responsibility for transaction database performance.",
+      "source_refs": [
+        "KB:RG-DATA",
+        "KB:SVC-ORDER",
+        "KB:PLT-DATABASE"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps to identify any recent changes or anomalies.",
+        "rationale": "The routine database statistics refresh at 13:50 may be related, but no direct evidence supports this. Reviewing alerts can help determine if there were other relevant events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify potential bottlenecks or issues with database queries.",
+        "rationale": "The slow order traces indicate that 87 percent of elapsed time is spent waiting for database queries. Logs and traces can provide more detailed insights into the nature of these delays.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that may have impacted the database performance.",
+        "rationale": "The routine database statistics refresh at 13:50 is a potential point of interest. Other recent changes could also be relevant to the current issue.",
+        "source_refs": [
+          "KB:ACT-004",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Confirm the current service owner and resolver group, as the specific database query or resource condition causing the increased latency has not been identified.",
+        "rationale": "Identifying the correct resolver group is crucial for effective triage. The primary resolver group may need to be confirmed if there are ambiguities in ownership.",
+        "source_refs": [
+          "KB:ACT-006",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The specific database query, lock or resource condition associated with the increased latency has not been identified.",
+        "why_needed": "This information is critical to understanding and resolving the issue. Without it, targeted actions cannot be taken.",
+        "affected_decisions": [
+          "incident_category",
+          "affected_area"
+        ],
+        "requested_evidence": "Database query logs, slow query reports, or any recent changes in database schema or queries."
+      },
+      {
+        "missing_information": "The expected duration of the degradation is not yet known.",
+        "why_needed": "This information helps in assessing the urgency and potential impact. Without it, the incident's severity and category may be uncertain.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Historical performance data or service-level agreements for expected degradation duration."
+      }
+    ],
+    "uncertainty_statement": "The specific cause of the increased latency is not yet known, and the expected duration of the degradation has not been determined. These uncertainties affect the definitive classification of severity and category.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "DEV-002",
+    "incident_summary": "Order Management Service is experiencing elevated latency, with approximately 18 percent of requests taking between 8 and 12 seconds.",
+    "summary_source_refs": [
+      "E1",
+      "E3",
+      "E2",
+      "KB:PLT-DATABASE"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "KB:SVC-ORDER",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "rationale": "Performance Degradation is selected because the service remains available while latency, throughput, error rate or processing performance is impaired.",
+      "source_refs": [
+        "KB:CAT-PERFORMANCE",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-DATABASE",
+      "additional_area_ids": [
+        "SVC-ORDER"
+      ],
+      "rationale": "The selected primary area is the directly implicated dependency, while the reported service remains the visible affected service.",
+      "source_refs": [
+        "KB:DEP:SVC-ORDER:PLT-DATABASE",
+        "KB:PLT-DATABASE",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DATA",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-DATA",
+        "KB:PLT-DATABASE"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-002",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3",
+          "KB:ACT-003",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-009"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-004",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-004"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The specific database query, lock or resource condition associated with the increased latency has not been identified.",
+        "why_needed": "This information is critical to understanding and resolving the issue. Without it, targeted actions cannot be taken.",
+        "affected_decisions": [
+          "incident_category",
+          "affected_area"
+        ],
+        "requested_evidence": "Database query logs, slow query reports, or any recent changes in database schema or queries."
+      },
+      {
+        "missing_information": "The expected duration of the degradation is not yet known.",
+        "why_needed": "This information helps in assessing the urgency and potential impact. Without it, the incident's severity and category may be uncertain.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Historical performance data or service-level agreements for expected degradation duration."
+      }
+    ],
+    "uncertainty_statement": "The specific cause of the increased latency is not yet known, and the expected duration of the degradation has not been determined. These uncertainties affect the definitive classification of severity and category.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"DEV-002\",\n  \"incident_summary\": \"Order Management Service is experiencing elevated latency, with approximately 18 percent of requests taking between 8 and 12 seconds.\",\n  \"summary_source_refs\": [\"KB:CAT-PERFORMANCE\", \"E1\", \"E3\"],\n  \"severity\": {\n    \"level\": \"High\",\n    \"rationale\": \"The service remains available but operates below its expected performance level, with a significant portion of requests experiencing delays. There is no confirmed data loss or security exposure.\",\n    \"source_refs\": [\"KB:SEVERITY:High\", \"E1\", \"E3\", \"E4\", \"C1\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-PERFORMANCE\",\n    \"rationale\": \"The service remains available but is operating below its expected performance level, with a significant portion of requests experiencing delays.\",\n    \"source_refs\": [\"KB:CAT-PERFORMANCE\", \"E1\", \"E3\", \"E4\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"PLT-DATABASE\",\n    \"additional_area_ids\": [\"SVC-ORDER\"],\n    \"rationale\": \"The increased latency is primarily associated with database queries, and the order-processing application remains healthy.\",\n    \"source_refs\": [\"KB:CAT-PERFORMANCE\", \"E1\", \"E2\", \"E3\", \"E4\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-DATA\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The primary resolver group for the affected service is RG-DATA, which has responsibility for transaction database performance.\",\n    \"source_refs\": [\"KB:RG-DATA\", \"KB:SVC-ORDER\", \"KB:PLT-DATABASE\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Review the triggering alerts and their timestamps to identify any recent changes or anomalies.\",\n      \"rationale\": \"The routine database statistics refresh at 13:50 may be related, but no direct evidence supports this. Reviewing alerts can help determine if there were other relevant events.\",\n      \"source_refs\": [\"KB:ACT-002\", \"C1\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service to identify potential bottlenecks or issues with database queries.\",\n      \"rationale\": \"The slow order traces indicate that 87 percent of elapsed time is spent waiting for database queries. Logs and traces can provide more detailed insights into the nature of these delays.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E1\", \"E2\", \"E3\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events that may have impacted the database performance.\",\n      \"rationale\": \"The routine database statistics refresh at 13:50 is a potential point of interest. Other recent changes could also be relevant to the current issue.\",\n      \"source_refs\": [\"KB:ACT-004\", \"C1\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Confirm the current service owner and resolver group, as the specific database query or resource condition causing the increased latency has not been identified.\",\n      \"rationale\": \"Identifying the correct resolver group is crucial for effective triage. The primary resolver group may need to be confirmed if there are ambiguities in ownership.\",\n      \"source_refs\": [\"KB:ACT-006\", \"E4\"],\n      \"common_action_id\": \"ACT-006\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The specific database query, lock or resource condition associated with the increased latency has not been identified.\",\n      \"why_needed\": \"This information is critical to understanding and resolving the issue. Without it, targeted actions cannot be taken.\",\n      \"affected_decisions\": [\"incident_category\", \"affected_area\"],\n      \"requested_evidence\": \"Database query logs, slow query reports, or any recent changes in database schema or queries.\"\n    },\n    {\n      \"missing_information\": \"The expected duration of the degradation is not yet known.\",\n      \"why_needed\": \"This information helps in assessing the urgency and potential impact. Without it, the incident's severity and category may be uncertain.\",\n      \"affected_decisions\": [\"severity\", \"incident_category\"],\n      \"requested_evidence\": \"Historical performance data or service-level agreements for expected degradation duration.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The specific cause of the increased latency is not yet known, and the expected duration of the degradation has not been determined. These uncertainties affect the definitive classification of severity and category.\",\n  \"advisory_only\": true,\n  \"definitive_root_cause_established\": false\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "High",
+        "rationale": "The service remains available but operates below its expected performance level, with a significant portion of requests experiencing delays. There is no confirmed data loss or security exposure.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "E1",
+          "E3",
+          "E4",
+          "C1"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "Medium",
+        "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "KB:SVC-ORDER",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-PERFORMANCE",
+        "rationale": "The service remains available but is operating below its expected performance level, with a significant portion of requests experiencing delays.",
+        "source_refs": [
+          "KB:CAT-PERFORMANCE",
+          "E1",
+          "E3",
+          "E4"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-PERFORMANCE",
+        "rationale": "Performance Degradation is selected because the service remains available while latency, throughput, error rate or processing performance is impaired.",
+        "source_refs": [
+          "KB:CAT-PERFORMANCE",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "PLT-DATABASE",
+        "additional_area_ids": [
+          "SVC-ORDER"
+        ],
+        "rationale": "The increased latency is primarily associated with database queries, and the order-processing application remains healthy.",
+        "source_refs": [
+          "KB:CAT-PERFORMANCE",
+          "E1",
+          "E2",
+          "E3",
+          "E4"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "PLT-DATABASE",
+        "additional_area_ids": [
+          "SVC-ORDER"
+        ],
+        "rationale": "The selected primary area is the directly implicated dependency, while the reported service remains the visible affected service.",
+        "source_refs": [
+          "KB:DEP:SVC-ORDER:PLT-DATABASE",
+          "KB:PLT-DATABASE",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-DATA",
+        "coordination_group_ids": [],
+        "rationale": "The primary resolver group for the affected service is RG-DATA, which has responsibility for transaction database performance.",
+        "source_refs": [
+          "KB:RG-DATA",
+          "KB:SVC-ORDER",
+          "KB:PLT-DATABASE"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-DATA",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-DATA",
+          "KB:PLT-DATABASE"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-PERFORMANCE",
+        "E1",
+        "E3"
+      ],
+      "revised": [
+        "E1",
+        "E3",
+        "E2",
+        "KB:PLT-DATABASE"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Review the triggering alerts and their timestamps to identify any recent changes or anomalies.",
+        "rationale": "The routine database statistics refresh at 13:50 may be related, but no direct evidence supports this. Reviewing alerts can help determine if there were other relevant events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-002",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify potential bottlenecks or issues with database queries.",
+        "rationale": "The slow order traces indicate that 87 percent of elapsed time is spent waiting for database queries. Logs and traces can provide more detailed insights into the nature of these delays.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "E3",
+          "KB:ACT-003",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that may have impacted the database performance.",
+        "rationale": "The routine database statistics refresh at 13:50 is a potential point of interest. Other recent changes could also be relevant to the current issue.",
+        "source_refs": [
+          "KB:ACT-004",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-004",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Confirm the current service owner and resolver group, as the specific database query or resource condition causing the increased latency has not been identified.",
+        "rationale": "Identifying the correct resolver group is crucial for effective triage. The primary resolver group may need to be confirmed if there are ambiguities in ownership.",
+        "source_refs": [
+          "KB:ACT-006",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      },
+      "revised": null,
+      "reason": "Redundant ownership-confirmation action was removed because routing is conclusive.",
+      "rule_id": "GR-ACTION-003"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009",
+          "KB:RB-007"
+        ],
+        "runbook_id": "RB-007",
+        "common_action_id": "ACT-009"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    }
+  ],
+  "validation_errors": [],
+  "elapsed_seconds": 505.204104000004,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T11:29:05.1045281Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 505005380000,
+    "load_duration": 14178519200,
+    "prompt_eval_count": 4256,
+    "prompt_eval_duration": 20288538000,
+    "eval_count": 1097,
+    "eval_duration": 469919400000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-006",
+    "KB:ACT-009",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-ORDER:PLT-COMPUTE",
+    "KB:DEP:SVC-ORDER:PLT-DATABASE",
+    "KB:DEP:SVC-ORDER:PLT-MESSAGING",
+    "KB:DEP:SVC-ORDER:SVC-INVENTORY",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-DATABASE",
+    "KB:PLT-MESSAGING",
+    "KB:RB-007",
+    "KB:RG-COMMERCE",
+    "KB:RG-DATA",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-INVENTORY",
+    "KB:SVC-ORDER"
+  ],
+  "selected_runbook_ids": [
+    "RB-007"
+  ]
+}

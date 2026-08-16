@@ -1,0 +1,65 @@
+{
+  "incident_id": "EVAL-002",
+  "title": "Automated dispatch notifications unavailable for one fulfilment centre",
+  "reported_affected_service_ids": [
+    "SVC-NOTIFY"
+  ],
+  "alert_or_symptom": "Automated dispatch notifications for orders processed by the North Fulfilment Centre cannot be sent, while notification traffic for other business units remains available.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "North Fulfilment Centre notification monitor",
+      "observation": "All 186 automated dispatch-notification requests submitted for the North Fulfilment Centre between 09:05 and 09:20 failed with a generic HTTP 503 response, with no successful dispatch notification recorded.",
+      "observed_at": "2026-07-25T09:20:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "status",
+      "source_name": "Notification Service business-flow dashboard",
+      "observation": "Customer order confirmations and operational notifications for all other fulfilment centres continued to process successfully during the same period.",
+      "observed_at": "2026-07-25T09:21:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "user_report",
+      "source_name": "North Fulfilment Centre operations lead",
+      "observation": "Twenty-three operations staff cannot send automated dispatch notifications. Staff are using the approved manual customer-contact procedure for priority dispatches.",
+      "observed_at": "2026-07-25T09:22:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The directly responsible technical component or failure condition has not been identified. The generic response does not establish where the notification request is failing.",
+      "observed_at": "2026-07-25T09:23:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "subset_of_users",
+    "user_impact_description": "Automated dispatch notifications are unavailable for the North Fulfilment Centre, affecting 23 operations staff and 186 notification attempts. Other notification workflows and order processing remain available.",
+    "business_function_affected": "Automated customer dispatch notifications for one fulfilment centre",
+    "affected_user_estimate": 23,
+    "geographic_scope": "North Fulfilment Centre, United Kingdom",
+    "workaround_status": "available",
+    "workaround_description": "Operations staff can use the approved manual customer-contact procedure for priority dispatches.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Notification Service is a Tier 3 standard service.",
+    "The affected dispatch-notification workflow supports one of several United Kingdom fulfilment centres.",
+    "Customer ordering, payment and warehouse dispatch processing continue to operate."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The directly responsible technical component or failure condition has not been identified.",
+    "It is not known at which stage the affected notification requests are failing.",
+    "The expected restoration time for automated dispatch notifications is unknown."
+  ],
+  "additional_context": [
+    "No order-processing interruption, data loss, corruption or serious security exposure has been reported.",
+    "The approved manual procedure is currently keeping priority customer contacts within the operational service target."
+  ]
+}

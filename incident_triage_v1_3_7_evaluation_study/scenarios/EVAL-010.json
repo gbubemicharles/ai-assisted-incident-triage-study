@@ -1,0 +1,104 @@
+{
+  "incident_id": "EVAL-010",
+  "title": "Customer portal web assets blocked by object-storage access policy",
+  "reported_affected_service_ids": [
+    "PLT-STORAGE",
+    "SVC-WEB"
+  ],
+  "alert_or_symptom": "The Customer Web Portal remains available, but many product images, style assets and downloadable product documents cannot be retrieved from object storage.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Customer portal web-asset monitoring",
+      "observation": "Between 17:02 and 17:22, 73.6 percent of uncached product-image, stylesheet and product-document requests failed with HTTP 403 responses. Previously cached assets continued to load.",
+      "observed_at": "2026-07-25T17:22:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "CDN origin-access logs",
+      "observation": "Failed asset requests reached the Object Storage Platform and received AccessDenied responses when the portal CDN origin identity attempted to retrieve the requested objects.",
+      "observed_at": "2026-07-25T17:23:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Object Storage Platform access-policy audit",
+      "observation": "The active storage access policy does not contain the expected read permission for the Customer Web Portal CDN origin identity on the web-assets object path.",
+      "observed_at": "2026-07-25T17:24:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Object Storage Platform health summary",
+      "observation": "The Object Storage Platform is available, the affected objects remain present and integrity checks report no object loss or corruption. Other authorised storage clients continue to retrieve their objects successfully.",
+      "observed_at": "2026-07-25T17:25:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "status",
+      "source_name": "Customer portal and API health summary",
+      "observation": "Portal HTML responses, product text, search, sign-in, basket updates, API requests and checkout transactions remain available and within normal operating thresholds.",
+      "observed_at": "2026-07-25T17:26:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "change_record",
+      "source_name": "Object-storage policy deployment record",
+      "observation": "A revised storage access policy was activated at 16:42. The active policy version omits the expected portal CDN-origin read permission that was present in the preceding approved version.",
+      "observed_at": "2026-07-25T17:27:00"
+    },
+    {
+      "evidence_id": "E7",
+      "source_type": "user_report",
+      "source_name": "Digital customer-support summary",
+      "observation": "Customers across the United Kingdom and Ireland report missing product images, incomplete page styling and unavailable product-document downloads. Customers can still search, sign in, add items to baskets and complete checkout.",
+      "observed_at": "2026-07-25T17:28:00"
+    },
+    {
+      "evidence_id": "E8",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The evidence directly establishes an object-storage access-configuration failure affecting Customer Web Portal assets. It does not indicate storage-platform unavailability, object loss, application failure or API failure.",
+      "observed_at": "2026-07-25T17:29:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "service_wide",
+    "user_impact_description": "Customer Web Portal users may encounter missing product images, incomplete styling and unavailable document downloads, while core browsing, authentication, basket and checkout functions remain operational.",
+    "business_function_affected": "Presentation and delivery of customer-facing product assets",
+    "affected_user_estimate": 9800,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "limited",
+    "workaround_description": "Customers can continue using product text and complete purchases. Customer-support staff can provide essential product information through the approved support process, but normal asset presentation is not restored.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Object Storage Platform is a Tier 2 important infrastructure service.",
+    "The Customer Web Portal is a Tier 1 customer-facing service and uses object storage for images, stylesheets and non-transactional documents.",
+    "Core application data and customer transactions are handled through other healthy services.",
+    "The affected objects remain present and no object-integrity failure has been detected."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "object-storage access-policy deployment",
+      "description": "A revised storage access policy was activated at 16:42 and omits the expected Customer Web Portal CDN-origin read permission.",
+      "occurred_at": "2026-07-25T16:42:00",
+      "confirmed_related_to_incident": true
+    }
+  ],
+  "reported_unknowns": [
+    "Why the expected CDN-origin read permission was omitted from the active storage access policy.",
+    "The complete set of affected objects and the extent to which CDN caching is temporarily masking the failure.",
+    "Whether any additional approved storage consumers are affected by the revised access policy.",
+    "The expected time for an approved correction and full restoration of normal web-asset delivery."
+  ],
+  "additional_context": [
+    "No object loss, corruption, customer-data exposure, transaction failure or serious security incident has been confirmed.",
+    "No storage permission, CDN configuration or production object should be changed outside the approved operational and change-control process."
+  ]
+}

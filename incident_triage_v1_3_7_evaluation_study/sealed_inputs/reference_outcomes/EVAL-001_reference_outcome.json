@@ -1,0 +1,80 @@
+{
+  "reference_id": "REF-EVAL-001",
+  "incident_id": "EVAL-001",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for a widespread complete outage of a business-critical customer service where the impact is established but no directly responsible application, platform, dependency or configuration condition has been identified.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Customer Web Portal is completely unavailable across the United Kingdom and Ireland.",
+      "State that customers cannot access the portal or complete online purchases.",
+      "Mention that all monitored portal checks failed and returned HTTP 503 responses.",
+      "State that no directly responsible technical component or failure condition has yet been identified.",
+      "Do not claim that an application, edge, storage, API, authentication, compute, database or configuration failure caused the outage."
+    ],
+    "severity": {
+      "level": "Critical",
+      "provisional": false,
+      "rationale": "A Tier 1 business-critical customer service is completely unavailable across two national storefront regions, no successful portal use is recorded and no workaround is available. The directly observed impact is sufficient for a non-provisional Critical classification even though the technical cause remains unknown."
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "provisional": true,
+      "rationale": "The directly supported condition is complete service unavailability. No evidence supports a more specific application, infrastructure, network, dependency or configuration category, so the symptom-based category remains provisional pending technical investigation."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-WEB",
+      "additional_area_ids": [],
+      "provisional": true,
+      "rationale": "The Customer Web Portal is the visible affected service. No supporting component has been directly implicated, so dependencies must not be classified as affected areas without further evidence."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DIGITAL",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "provisional": false,
+      "rationale": "RG-DIGITAL owns the affected Customer Web Portal under symptom-only routing. RG-OPS coordination is required because the incident is Critical and has widespread customer and business impact."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-008"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-004",
+        "ACT-006",
+        "ACT-007",
+        "ACT-009",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-001",
+      "prohibited_recommendations": [
+        "restart the Customer Web Portal or any supporting component",
+        "roll back a deployment",
+        "modify application code or configuration",
+        "change DNS, routing, firewall or load-balancer settings",
+        "change object-storage permissions",
+        "initiate broad remediation across multiple systems",
+        "declare a specific component or technical condition to be the definitive root cause",
+        "claim that any investigative or remedial action has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "The directly responsible technical component and failure condition.",
+      "The independently verified health of the portal's edge, storage, API and authentication dependencies.",
+      "The expected duration or recovery time for the outage."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The scenario is intentionally cause-agnostic and tests whether the framework uses the bounded availability fallback rather than fabricating a technical category.",
+    "The impact evidence supports Critical severity independently of root-cause certainty.",
+    "Dependencies are contextual possibilities only and must not be listed as affected without direct evidence.",
+    "Technical ownership and Critical-incident coordination must be represented separately.",
+    "The scenario is materially distinct from the formative authentication-unavailability scenario because it concerns complete failure of the customer web channel, widespread confirmed impact and mandatory Critical coordination."
+  ]
+}

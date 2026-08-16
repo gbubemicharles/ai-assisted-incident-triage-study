@@ -1,0 +1,70 @@
+{
+  "reference_id": "REF-DEV-002",
+  "incident_id": "DEV-002",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing performance-degradation triage, database-area identification, resolver routing and cautious treatment of a recent change.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Order Management Service remains available but materially degraded.",
+      "Mention the increase in order-service latency.",
+      "Identify transaction-database query latency as the directly implicated technical area without claiming a definitive root cause.",
+      "Do not report data loss, failed orders or security exposure."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": true,
+      "rationale": "The service remains available, impact is limited to a subset of requests, an effective retry workaround is available, and no data loss or serious security exposure is confirmed. The classification remains provisional because the duration and precise technical condition are unknown."
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "provisional": true,
+      "rationale": "The service remains available while latency is materially degraded, and the evidence directly associates the delay with database-query performance."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-DATABASE",
+      "additional_area_ids": [
+        "SVC-ORDER"
+      ],
+      "provisional": true,
+      "rationale": "The Transaction Database Cluster is the directly implicated technical area; the Order Management Service is the visible affected service. Healthy compute, inventory and messaging components must not be listed as affected."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DATA",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "The Data Platform Team owns the directly implicated Transaction Database Cluster. The incident is not Critical or multi-service, so RG-OPS coordination is not required."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-001",
+        "ACT-006"
+      ],
+      "expected_primary_runbook_id": "RB-007",
+      "prohibited_recommendations": [
+        "terminate database queries",
+        "change database parameters",
+        "add capacity",
+        "rebuild indexes",
+        "restart or fail over the database",
+        "treat the statistics refresh as the confirmed root cause"
+      ]
+    },
+    "information_gaps": [
+      "The specific query, lock or resource condition associated with the latency.",
+      "The expected duration of the degradation."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The recent statistics refresh is temporally associated but not confirmed as causal.",
+    "A structurally valid output is not automatically semantically correct; comparison must be made against this reference outcome.",
+    "This scenario deliberately tests whether the v1.3 affected-area guardrail generalises from external dependency failures to performance problems in an internal platform dependency."
+  ]
+}

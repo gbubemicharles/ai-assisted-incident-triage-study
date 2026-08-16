@@ -1,0 +1,67 @@
+{
+  "incident_id": "DEV-004",
+  "title": "Isolated notification-template rendering errors",
+  "reported_affected_service_ids": [
+    "SVC-NOTIFY"
+  ],
+  "alert_or_symptom": "A small number of notification messages using one promotional template are failing to render, while normal notification processing remains available.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "log",
+      "source_name": "Notification Service application log",
+      "observation": "Fourteen messages using template PROMO-V4 generated an unhandled TemplateRenderException between 16:22 and 16:28.",
+      "observed_at": "2026-07-23T16:28:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Notification processing success rate",
+      "observation": "The Notification Service processed 12,386 of 12,400 messages successfully during the same period, giving a success rate of 99.89 percent.",
+      "observed_at": "2026-07-23T16:29:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Message Broker, Application Compute Cluster and External Email and SMS Provider are healthy and operating normally.",
+      "observed_at": "2026-07-23T16:30:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "user_report",
+      "source_name": "Internal campaign operator report",
+      "observation": "The rendering issue is limited to one internal promotional test campaign; transactional customer notifications are unaffected.",
+      "observed_at": "2026-07-23T16:31:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "available",
+    "impact_scope": "isolated",
+    "user_impact_description": "Fourteen internal promotional test messages failed to render; production transactional notifications continue to process normally.",
+    "business_function_affected": "Internal promotional-message testing",
+    "affected_user_estimate": 1,
+    "geographic_scope": "Internal United Kingdom marketing test account",
+    "workaround_status": "available",
+    "workaround_description": "The campaign operator can use another existing approved template for the test messages.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Notification Service consumes events from the Message Broker and sends messages through the External Email and SMS Provider.",
+    "Production transactional notification templates continue to operate normally."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "application deployment",
+      "description": "A Notification Service template-parser update was deployed at 15:55.",
+      "occurred_at": "2026-07-23T15:55:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [],
+  "additional_context": [
+    "No failed transactional notifications, customer-facing outage, data loss or security exposure has been observed."
+  ]
+}

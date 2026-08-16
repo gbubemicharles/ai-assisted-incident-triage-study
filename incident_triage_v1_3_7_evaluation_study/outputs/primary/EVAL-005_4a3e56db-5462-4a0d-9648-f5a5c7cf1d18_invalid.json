@@ -1,0 +1,550 @@
+{
+  "run_id": "4a3e56db-5462-4a0d-9648-f5a5c7cf1d18",
+  "recorded_at_utc": "2026-07-25T18:06:45.670960+00:00",
+  "status": "invalid",
+  "incident": {
+    "incident_id": "EVAL-005",
+    "title": "Optional product-comparison panel fails in the customer portal",
+    "reported_affected_service_ids": [
+      "SVC-WEB"
+    ],
+    "alert_or_symptom": "Some customers cannot open the optional product-comparison panel in the customer web portal, while product browsing, sign-in, basket and checkout functions remain available.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "user_report",
+        "source_name": "Digital customer-support summary",
+        "observation": "Fourteen customers reported that selecting Compare Products causes the comparison panel to remain blank. No reports indicate failure of product pages, sign-in, basket or checkout.",
+        "observed_at": "2026-07-25T12:15:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "trace",
+        "source_name": "Browser telemetry",
+        "observation": "Affected browser sessions record an unhandled JavaScript TypeError in comparison-panel.js when the comparison panel attempts to render a product attribute whose display label is null.",
+        "observed_at": "2026-07-25T12:16:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "status",
+        "source_name": "Customer portal synthetic monitoring",
+        "observation": "Portal home-page loading, product search, product-detail viewing, sign-in, basket updates and checkout synthetic transactions all remained successful.",
+        "observed_at": "2026-07-25T12:17:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "metric",
+        "source_name": "Portal server and API monitoring",
+        "observation": "Customer Web Portal server error rates and Public API Gateway request outcomes remained within normal operating thresholds during the affected period.",
+        "observed_at": "2026-07-25T12:18:00"
+      },
+      {
+        "evidence_id": "E5",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The directly observed failure is confined to client-side comparison-panel rendering. No supporting service, platform or infrastructure failure has been identified.",
+        "observed_at": "2026-07-25T12:19:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "partially_degraded",
+      "impact_scope": "subset_of_users",
+      "user_impact_description": "Fourteen customers cannot use the optional product-comparison panel, while all core portal functions and customer purchasing journeys remain available.",
+      "business_function_affected": "Optional product-comparison feature",
+      "affected_user_estimate": 14,
+      "geographic_scope": "United Kingdom customer portal",
+      "workaround_status": "available",
+      "workaround_description": "Customers can review product-detail pages individually and continue shopping without using the comparison panel.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Customer Web Portal is a Tier 1 service, but the affected product-comparison panel is an optional convenience feature.",
+      "Product browsing, authentication, basket management, payment and checkout remain operational.",
+      "The comparison feature does not modify customer, product or transaction data."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [
+      "The complete set of product records containing the null display label has not yet been established.",
+      "It is not known whether the defect affects any browser versions not represented in the current reports.",
+      "The time required to correct and release the client-side rendering defect is unknown."
+    ],
+    "additional_context": [
+      "No data loss, corruption, security exposure or interruption to purchasing has been reported.",
+      "The issue can be reproduced without changing production data or configuration."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-005",
+    "incident_summary": "Fourteen customers cannot open the optional product-comparison panel in the customer web portal, while all core portal functions remain available.",
+    "summary_source_refs": [
+      "KB:SVC-WEB",
+      "KB:CAT-AVAILABILITY"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "The issue affects a subset of users and is confined to an optional feature. No data loss, corruption, or security exposure has been reported.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "E1",
+        "E3",
+        "E4",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "rationale": "The issue is confined to a specific feature and does not affect core portal functions.",
+      "source_refs": [
+        "KB:CAT-AVAILABILITY",
+        "E1",
+        "E3",
+        "E4",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-WEB",
+      "additional_area_ids": [
+        "SVC-API",
+        "PLT-STORAGE"
+      ],
+      "rationale": "The issue is directly related to the customer web portal and involves its interaction with backend services.",
+      "source_refs": [
+        "KB:SVC-WEB",
+        "KB:DEP:SVC-WEB:SVC-API",
+        "KB:DEP:SVC-WEB:PLT-STORAGE",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-DIGITAL",
+      "coordination_group_ids": [],
+      "rationale": "The Digital Experience Team is primarily responsible for the customer web portal and its frontend application code.",
+      "source_refs": [
+        "KB:RG-DIGITAL",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Investigate client-side JavaScript errors in comparison-panel.js to identify the root cause of null display labels.",
+        "rationale": "The error observed in E2 indicates a specific issue with rendering product attributes. This action will help pinpoint the exact defect.",
+        "source_refs": [
+          "KB:ACT-001",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Verify that all affected products have valid display labels in the database and application configuration.",
+        "rationale": "This action will ensure that the issue is not due to missing or invalid data on the backend side.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The complete set of product records containing null display labels has not yet been established.",
+        "why_needed": "To fully understand the scope and impact of the issue.",
+        "affected_decisions": [
+          "severity",
+          "affected_area"
+        ],
+        "requested_evidence": "A list of all products with null display labels."
+      },
+      {
+        "missing_information": "It is not known whether the defect affects any browser versions not represented in current reports.",
+        "why_needed": "To determine if the issue is browser-specific or more widespread.",
+        "affected_decisions": [
+          "severity",
+          "affected_area"
+        ],
+        "requested_evidence": "Browser telemetry data from additional user sessions."
+      },
+      {
+        "missing_information": "The time required to correct and release the client-side rendering defect is unknown.",
+        "why_needed": "To estimate the duration of the workaround or potential impact on service availability.",
+        "affected_decisions": [
+          "severity",
+          "initial_actions"
+        ],
+        "requested_evidence": "Estimate from development team."
+      }
+    ],
+    "uncertainty_statement": "The severity and affected area are provisionally classified based on available evidence. Further investigation is required to confirm the exact impact and root cause.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-005",
+    "incident_summary": "Fourteen customers cannot open the optional product-comparison panel in the customer web portal, while all core portal functions remain available.",
+    "summary_source_refs": [
+      "E1",
+      "E2",
+      "E3",
+      "KB:SVC-API"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "KB:SVC-WEB",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "rationale": "Performance Degradation is selected provisionally because service impact is present without sufficient evidence for a more specific technical category.",
+      "source_refs": [
+        "KB:CAT-PERFORMANCE",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-API",
+      "additional_area_ids": [
+        "SVC-WEB"
+      ],
+      "rationale": "The selected primary area is the directly implicated dependency, while the reported service remains the visible affected service.",
+      "source_refs": [
+        "KB:DEP:SVC-WEB:SVC-API",
+        "KB:SVC-API",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-NETWORK",
+        "KB:SVC-API"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E5",
+          "KB:ACT-002"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The complete set of product records containing null display labels has not yet been established.",
+        "why_needed": "To fully understand the scope and impact of the issue.",
+        "affected_decisions": [
+          "severity",
+          "affected_area"
+        ],
+        "requested_evidence": "A list of all products with null display labels."
+      },
+      {
+        "missing_information": "It is not known whether the defect affects any browser versions not represented in current reports.",
+        "why_needed": "To determine if the issue is browser-specific or more widespread.",
+        "affected_decisions": [
+          "severity",
+          "affected_area"
+        ],
+        "requested_evidence": "Browser telemetry data from additional user sessions."
+      },
+      {
+        "missing_information": "The time required to correct and release the client-side rendering defect is unknown.",
+        "why_needed": "To estimate the duration of the workaround or potential impact on service availability.",
+        "affected_decisions": [
+          "severity",
+          "initial_actions"
+        ],
+        "requested_evidence": "Estimate from development team."
+      }
+    ],
+    "uncertainty_statement": "The severity and affected area are provisionally classified based on available evidence. Further investigation is required to confirm the exact impact and underlying cause.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-005\",\n  \"incident_summary\": \"Fourteen customers cannot open the optional product-comparison panel in the customer web portal, while all core portal functions remain available.\",\n  \"summary_source_refs\": [\"KB:SVC-WEB\", \"KB:CAT-AVAILABILITY\"],\n  \"severity\": {\n    \"level\": \"Medium\",\n    \"rationale\": \"The issue affects a subset of users and is confined to an optional feature. No data loss, corruption, or security exposure has been reported.\",\n    \"source_refs\": [\"KB:SEVERITY:Medium\", \"E1\", \"E3\", \"E4\", \"E5\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-AVAILABILITY\",\n    \"rationale\": \"The issue is confined to a specific feature and does not affect core portal functions.\",\n    \"source_refs\": [\"KB:CAT-AVAILABILITY\", \"E1\", \"E3\", \"E4\", \"E5\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-WEB\",\n    \"additional_area_ids\": [\"SVC-API\", \"PLT-STORAGE\"],\n    \"rationale\": \"The issue is directly related to the customer web portal and involves its interaction with backend services.\",\n    \"source_refs\": [\"KB:SVC-WEB\", \"KB:DEP:SVC-WEB:SVC-API\", \"KB:DEP:SVC-WEB:PLT-STORAGE\", \"E1\", \"E2\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-DIGITAL\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The Digital Experience Team is primarily responsible for the customer web portal and its frontend application code.\",\n    \"source_refs\": [\"KB:RG-DIGITAL\", \"E1\", \"E2\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Investigate client-side JavaScript errors in comparison-panel.js to identify the root cause of null display labels.\",\n      \"rationale\": \"The error observed in E2 indicates a specific issue with rendering product attributes. This action will help pinpoint the exact defect.\",\n      \"source_refs\": [\"KB:ACT-001\", \"E2\"],\n      \"common_action_id\": \"ACT-001\"\n    },\n    {\n      \"action\": \"Verify that all affected products have valid display labels in the database and application configuration.\",\n      \"rationale\": \"This action will ensure that the issue is not due to missing or invalid data on the backend side.\",\n      \"source_refs\": [\"KB:ACT-002\", \"E5\"],\n      \"common_action_id\": \"ACT-002\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The complete set of product records containing null display labels has not yet been established.\",\n      \"why_needed\": \"To fully understand the scope and impact of the issue.\",\n      \"affected_decisions\": [\"severity\", \"affected_area\"],\n      \"requested_evidence\": \"A list of all products with null display labels.\"\n    },\n    {\n      \"missing_information\": \"It is not known whether the defect affects any browser versions not represented in current reports.\",\n      \"why_needed\": \"To determine if the issue is browser-specific or more widespread.\",\n      \"affected_decisions\": [\"severity\", \"affected_area\"],\n      \"requested_evidence\": \"Browser telemetry data from additional user sessions.\"\n    },\n    {\n      \"missing_information\": \"The time required to correct and release the client-side rendering defect is unknown.\",\n      \"why_needed\": \"To estimate the duration of the workaround or potential impact on service availability.\",\n      \"affected_decisions\": [\"severity\", \"initial_actions\"],\n      \"requested_evidence\": \"Estimate from development team.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The severity and affected area are provisionally classified based on available evidence. Further investigation is required to confirm the exact impact and root cause.\",\n  \"advisory_only\": true\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "Medium",
+        "rationale": "The issue affects a subset of users and is confined to an optional feature. No data loss, corruption, or security exposure has been reported.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "E1",
+          "E3",
+          "E4",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "Medium",
+        "rationale": "Medium severity is supported by a contained or partial disruption with manageable operational impact.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "KB:SVC-WEB",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-AVAILABILITY",
+        "rationale": "The issue is confined to a specific feature and does not affect core portal functions.",
+        "source_refs": [
+          "KB:CAT-AVAILABILITY",
+          "E1",
+          "E3",
+          "E4",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-PERFORMANCE",
+        "rationale": "Performance Degradation is selected provisionally because service impact is present without sufficient evidence for a more specific technical category.",
+        "source_refs": [
+          "KB:CAT-PERFORMANCE",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-WEB",
+        "additional_area_ids": [
+          "SVC-API",
+          "PLT-STORAGE"
+        ],
+        "rationale": "The issue is directly related to the customer web portal and involves its interaction with backend services.",
+        "source_refs": [
+          "KB:SVC-WEB",
+          "KB:DEP:SVC-WEB:SVC-API",
+          "KB:DEP:SVC-WEB:PLT-STORAGE",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-API",
+        "additional_area_ids": [
+          "SVC-WEB"
+        ],
+        "rationale": "The selected primary area is the directly implicated dependency, while the reported service remains the visible affected service.",
+        "source_refs": [
+          "KB:DEP:SVC-WEB:SVC-API",
+          "KB:SVC-API",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-DIGITAL",
+        "coordination_group_ids": [],
+        "rationale": "The Digital Experience Team is primarily responsible for the customer web portal and its frontend application code.",
+        "source_refs": [
+          "KB:RG-DIGITAL",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-NETWORK",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-NETWORK",
+          "KB:SVC-API"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:SVC-WEB",
+        "KB:CAT-AVAILABILITY"
+      ],
+      "revised": [
+        "E1",
+        "E2",
+        "E3",
+        "KB:SVC-API"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Investigate client-side JavaScript errors in comparison-panel.js to identify the root cause of null display labels.",
+        "rationale": "The error observed in E2 indicates a specific issue with rendering product attributes. This action will help pinpoint the exact defect.",
+        "source_refs": [
+          "KB:ACT-001",
+          "E2"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "revised": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E2",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Verify that all affected products have valid display labels in the database and application configuration.",
+        "rationale": "This action will ensure that the issue is not due to missing or invalid data on the backend side.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E5",
+          "KB:ACT-002"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The severity and affected area are provisionally classified based on available evidence. Further investigation is required to confirm the exact impact and root cause.",
+      "revised": "The severity and affected area are provisionally classified based on available evidence. Further investigation is required to confirm the exact impact and underlying cause.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [
+    "Output contains unknown or unprovided source references: KB:ACT-001, KB:ACT-002"
+  ],
+  "elapsed_seconds": 382.2163161000353,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T18:06:45.6083974Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 382097242900,
+    "load_duration": 1041702400,
+    "prompt_eval_count": 4088,
+    "prompt_eval_duration": 18723669000,
+    "eval_count": 893,
+    "eval_duration": 353863969000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-WEB:PLT-EDGE",
+    "KB:DEP:SVC-WEB:PLT-STORAGE",
+    "KB:DEP:SVC-WEB:SVC-API",
+    "KB:DEP:SVC-WEB:SVC-AUTH",
+    "KB:PLT-EDGE",
+    "KB:PLT-STORAGE",
+    "KB:RG-DATA",
+    "KB:RG-DIGITAL",
+    "KB:RG-IAM",
+    "KB:RG-INFRA",
+    "KB:RG-NETWORK",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-API",
+    "KB:SVC-AUTH",
+    "KB:SVC-WEB"
+  ],
+  "selected_runbook_ids": []
+}

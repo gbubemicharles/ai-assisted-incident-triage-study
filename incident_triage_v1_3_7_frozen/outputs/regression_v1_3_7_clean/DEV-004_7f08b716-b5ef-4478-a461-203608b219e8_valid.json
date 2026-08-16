@@ -1,0 +1,614 @@
+{
+  "run_id": "7f08b716-b5ef-4478-a461-203608b219e8",
+  "recorded_at_utc": "2026-07-25T12:13:29.945351+00:00",
+  "status": "valid",
+  "incident": {
+    "incident_id": "DEV-004",
+    "title": "Isolated notification-template rendering errors",
+    "reported_affected_service_ids": [
+      "SVC-NOTIFY"
+    ],
+    "alert_or_symptom": "A small number of notification messages using one promotional template are failing to render, while normal notification processing remains available.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "log",
+        "source_name": "Notification Service application log",
+        "observation": "Fourteen messages using template PROMO-V4 generated an unhandled TemplateRenderException between 16:22 and 16:28.",
+        "observed_at": "2026-07-23T16:28:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "metric",
+        "source_name": "Notification processing success rate",
+        "observation": "The Notification Service processed 12,386 of 12,400 messages successfully during the same period, giving a success rate of 99.89 percent.",
+        "observed_at": "2026-07-23T16:29:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "status",
+        "source_name": "Related component health",
+        "observation": "The Message Broker, Application Compute Cluster and External Email and SMS Provider are healthy and operating normally.",
+        "observed_at": "2026-07-23T16:30:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "user_report",
+        "source_name": "Internal campaign operator report",
+        "observation": "The rendering issue is limited to one internal promotional test campaign; transactional customer notifications are unaffected.",
+        "observed_at": "2026-07-23T16:31:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "available",
+      "impact_scope": "isolated",
+      "user_impact_description": "Fourteen internal promotional test messages failed to render; production transactional notifications continue to process normally.",
+      "business_function_affected": "Internal promotional-message testing",
+      "affected_user_estimate": 1,
+      "geographic_scope": "Internal United Kingdom marketing test account",
+      "workaround_status": "available",
+      "workaround_description": "The campaign operator can use another existing approved template for the test messages.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Notification Service consumes events from the Message Broker and sends messages through the External Email and SMS Provider.",
+      "Production transactional notification templates continue to operate normally."
+    ],
+    "recent_changes": [
+      {
+        "change_id": "C1",
+        "change_type": "application deployment",
+        "description": "A Notification Service template-parser update was deployed at 15:55.",
+        "occurred_at": "2026-07-23T15:55:00",
+        "confirmed_related_to_incident": false
+      }
+    ],
+    "reported_unknowns": [],
+    "additional_context": [
+      "No failed transactional notifications, customer-facing outage, data loss or security exposure has been observed."
+    ]
+  },
+  "model_output": {
+    "incident_id": "DEV-004",
+    "incident_summary": "Fourteen internal promotional test messages failed to render using template PROMO-V4, while production transactional notifications continue to process normally.",
+    "summary_source_refs": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "The issue is limited to a subset of messages and does not affect the overall availability or performance of the service. A workaround exists, but the failure indicates an application-level problem.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "rationale": "The failure is directly associated with the application code, specifically related to template rendering.",
+      "source_refs": [
+        "KB:CAT-APPLICATION",
+        "E1",
+        "E4"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [],
+      "rationale": "The Notification Service is the directly implicated component.",
+      "source_refs": [
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E4"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "rationale": "The Messaging and Communications Team is primarily responsible for the Notification Service.",
+      "source_refs": [
+        "KB:RG-MESSAGING",
+        "KB:SVC-NOTIFY"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify the root cause of the TemplateRenderException.",
+        "rationale": "Reviewing application-level logs can help pinpoint the issue with template rendering.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that might have impacted the Notification Service.",
+        "rationale": "Recent updates could be related to the observed failure.",
+        "source_refs": [
+          "KB:ACT-004",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies, particularly the Message Broker and External Email and SMS Provider.",
+        "rationale": "Ensuring that these components are healthy can help rule out external issues affecting the Notification Service.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      {
+        "action": "Confirm the current service owner and resolver group to ensure proper incident management.",
+        "rationale": "Clarifying ownership can prevent delays in resolving the issue.",
+        "source_refs": [
+          "KB:ACT-006",
+          "KB:SVC-NOTIFY"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The exact nature of the TemplateRenderException and its root cause are not yet known.",
+        "why_needed": "Understanding the root cause is necessary to resolve the issue and prevent future occurrences.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Detailed logs, stack traces, and any relevant application-level metrics."
+      }
+    ],
+    "uncertainty_statement": "The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "DEV-004",
+    "incident_summary": "Fourteen internal promotional test messages failed to render using template PROMO-V4, while production transactional notifications continue to process normally.",
+    "summary_source_refs": [
+      "E1",
+      "E4",
+      "E2",
+      "KB:SVC-NOTIFY"
+    ],
+    "severity": {
+      "level": "Low",
+      "rationale": "Low severity is supported because the service remains available and the reported impact is isolated.",
+      "source_refs": [
+        "KB:SEVERITY:Low",
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E2"
+      ],
+      "provisional": false
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+      "source_refs": [
+        "KB:CAT-APPLICATION",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-NOTIFY",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-MESSAGING",
+        "KB:SVC-NOTIFY"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-004",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Preserve the incident output and supporting evidence for subsequent investigation.",
+        "rationale": "Preserve the current incident evidence and triage record for handover and subsequent investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-010",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-010"
+      }
+    ],
+    "information_gaps": [],
+    "uncertainty_statement": "The supplied evidence supports the initial triage decisions, but a definitive root cause has not been established.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"DEV-004\",\n  \"incident_summary\": \"Fourteen internal promotional test messages failed to render using template PROMO-V4, while production transactional notifications continue to process normally.\",\n  \"summary_source_refs\": [\"E1\", \"E2\", \"E3\", \"E4\"],\n  \"severity\": {\n    \"level\": \"Medium\",\n    \"rationale\": \"The issue is limited to a subset of messages and does not affect the overall availability or performance of the service. A workaround exists, but the failure indicates an application-level problem.\",\n    \"source_refs\": [\"KB:SEVERITY:Medium\", \"E1\", \"E2\", \"E3\", \"E4\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-APPLICATION\",\n    \"rationale\": \"The failure is directly associated with the application code, specifically related to template rendering.\",\n    \"source_refs\": [\"KB:CAT-APPLICATION\", \"E1\", \"E4\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-NOTIFY\",\n    \"additional_area_ids\": [],\n    \"rationale\": \"The Notification Service is the directly implicated component.\",\n    \"source_refs\": [\"KB:SVC-NOTIFY\", \"E1\", \"E4\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-MESSAGING\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The Messaging and Communications Team is primarily responsible for the Notification Service.\",\n    \"source_refs\": [\"KB:RG-MESSAGING\", \"KB:SVC-NOTIFY\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service to identify the root cause of the TemplateRenderException.\",\n      \"rationale\": \"Reviewing application-level logs can help pinpoint the issue with template rendering.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E1\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events that might have impacted the Notification Service.\",\n      \"rationale\": \"Recent updates could be related to the observed failure.\",\n      \"source_refs\": [\"KB:ACT-004\", \"C1\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies, particularly the Message Broker and External Email and SMS Provider.\",\n      \"rationale\": \"Ensuring that these components are healthy can help rule out external issues affecting the Notification Service.\",\n      \"source_refs\": [\"KB:ACT-005\", \"E3\"],\n      \"common_action_id\": \"ACT-005\"\n    },\n    {\n      \"action\": \"Confirm the current service owner and resolver group to ensure proper incident management.\",\n      \"rationale\": \"Clarifying ownership can prevent delays in resolving the issue.\",\n      \"source_refs\": [\"KB:ACT-006\", \"KB:SVC-NOTIFY\"],\n      \"common_action_id\": \"ACT-006\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The exact nature of the TemplateRenderException and its root cause are not yet known.\",\n      \"why_needed\": \"Understanding the root cause is necessary to resolve the issue and prevent future occurrences.\",\n      \"affected_decisions\": [\"severity\", \"incident_category\"],\n      \"requested_evidence\": \"Detailed logs, stack traces, and any relevant application-level metrics.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.\",\n  \"advisory_only\": true,\n  \"definitive_root_cause_established\": false\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "Medium",
+        "rationale": "The issue is limited to a subset of messages and does not affect the overall availability or performance of the service. A workaround exists, but the failure indicates an application-level problem.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "E1",
+          "E2",
+          "E3",
+          "E4"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "Low",
+        "rationale": "Low severity is supported because the service remains available and the reported impact is isolated.",
+        "source_refs": [
+          "KB:SEVERITY:Low",
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E2"
+        ],
+        "provisional": false
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-APPLICATION",
+        "rationale": "The failure is directly associated with the application code, specifically related to template rendering.",
+        "source_refs": [
+          "KB:CAT-APPLICATION",
+          "E1",
+          "E4"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-APPLICATION",
+        "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+        "source_refs": [
+          "KB:CAT-APPLICATION",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-NOTIFY",
+        "additional_area_ids": [],
+        "rationale": "The Notification Service is the directly implicated component.",
+        "source_refs": [
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E4"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-NOTIFY",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-NOTIFY",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-MESSAGING",
+        "coordination_group_ids": [],
+        "rationale": "The Messaging and Communications Team is primarily responsible for the Notification Service.",
+        "source_refs": [
+          "KB:RG-MESSAGING",
+          "KB:SVC-NOTIFY"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-MESSAGING",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-MESSAGING",
+          "KB:SVC-NOTIFY"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "E1",
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "revised": [
+        "E1",
+        "E4",
+        "E2",
+        "KB:SVC-NOTIFY"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service to identify the root cause of the TemplateRenderException.",
+        "rationale": "Reviewing application-level logs can help pinpoint the issue with template rendering.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E1",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that might have impacted the Notification Service.",
+        "rationale": "Recent updates could be related to the observed failure.",
+        "source_refs": [
+          "KB:ACT-004",
+          "C1"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "C1",
+          "KB:ACT-004",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies, particularly the Message Broker and External Email and SMS Provider.",
+        "rationale": "Ensuring that these components are healthy can help rule out external issues affecting the Notification Service.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": null,
+      "reason": "Dependency-validation action was removed because every relevant dependency is explicitly reported healthy.",
+      "rule_id": "GR-ACTION-006"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Confirm the current service owner and resolver group to ensure proper incident management.",
+        "rationale": "Clarifying ownership can prevent delays in resolving the issue.",
+        "source_refs": [
+          "KB:ACT-006",
+          "KB:SVC-NOTIFY"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-006"
+      },
+      "revised": null,
+      "reason": "Redundant ownership-confirmation action was removed because routing is conclusive.",
+      "rule_id": "GR-ACTION-003"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Preserve the incident output and supporting evidence for subsequent investigation.",
+        "rationale": "Preserve the current incident evidence and triage record for handover and subsequent investigation.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-010",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-010"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "information_gaps",
+      "original": {
+        "missing_information": "The exact nature of the TemplateRenderException and its root cause are not yet known.",
+        "why_needed": "Understanding the root cause is necessary to resolve the issue and prevent future occurrences.",
+        "affected_decisions": [
+          "severity",
+          "incident_category"
+        ],
+        "requested_evidence": "Detailed logs, stack traces, and any relevant application-level metrics."
+      },
+      "revised": null,
+      "reason": "An ungrounded or investigation-only gap was removed because it does not materially affect the bounded triage decisions.",
+      "rule_id": "GR-GAP-002"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.",
+      "revised": "The supplied evidence supports the initial triage decisions, but a definitive root cause has not been established.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [],
+  "elapsed_seconds": 300.2699421000143,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T12:13:29.9086209Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 300234960500,
+    "load_duration": 8928101600,
+    "prompt_eval_count": 4008,
+    "prompt_eval_duration": 18164693000,
+    "eval_count": 851,
+    "eval_duration": 273033625000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-010",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-NOTIFY:EXT-COMMS",
+    "KB:DEP:SVC-NOTIFY:PLT-COMPUTE",
+    "KB:DEP:SVC-NOTIFY:PLT-MESSAGING",
+    "KB:EXT-COMMS",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-MESSAGING",
+    "KB:RB-003",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-OPS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-NOTIFY"
+  ],
+  "selected_runbook_ids": [
+    "RB-003"
+  ]
+}

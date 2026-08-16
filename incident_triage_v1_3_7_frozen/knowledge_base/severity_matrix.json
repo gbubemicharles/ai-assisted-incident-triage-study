@@ -1,0 +1,86 @@
+{
+  "severity_levels": [
+    {
+      "name": "Critical",
+      "rank": 1,
+      "definition": "Complete outage or severe degradation of a business-critical service, widespread impact, or confirmed risk of serious operational harm.",
+      "typical_indicators": [
+        "business-critical service unavailable",
+        "widespread or multi-region impact",
+        "multiple critical services affected",
+        "no effective workaround",
+        "confirmed data loss or corruption",
+        "serious security exposure"
+      ],
+      "response_priority": "Immediate coordinated response and escalation"
+    },
+    {
+      "name": "High",
+      "rank": 2,
+      "definition": "Major outage or substantial degradation of an important service with significant but not catastrophic impact.",
+      "typical_indicators": [
+        "major functionality unavailable",
+        "multiple users or components affected",
+        "substantial service degradation",
+        "limited or unsustainable workaround",
+        "urgent resolver-team engagement required"
+      ],
+      "response_priority": "Urgent investigation"
+    },
+    {
+      "name": "Medium",
+      "rank": 3,
+      "definition": "Partial or contained disruption with manageable impact and an available workaround.",
+      "typical_indicators": [
+        "subset of users affected",
+        "single component affected",
+        "non-critical feature unavailable",
+        "performance degradation with manageable impact",
+        "effective workaround available"
+      ],
+      "response_priority": "Prioritised normal investigation"
+    },
+    {
+      "name": "Low",
+      "rank": 4,
+      "definition": "Minimal or no current user impact, isolated non-critical fault, warning or informational condition.",
+      "typical_indicators": [
+        "isolated user or component",
+        "cosmetic issue",
+        "no demonstrated service impact",
+        "informational alert",
+        "routine corrective action sufficient"
+      ],
+      "response_priority": "Routine or planned action"
+    }
+  ],
+  "automatic_escalation_rules": [
+    {
+      "condition": "confirmed_data_loss_corruption_or_serious_security_exposure",
+      "minimum_severity": "Critical"
+    },
+    {
+      "condition": "complete_outage_of_business_critical_service_without_workaround",
+      "minimum_severity": "Critical"
+    },
+    {
+      "condition": "cascading_failure_across_critical_services_or_regions",
+      "minimum_severity": "Critical"
+    },
+    {
+      "condition": "complete_outage_of_important_service_with_substantial_user_impact",
+      "minimum_severity": "High"
+    },
+    {
+      "condition": "severe_widespread_degradation_without_sustainable_workaround",
+      "minimum_severity": "High"
+    }
+  ],
+  "classification_rules": {
+    "use_observed_evidence_only": true,
+    "highest_supported_severity_applies": true,
+    "identify_missing_information": true,
+    "allow_provisional_classification": true,
+    "do_not_use_arbitrary_confidence_percentages": true
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "reference_id": "REF-EVAL-002",
+  "incident_id": "EVAL-002",
+  "established_before_execution": true,
+  "purpose": "Held-out severity-boundary reference outcome for a complete loss of one notification function affecting a contained subset of users, where the affected service is standard, other business flows remain available and an effective approved workaround exists.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that automated dispatch notifications are unavailable for the North Fulfilment Centre.",
+      "State that 186 notification attempts failed and 23 operations staff are affected.",
+      "State that other notification workflows and order processing remain available.",
+      "Mention that an approved manual customer-contact procedure is available and currently effective.",
+      "State that the directly responsible technical condition has not been identified.",
+      "Do not claim that a specific application, messaging, external-provider or configuration condition caused the failures."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": false,
+      "rationale": "The unavailable function is confined to one fulfilment centre and a subset of users. The Notification Service is a standard Tier 3 service, other notification and order-processing flows remain available, and an approved manual alternative is keeping priority activity within the operational target. These factors support a contained and manageable Medium-severity incident rather than High or Critical severity."
+    },
+    "incident_category": {
+      "code": "CAT-AVAILABILITY",
+      "provisional": true,
+      "rationale": "The directly supported condition is unavailability of the affected notification function. The evidence does not identify a more specific application, infrastructure, network, dependency or configuration condition, so the availability category remains provisional."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-NOTIFY",
+      "additional_area_ids": [],
+      "provisional": true,
+      "rationale": "The Notification Service is the visible affected service, but no underlying component or dependency has been directly implicated. Other systems must not be added as affected areas without supporting evidence."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-MESSAGING owns the Notification Service. The contained Medium-severity impact does not require Critical-incident or multi-service coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-004",
+        "ACT-006"
+      ],
+      "expected_primary_runbook_id": "RB-001",
+      "prohibited_recommendations": [
+        "restart the Notification Service or any supporting component",
+        "roll back a deployment",
+        "modify application or infrastructure configuration",
+        "change messaging or external-provider settings",
+        "automatically resend or alter customer notifications",
+        "initiate broad remediation across unrelated notification workflows",
+        "declare a specific component or technical condition to be the definitive root cause",
+        "claim that any investigative or remedial action has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "The directly responsible technical component and failure condition.",
+      "The stage at which the affected notification requests are failing and the independently verified health of relevant dependencies.",
+      "The expected restoration time for automated dispatch notifications."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario deliberately tests whether the framework distinguishes contained operational impact from a major service-wide outage.",
+    "The complete loss of the affected function does not by itself establish High severity because the service is standard, the scope is limited, core order processing continues and an effective workaround exists.",
+    "The reference outcome must not be changed if the frozen framework applies a more severe rule during evaluation.",
+    "The generic HTTP 503 response establishes unavailability but not an application, infrastructure, dependency or configuration cause.",
+    "The scenario is materially distinct from DEV-004, which contained direct application-exception evidence, affected only an internal test template and was classified as a Low-severity application incident."
+  ]
+}

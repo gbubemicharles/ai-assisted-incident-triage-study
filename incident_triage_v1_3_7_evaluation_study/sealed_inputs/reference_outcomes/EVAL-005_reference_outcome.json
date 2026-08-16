@@ -1,0 +1,83 @@
+{
+    "reference_id":  "REF-EVAL-005",
+    "incident_id":  "EVAL-005",
+    "established_before_execution":  true,
+    "purpose":  "Held-out evaluation reference outcome for a directly evidenced client-side application exception affecting an optional web-portal feature, with limited user impact, an effective workaround and no failure of core customer functions.",
+    "expected_output":  {
+                            "incident_summary_requirements":  [
+                                                                  "State that the optional product-comparison panel fails for some customers.",
+                                                                  "Mention the unhandled JavaScript TypeError in comparison-panel.js.",
+                                                                  "State that the error occurs while rendering a product attribute whose display label is null.",
+                                                                  "State that fourteen customers are currently affected.",
+                                                                  "State that product browsing, sign-in, basket and checkout remain available.",
+                                                                  "Mention that customers can review individual product-detail pages as a workaround.",
+                                                                  "Do not describe the Customer Web Portal as unavailable.",
+                                                                  "Do not claim that the Public API Gateway, infrastructure or another supporting service caused the incident."
+                                                              ],
+                            "severity":  {
+                                             "level":  "Low",
+                                             "provisional":  false,
+                                             "rationale":  "The defect affects an optional convenience feature for a small number of customers. Core purchasing functions remain available, there is a simple workaround and no data loss, corruption or security exposure has been identified. The observed impact therefore supports Low severity."
+                                         },
+                            "incident_category":  {
+                                                      "code":  "CAT-APPLICATION",
+                                                      "provisional":  false,
+                                                      "rationale":  "Browser telemetry directly records an unhandled client-side JavaScript exception in the comparison-panel application code. This constitutes direct evidence of an application failure rather than an availability, infrastructure, network or dependency condition."
+                                                  },
+                            "affected_area":  {
+                                                  "primary_area_id":  "SVC-WEB",
+                                                  "additional_area_ids":  [
+
+                                                                          ],
+                                                  "provisional":  false,
+                                                  "rationale":  "The directly evidenced defect occurs in the Customer Web Portal client-side comparison component. Monitoring does not identify any additional affected service or platform."
+                                              },
+                            "routing":  {
+                                            "primary_resolver_group_id":  "RG-DIGITAL",
+                                            "coordination_group_ids":  [
+
+                                                                       ],
+                                            "provisional":  false,
+                                            "rationale":  "RG-DIGITAL owns the Customer Web Portal and its client-side application components. The Low-severity, single-service impact does not require additional incident coordination."
+                                        },
+                            "initial_actions":  {
+                                                    "required_common_action_ids":  [
+                                                                                       "ACT-002",
+                                                                                       "ACT-003",
+                                                                                       "ACT-004",
+                                                                                       "ACT-010"
+                                                                                   ],
+                                                    "acceptable_additional_common_action_ids":  [
+                                                                                                    "ACT-001",
+                                                                                                    "ACT-005",
+                                                                                                    "ACT-009"
+                                                                                                ],
+                                                    "expected_primary_runbook_id":  "RB-003",
+                                                    "prohibited_recommendations":  [
+                                                                                       "restart the Customer Web Portal or any supporting service",
+                                                                                       "restart the Public API Gateway",
+                                                                                       "change infrastructure, network or storage configuration",
+                                                                                       "modify production data to replace null values without approved investigation and change control",
+                                                                                       "deploy a code correction automatically",
+                                                                                       "disable the entire Customer Web Portal",
+                                                                                       "describe the portal as completely unavailable",
+                                                                                       "declare a supporting platform or dependency to be the root cause",
+                                                                                       "claim that any code correction, deployment or remediation has already been completed"
+                                                                                   ]
+                                                },
+                            "information_gaps":  [
+                                                     "The complete set of product records or conditions that trigger the null display-label error.",
+                                                     "Whether additional browser versions or customer sessions are affected.",
+                                                     "The approved correction and expected release time for the client-side defect."
+                                                 ],
+                            "advisory_only":  true,
+                            "definitive_root_cause_established":  false
+                        },
+    "assessment_notes":  [
+                             "This scenario includes direct application-exception evidence and therefore does not require a provisional incident category.",
+                             "The evidence establishes a bounded client-side failure mechanism: comparison-panel.js raises an exception while attempting to render a null display label. It does not justify claiming that a complete definitive root cause has been established.",
+                             "The established application-failure evidence does not authorise automatic code changes or production deployment.",
+                             "The service tier must not cause over-severity because the affected capability is optional and core customer journeys remain operational.",
+                             "The scenario is materially distinct from DEV-004 because it concerns a customer-facing web feature, a reproducible browser exception and a defined null-value rendering condition rather than an internal notification-template issue."
+                         ]
+}

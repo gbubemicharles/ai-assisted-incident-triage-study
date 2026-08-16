@@ -1,0 +1,87 @@
+{
+  "reference_id": "REF-EVAL-010",
+  "incident_id": "EVAL-010",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for a directly evidenced object-storage access-configuration failure that prevents the Customer Web Portal CDN origin from retrieving web assets while the storage platform, objects and core portal functions remain available.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that Customer Web Portal asset requests are receiving HTTP 403 AccessDenied responses.",
+      "Mention that 73.6 percent of uncached image, stylesheet and document requests failed.",
+      "State that the active storage access policy omits the expected read permission for the portal CDN origin identity.",
+      "State that the affected objects remain present and the Object Storage Platform is available.",
+      "State that product text, search, sign-in, basket and checkout remain operational.",
+      "Mention that customers are experiencing missing images, incomplete styling and unavailable document downloads.",
+      "Do not describe the Object Storage Platform or Customer Web Portal as completely unavailable.",
+      "Do not claim that objects have been deleted, lost or corrupted."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": false,
+      "rationale": "The issue affects web-asset presentation across the Customer Web Portal, but core browsing, authentication, basket and checkout functions remain operational. No transaction failure, data loss, corruption or security exposure is confirmed, and customers can continue purchasing. The service-wide but manageable degradation therefore supports Medium severity."
+    },
+    "incident_category": {
+      "code": "CAT-DEPENDENCY-CONFIG",
+      "provisional": false,
+      "rationale": "Storage access-policy and CDN-origin evidence directly establish that the expected read permission is absent from the active policy. This is a configuration and dependency-access failure rather than storage unavailability, application failure or unexplained service degradation."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-STORAGE",
+      "additional_area_ids": [
+        "SVC-WEB"
+      ],
+      "provisional": false,
+      "rationale": "The directly implicated condition is the access policy enforced by the Object Storage Platform. The Customer Web Portal is an additional affected service because its asset requests are denied, while the platform and stored objects remain otherwise available."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-INFRA",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-INFRA owns the Object Storage Platform and its cloud-resource configuration. The Medium-severity, single-service impact does not require critical-incident or cross-team coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-005",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-011",
+      "prohibited_recommendations": [
+        "change or restore storage permissions automatically",
+        "make the storage location or affected objects public",
+        "bypass storage access controls",
+        "replace, delete or recreate the affected objects",
+        "change CDN-origin identity or CDN configuration",
+        "restart the Object Storage Platform or Customer Web Portal",
+        "redeploy the Customer Web Portal",
+        "describe the storage platform or portal as completely unavailable",
+        "claim that objects have been lost or corrupted",
+        "declare that the administrative reason for the permission omission has been definitively established",
+        "claim that the access policy or web-asset delivery has already been corrected"
+      ]
+    },
+    "information_gaps": [
+      "Why the expected portal CDN-origin read permission was omitted from the active policy and what configuration was formally approved.",
+      "The complete set of affected objects and the extent to which cached assets are masking impact.",
+      "Whether any additional authorised storage consumers are affected.",
+      "The expected time for an approved correction and full restoration of web-asset delivery."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The object-storage access failure is directly established, so the category and primary affected area are non-provisional.",
+    "The Object Storage Platform remains available and the objects remain intact; the failure concerns access configuration.",
+    "SVC-WEB is an additional affected area but is not the directly responsible technical component.",
+    "The omitted permission is directly associated with the incident, while the administrative reason for its omission remains unknown.",
+    "The evidence must not be used to recommend changing permissions, making objects public or bypassing access controls.",
+    "The scenario is materially distinct from the formative scenarios because none involved object-storage access policy or customer web-asset delivery."
+  ]
+}

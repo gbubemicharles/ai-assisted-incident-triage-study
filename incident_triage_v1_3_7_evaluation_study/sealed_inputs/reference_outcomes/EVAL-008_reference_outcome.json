@@ -1,0 +1,82 @@
+{
+  "reference_id": "REF-EVAL-008",
+  "incident_id": "EVAL-008",
+  "established_before_execution": true,
+  "purpose": "Held-out evaluation reference outcome for a directly evidenced DNS-resolution failure restricted to one internal test hostname, with no customer-facing impact and an effective approved workaround.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that preview-internal.example.test returns NXDOMAIN.",
+      "State that the hostname is absent from the currently served authoritative DNS zone data.",
+      "State that six engineers are affected.",
+      "State that production DNS records, CDN distributions and load balancers remain healthy.",
+      "State that no customer-facing service is affected.",
+      "Mention that an approved direct internal load-balancer address is available as a workaround.",
+      "Do not describe the production edge platform as unavailable.",
+      "Do not claim that the reason for the missing DNS record has been definitively established."
+    ],
+    "severity": {
+      "level": "Low",
+      "provisional": false,
+      "rationale": "The fault is isolated to one internal non-production hostname, affects six engineers, has no demonstrated customer or production impact and has an effective approved workaround. These conditions support Low severity despite the criticality of the wider edge platform."
+    },
+    "incident_category": {
+      "code": "CAT-INFRA-NETWORK",
+      "provisional": false,
+      "rationale": "Authoritative DNS evidence directly establishes a name-resolution failure: the affected hostname returns NXDOMAIN and is absent from the served zone data. This supports a non-provisional infrastructure/network classification."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-EDGE",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The directly evidenced fault is within the DNS function of the DNS, CDN and Load-Balancing Platform. No application service or production edge component has been shown to be additionally affected."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-NETWORK owns PLT-EDGE and its DNS function. The isolated Low-severity internal impact does not require cross-team or critical-incident coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-005",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-005",
+      "prohibited_recommendations": [
+        "create, restore or modify the DNS record automatically",
+        "modify authoritative DNS-zone data without approved change control",
+        "change production DNS records",
+        "change CDN or load-balancer configuration",
+        "change firewall or routing rules",
+        "disable DNS or security controls",
+        "restart the DNS platform",
+        "describe the production edge platform as unavailable",
+        "declare that record deletion, expiration or an earlier change is the definitive root cause",
+        "claim that the DNS record or service has already been restored"
+      ]
+    },
+    "information_gaps": [
+      "Why the internal hostname is absent from the currently served DNS zone data.",
+      "Whether the record was removed, expired or omitted during an approved DNS-zone process.",
+      "The expected restoration time through the normal change-controlled process."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "The DNS failure itself is directly established, so the category and affected area are non-provisional.",
+    "The underlying administrative or technical reason for the missing record remains unknown, so definitive-root-cause status must remain false.",
+    "The wider PLT-EDGE service tier must not cause over-severity because production services are healthy and the impact is isolated to an internal test hostname.",
+    "The approved workaround and absence of customer impact support Low severity.",
+    "The scenario is materially distinct from DEV-003 because it concerns isolated authoritative DNS resolution rather than a multi-service compute-cluster network partition."
+  ]
+}

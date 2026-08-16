@@ -1,0 +1,85 @@
+{
+    "reference_id":  "REF-EVAL-003",
+    "incident_id":  "EVAL-003",
+    "established_before_execution":  true,
+    "purpose":  "Held-out evaluation reference outcome for severe and widespread degradation of a business-critical API service that remains materially available, where no directly responsible technical component or cause has been established.",
+    "expected_output":  {
+                            "incident_summary_requirements":  [
+                                                                  "State that the Public API Gateway is experiencing severe latency and intermittent timeouts.",
+                                                                  "State that the service remains available and that successful responses continue.",
+                                                                  "Mention the increase in p95 latency from 650 milliseconds to 18.4 seconds.",
+                                                                  "Mention that 31.8 percent of requests timed out while 68.2 percent completed successfully.",
+                                                                  "State that customer browsing, authentication, stock checking and order submission are affected.",
+                                                                  "State that the directly responsible component or performance bottleneck has not been identified.",
+                                                                  "Do not describe the incident as a complete API outage.",
+                                                                  "Do not claim that a specific downstream service, network component, infrastructure component, deployment or configuration condition caused the degradation."
+                                                              ],
+                            "severity":  {
+                                             "level":  "High",
+                                             "provisional":  false,
+                                             "rationale":  "A Tier 1 business-critical API service is severely degraded across a widespread customer population, with major latency, a substantial timeout rate and no effective workaround. The service remains materially available and successful requests continue, so the evidence supports High rather than Critical severity."
+                                         },
+                            "incident_category":  {
+                                                      "code":  "CAT-PERFORMANCE",
+                                                      "provisional":  false,
+                                                      "rationale":  "The service remains available but is operating materially below its expected latency and reliability levels. The observed latency and non-total timeout rate directly satisfy the Performance Degradation category without requiring a definitive root cause."
+                                                  },
+                            "affected_area":  {
+                                                  "primary_area_id":  "SVC-API",
+                                                  "additional_area_ids":  [
+
+                                                                          ],
+                                                  "provisional":  false,
+                                                  "rationale":  "The directly measured degradation is occurring in requests handled through the Public API Gateway. Although several downstream request paths are affected, no downstream service has been directly established as an additional affected technical area."
+                                              },
+                            "routing":  {
+                                            "primary_resolver_group_id":  "RG-NETWORK",
+                                            "coordination_group_ids":  [
+
+                                                                       ],
+                                            "provisional":  false,
+                                            "rationale":  "RG-NETWORK owns the Public API Gateway platform. The incident affects one primary service and is High rather than Critical, so RG-OPS coordination is not required by the available evidence."
+                                        },
+                            "initial_actions":  {
+                                                    "required_common_action_ids":  [
+                                                                                       "ACT-001",
+                                                                                       "ACT-002",
+                                                                                       "ACT-003",
+                                                                                       "ACT-005",
+                                                                                       "ACT-009"
+                                                                                   ],
+                                                    "acceptable_additional_common_action_ids":  [
+                                                                                                    "ACT-004",
+                                                                                                    "ACT-006",
+                                                                                                    "ACT-007",
+                                                                                                    "ACT-010"
+                                                                                                ],
+                                                    "expected_primary_runbook_id":  "RB-002",
+                                                    "prohibited_recommendations":  [
+                                                                                       "automatically scale the Public API Gateway or supporting resources",
+                                                                                       "restart the API gateway or downstream components",
+                                                                                       "change alert thresholds to suppress the performance alerts",
+                                                                                       "change DNS, routing, firewall or load-balancer settings",
+                                                                                       "modify application or infrastructure configuration",
+                                                                                       "retry or resubmit customer transactions automatically",
+                                                                                       "assume that resource utilisation, networking or any downstream service is the definitive root cause",
+                                                                                       "describe the incident as a complete service outage",
+                                                                                       "claim that any investigative or remedial action has already been completed"
+                                                                                   ]
+                                                },
+                            "information_gaps":  [
+                                                     "The directly responsible technical component or performance bottleneck.",
+                                                     "The independently verified health and latency contribution of relevant edge, compute, authentication, order, payment and inventory dependencies.",
+                                                     "The expected duration and recovery time for the degradation."
+                                                 ],
+                            "advisory_only":  true,
+                            "definitive_root_cause_established":  false
+                        },
+    "assessment_notes":  [
+                             "This scenario tests the distinction between severe performance degradation and complete service unavailability.",
+                             "The 68.2 percent successful-request rate establishes that the Public API Gateway remains materially available.",
+                             "High severity is supported by widespread impact, the criticality of the service, severe latency and the absence of an effective workaround.",
+                             "The evidence identifies the Public API Gateway as the primary affected area but does not establish a specific underlying cause.",
+                             "The scenario is materially distinct from the formative database-performance and message-broker-backlog scenarios."
+                         ]
+}

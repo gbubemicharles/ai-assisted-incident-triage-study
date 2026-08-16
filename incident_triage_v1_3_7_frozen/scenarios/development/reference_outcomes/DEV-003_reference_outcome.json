@@ -1,0 +1,72 @@
+{
+  "reference_id": "REF-DEV-003",
+  "incident_id": "DEV-003",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing Critical multi-service infrastructure triage, shared-platform identification, technical ownership and justified RG-OPS coordination.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Public API Gateway, Identity and Access Service and Order Management Service are simultaneously affected.",
+      "Describe the customer impact across the United Kingdom and Ireland storefronts.",
+      "Identify the Application Compute Cluster network partition as the directly implicated technical condition without declaring a definitive root cause.",
+      "Do not list the healthy edge, database or messaging platforms as affected."
+    ],
+    "severity": {
+      "level": "Critical",
+      "provisional": false,
+      "rationale": "Multiple business-critical services are effectively unusable across two storefront regions, no workaround is available, and the impact is widespread and simultaneous."
+    },
+    "incident_category": {
+      "code": "CAT-INFRA-NETWORK",
+      "provisional": false,
+      "rationale": "The evidence directly identifies a network partition within the shared Application Compute Cluster rather than an application, dependency or symptom-only failure."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-COMPUTE",
+      "additional_area_ids": [
+        "SVC-API",
+        "SVC-AUTH",
+        "SVC-ORDER"
+      ],
+      "provisional": false,
+      "rationale": "The Application Compute Cluster is the shared directly implicated technical area; the three reported services are the visible affected services."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-INFRA",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "provisional": false,
+      "rationale": "The Cloud Infrastructure Team owns the directly implicated compute platform, while RG-OPS coordination is justified by Critical multi-service impact."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-008"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-012",
+      "prohibited_recommendations": [
+        "restart or reboot compute nodes",
+        "change routes, firewall rules or DNS settings",
+        "scale the compute cluster",
+        "redeploy or roll back applications",
+        "fail over infrastructure automatically",
+        "declare the network partition to be the definitive root cause"
+      ]
+    },
+    "information_gaps": [],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario deliberately uses a shared infrastructure condition affecting three critical services so that RG-OPS coordination is required rather than merely optional.",
+    "No reported unknowns are supplied; the prototype should not invent material information gaps.",
+    "The scenario tests whether healthy components are excluded and whether technical ownership and coordination are represented separately.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

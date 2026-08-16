@@ -1,0 +1,98 @@
+{
+  "incident_id": "EVAL-011",
+  "title": "Multiple customer services degraded with no established common cause",
+  "reported_affected_service_ids": [
+    "SVC-API",
+    "SVC-AUTH",
+    "SVC-ORDER"
+  ],
+  "alert_or_symptom": "The Public API Gateway, Identity and Access Service and Order Management Service are simultaneously experiencing elevated latency and intermittent failures, but all three services remain materially available.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Public API Gateway performance dashboard",
+      "observation": "Public API Gateway p95 latency increased from 700 milliseconds to 11.8 seconds. Of 128,000 requests between 18:02 and 18:22, 18.6 percent timed out and 81.4 percent completed successfully.",
+      "observed_at": "2026-07-25T18:22:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Identity and Access Service transaction dashboard",
+      "observation": "Token-issuance p95 latency increased from 480 milliseconds to 8.6 seconds. During the same interval, 14.2 percent of authentication requests failed and 85.8 percent succeeded.",
+      "observed_at": "2026-07-25T18:23:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "metric",
+      "source_name": "Order Management Service transaction dashboard",
+      "observation": "Order-submission p95 latency increased from 1.1 seconds to 9.7 seconds. Of 19,400 order requests, 11.5 percent failed and 88.5 percent completed successfully.",
+      "observed_at": "2026-07-25T18:24:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "trace",
+      "source_name": "Cross-service distributed tracing summary",
+      "observation": "Elevated request duration appears at different stages across API routing, authentication and order-processing traces. The available traces do not identify one shared component, one consistent failing operation or one directly responsible service.",
+      "observed_at": "2026-07-25T18:25:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "status",
+      "source_name": "Shared-platform health summary",
+      "observation": "No direct compute-host failure, database outage, message-broker failure, DNS failure, load-balancer failure or storage failure has been detected. High-level platform health checks remain successful, but component-level latency contribution has not been independently established.",
+      "observed_at": "2026-07-25T18:26:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "user_report",
+      "source_name": "Digital customer-support summary",
+      "observation": "Customers across the United Kingdom and Ireland report slow page operations, delayed sign-in and intermittent order-submission failures. Many customers can complete their activity after waiting, but repeated order submission is discouraged.",
+      "observed_at": "2026-07-25T18:27:00"
+    },
+    {
+      "evidence_id": "E7",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "SVC-API is the common customer request entry point and has the highest observed timeout rate, but the evidence does not establish that it caused the authentication and order degradation. No application exception, infrastructure failure, network failure, dependency failure or configuration error has been directly established.",
+      "observed_at": "2026-07-25T18:28:00"
+    },
+    {
+      "evidence_id": "E8",
+      "source_type": "incident_record",
+      "source_name": "Initial ownership assessment",
+      "observation": "The available evidence spans services owned by RG-NETWORK, RG-IAM and RG-COMMERCE. A primary technical resolver cannot yet be selected without arbitrarily attributing the incident to one team.",
+      "observed_at": "2026-07-25T18:29:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "severely_degraded",
+    "impact_scope": "multi_service",
+    "user_impact_description": "Customers across the United Kingdom and Ireland are experiencing substantial latency and intermittent failures across API access, authentication and order submission, although successful transactions continue.",
+    "business_function_affected": "Customer digital access, authentication and order processing",
+    "affected_user_estimate": 19600,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "limited",
+    "workaround_description": "Some customer requests succeed after waiting or trying later, but there is no approved method that restores reliable service and repeated order submission is discouraged.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Public API Gateway, Identity and Access Service and Order Management Service are Tier 1 critical services.",
+    "The three affected services have different primary technical owners.",
+    "Successful API, authentication and order transactions continue throughout the incident.",
+    "The Public API Gateway is the common external request entry point, but it has not been established as the cause of downstream degradation."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "Whether the three service degradations share one technical cause or represent more than one concurrent condition.",
+    "The latency contribution and independently verified health of each relevant application and platform dependency.",
+    "Which technical component should be treated as the primary affected area and which resolver team should assume technical ownership.",
+    "The expected duration and recovery time for normal multi-service performance.",
+    "Whether any failed order submissions created partial records or duplicate-processing risk."
+  ],
+  "additional_context": [
+    "No complete service outage, confirmed data loss, corruption or serious security exposure has been identified.",
+    "No recent deployment or configuration change has been directly associated with the incident."
+  ]
+}

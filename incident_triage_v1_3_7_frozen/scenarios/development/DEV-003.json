@@ -1,0 +1,69 @@
+{
+  "incident_id": "DEV-003",
+  "title": "Critical multi-service request disruption",
+  "reported_affected_service_ids": [
+    "SVC-API",
+    "SVC-AUTH",
+    "SVC-ORDER"
+  ],
+  "alert_or_symptom": "Public API requests, user sign-ins and order submissions are failing across the United Kingdom and Ireland storefronts.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Public API request success rate",
+      "observation": "Public API request success fell from 99.8 percent to 0.6 percent at 09:42 across the United Kingdom and Ireland storefronts.",
+      "observed_at": "2026-07-23T09:42:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Authentication and order transaction success",
+      "observation": "Token issuance success fell to 0.4 percent and order-creation success fell to 0.7 percent at the same time.",
+      "observed_at": "2026-07-23T09:43:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Application Compute Cluster event",
+      "observation": "The Application Compute Cluster reports a network partition between workload nodes and the cluster service endpoint; affected workloads cannot establish internal connections.",
+      "observed_at": "2026-07-23T09:43:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "trace",
+      "source_name": "Cross-service request traces",
+      "observation": "Requests to the Public API Gateway, Identity and Access Service and Order Management Service stop at the compute-connection stage before application handlers are reached.",
+      "observed_at": "2026-07-23T09:44:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "status",
+      "source_name": "Related platform health",
+      "observation": "The DNS, CDN and Load-Balancing Platform, Transaction Database Cluster and Message Broker are healthy and operating normally.",
+      "observed_at": "2026-07-23T09:45:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "multi_service",
+    "user_impact_description": "Customers cannot sign in, retrieve account data or submit orders through the affected channels.",
+    "business_function_affected": "Customer access, authentication and order processing",
+    "affected_user_estimate": 42000,
+    "geographic_scope": "United Kingdom and Ireland storefronts",
+    "workaround_status": "none",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Public API Gateway, Identity and Access Service and Order Management Service run on the Application Compute Cluster.",
+    "The edge, transaction-data and messaging platforms remain healthy."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [],
+  "additional_context": [
+    "The impact began simultaneously across all three reported services at 09:42.",
+    "No data loss, duplicate orders or security exposure has been observed."
+  ]
+}

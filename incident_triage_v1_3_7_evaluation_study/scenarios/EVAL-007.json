@@ -1,0 +1,90 @@
+{
+  "incident_id": "EVAL-007",
+  "title": "Shared compute-host failure disrupts multiple critical services",
+  "reported_affected_service_ids": [
+    "SVC-WEB",
+    "SVC-AUTH",
+    "SVC-PAYMENT"
+  ],
+  "alert_or_symptom": "The customer web portal, user authentication and payment processing became unavailable simultaneously after most Application Compute Cluster worker nodes failed.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "status",
+      "source_name": "Application Compute Cluster health",
+      "observation": "Eight of ten worker nodes changed to NotReady between 14:02 and 14:03. The cluster reports insufficient remaining capacity to schedule the affected application workloads.",
+      "observed_at": "2026-07-25T14:03:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "alert",
+      "source_name": "Compute-host infrastructure monitoring",
+      "observation": "The underlying hosts supporting the eight failed worker nodes report host-unavailable and virtual-machine-termination events. The events occurred before the affected application replicas became unavailable.",
+      "observed_at": "2026-07-25T14:04:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Workload scheduling status",
+      "observation": "Customer Web Portal, Identity and Access Service and Payment Processing Service replicas are unavailable because their workloads cannot run on the remaining compute capacity.",
+      "observed_at": "2026-07-25T14:05:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "metric",
+      "source_name": "Critical-service transaction monitoring",
+      "observation": "Portal transaction success fell to 0 percent, token issuance success fell to 0.5 percent and payment-processing success fell to 0.9 percent after the compute-host failures.",
+      "observed_at": "2026-07-25T14:06:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "status",
+      "source_name": "Related platform health summary",
+      "observation": "The DNS, CDN and Load-Balancing Platform, Transaction Database Cluster, Message Broker and Object Storage Platform remain healthy and reachable.",
+      "observed_at": "2026-07-25T14:07:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "user_report",
+      "source_name": "Customer-support incident summary",
+      "observation": "Customers across the United Kingdom and Ireland cannot load the portal, sign in or complete payment. No approved alternative customer channel is available.",
+      "observed_at": "2026-07-25T14:08:00"
+    },
+    {
+      "evidence_id": "E7",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The shared Application Compute Cluster host failure directly explains the simultaneous loss of the affected workloads. The precise physical or hypervisor-level mechanism responsible for the host failures has not yet been determined.",
+      "observed_at": "2026-07-25T14:09:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "multi_service",
+    "user_impact_description": "Customers across the United Kingdom and Ireland cannot access the web portal, authenticate or complete payment because multiple critical application workloads cannot run on the remaining compute capacity.",
+    "business_function_affected": "Customer digital access, authentication and payment processing",
+    "affected_user_estimate": 48500,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "none",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Application Compute Cluster is a Tier 1 shared infrastructure platform.",
+    "The Customer Web Portal, Identity and Access Service and Payment Processing Service are Tier 1 critical services hosted on the cluster.",
+    "The affected workloads require cluster compute capacity to run.",
+    "The edge, database, messaging and storage platforms remain healthy."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The precise physical, virtualisation or hypervisor-level mechanism that caused the compute hosts to become unavailable.",
+    "Whether the failed hosts can safely return to service or replacement capacity will be required.",
+    "The expected restoration time for sufficient compute capacity and the affected services.",
+    "Whether any in-flight authentication or payment requests require subsequent integrity verification."
+  ],
+  "additional_context": [
+    "No data loss, corruption, duplicate payment or serious security exposure has been confirmed.",
+    "The incident affects multiple independently owned critical application services through one directly evidenced shared compute-platform failure."
+  ]
+}

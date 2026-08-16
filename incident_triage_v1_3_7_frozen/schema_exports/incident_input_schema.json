@@ -1,0 +1,323 @@
+{
+  "$defs": {
+    "AvailabilityState": {
+      "enum": [
+        "unavailable",
+        "severely_degraded",
+        "partially_degraded",
+        "available",
+        "unknown"
+      ],
+      "title": "AvailabilityState",
+      "type": "string"
+    },
+    "EvidenceItem": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "pattern": "^E[1-9][0-9]*$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "source_type": {
+          "$ref": "#/$defs/EvidenceSourceType"
+        },
+        "source_name": {
+          "minLength": 1,
+          "title": "Source Name",
+          "type": "string"
+        },
+        "observation": {
+          "minLength": 1,
+          "title": "Observation",
+          "type": "string"
+        },
+        "observed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed At"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_type",
+        "source_name",
+        "observation"
+      ],
+      "title": "EvidenceItem",
+      "type": "object"
+    },
+    "EvidenceSourceType": {
+      "enum": [
+        "alert",
+        "log",
+        "metric",
+        "trace",
+        "status",
+        "incident_record",
+        "change_record",
+        "user_report",
+        "other"
+      ],
+      "title": "EvidenceSourceType",
+      "type": "string"
+    },
+    "ImpactScope": {
+      "enum": [
+        "widespread",
+        "multi_service",
+        "service_wide",
+        "subset_of_users",
+        "isolated",
+        "unknown"
+      ],
+      "title": "ImpactScope",
+      "type": "string"
+    },
+    "RecentChange": {
+      "additionalProperties": false,
+      "properties": {
+        "change_id": {
+          "pattern": "^C[1-9][0-9]*$",
+          "title": "Change Id",
+          "type": "string"
+        },
+        "change_type": {
+          "minLength": 1,
+          "title": "Change Type",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "occurred_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Occurred At"
+        },
+        "confirmed_related_to_incident": {
+          "default": false,
+          "title": "Confirmed Related To Incident",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "change_id",
+        "change_type",
+        "description"
+      ],
+      "title": "RecentChange",
+      "type": "object"
+    },
+    "ServiceComponentID": {
+      "enum": [
+        "SVC-WEB",
+        "SVC-API",
+        "SVC-AUTH",
+        "SVC-ORDER",
+        "SVC-PAYMENT",
+        "SVC-INVENTORY",
+        "SVC-NOTIFY",
+        "PLT-COMPUTE",
+        "PLT-DATABASE",
+        "PLT-MESSAGING",
+        "PLT-EDGE",
+        "PLT-STORAGE",
+        "EXT-PAYMENT",
+        "EXT-COMMS"
+      ],
+      "title": "ServiceComponentID",
+      "type": "string"
+    },
+    "ServiceImpact": {
+      "additionalProperties": false,
+      "properties": {
+        "availability_state": {
+          "$ref": "#/$defs/AvailabilityState"
+        },
+        "impact_scope": {
+          "$ref": "#/$defs/ImpactScope"
+        },
+        "user_impact_description": {
+          "minLength": 1,
+          "title": "User Impact Description",
+          "type": "string"
+        },
+        "business_function_affected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Business Function Affected"
+        },
+        "affected_user_estimate": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Affected User Estimate"
+        },
+        "geographic_scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Geographic Scope"
+        },
+        "workaround_status": {
+          "$ref": "#/$defs/WorkaroundStatus"
+        },
+        "workaround_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Workaround Description"
+        },
+        "data_loss_or_corruption_confirmed": {
+          "default": false,
+          "title": "Data Loss Or Corruption Confirmed",
+          "type": "boolean"
+        },
+        "serious_security_exposure_confirmed": {
+          "default": false,
+          "title": "Serious Security Exposure Confirmed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "availability_state",
+        "impact_scope",
+        "user_impact_description",
+        "workaround_status"
+      ],
+      "title": "ServiceImpact",
+      "type": "object"
+    },
+    "WorkaroundStatus": {
+      "enum": [
+        "none",
+        "limited",
+        "available",
+        "not_required",
+        "unknown"
+      ],
+      "title": "WorkaroundStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "incident_id": {
+      "minLength": 1,
+      "title": "Incident Id",
+      "type": "string"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "reported_affected_service_ids": {
+      "items": {
+        "$ref": "#/$defs/ServiceComponentID"
+      },
+      "minItems": 1,
+      "title": "Reported Affected Service Ids",
+      "type": "array"
+    },
+    "alert_or_symptom": {
+      "minLength": 1,
+      "title": "Alert Or Symptom",
+      "type": "string"
+    },
+    "technical_evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceItem"
+      },
+      "minItems": 1,
+      "title": "Technical Evidence",
+      "type": "array"
+    },
+    "service_impact": {
+      "$ref": "#/$defs/ServiceImpact"
+    },
+    "environmental_context": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Environmental Context",
+      "type": "array"
+    },
+    "recent_changes": {
+      "items": {
+        "$ref": "#/$defs/RecentChange"
+      },
+      "title": "Recent Changes",
+      "type": "array"
+    },
+    "reported_unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reported Unknowns",
+      "type": "array"
+    },
+    "additional_context": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Additional Context",
+      "type": "array"
+    }
+  },
+  "required": [
+    "incident_id",
+    "title",
+    "reported_affected_service_ids",
+    "alert_or_symptom",
+    "technical_evidence",
+    "service_impact"
+  ],
+  "title": "IncidentInput",
+  "type": "object"
+}

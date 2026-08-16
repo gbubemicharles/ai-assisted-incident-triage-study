@@ -1,0 +1,82 @@
+{
+  "routing_policy": {
+    "direct_component_evidence": "Route to the primary resolver group of the directly implicated component.",
+    "symptom_only": "Route to the primary owner of the affected service.",
+    "shared_platform_failure": "Route to the owner of the shared platform component.",
+    "external_dependency": "Route to the internal group that owns the external integration.",
+    "unclear_ownership": "Route provisionally to RG-OPS and identify the ownership information gap.",
+    "critical_incident": "Retain the technical resolver group and add RG-OPS as a coordination requirement where appropriate."
+  },
+  "ownership": [
+    {
+      "component_id": "SVC-WEB",
+      "primary_group": "RG-DIGITAL",
+      "secondary_groups": ["RG-NETWORK"]
+    },
+    {
+      "component_id": "SVC-API",
+      "primary_group": "RG-NETWORK",
+      "secondary_groups": ["RG-INFRA"]
+    },
+    {
+      "component_id": "SVC-AUTH",
+      "primary_group": "RG-IAM",
+      "secondary_groups": ["RG-DATA"]
+    },
+    {
+      "component_id": "SVC-ORDER",
+      "primary_group": "RG-COMMERCE",
+      "secondary_groups": ["RG-DATA", "RG-MESSAGING"]
+    },
+    {
+      "component_id": "SVC-PAYMENT",
+      "primary_group": "RG-PAYMENTS",
+      "secondary_groups": ["RG-DATA", "RG-MESSAGING"]
+    },
+    {
+      "component_id": "SVC-INVENTORY",
+      "primary_group": "RG-COMMERCE",
+      "secondary_groups": ["RG-DATA"]
+    },
+    {
+      "component_id": "SVC-NOTIFY",
+      "primary_group": "RG-MESSAGING",
+      "secondary_groups": []
+    },
+    {
+      "component_id": "PLT-COMPUTE",
+      "primary_group": "RG-INFRA",
+      "secondary_groups": []
+    },
+    {
+      "component_id": "PLT-DATABASE",
+      "primary_group": "RG-DATA",
+      "secondary_groups": ["RG-INFRA"]
+    },
+    {
+      "component_id": "PLT-MESSAGING",
+      "primary_group": "RG-MESSAGING",
+      "secondary_groups": ["RG-INFRA"]
+    },
+    {
+      "component_id": "PLT-EDGE",
+      "primary_group": "RG-NETWORK",
+      "secondary_groups": ["RG-INFRA"]
+    },
+    {
+      "component_id": "PLT-STORAGE",
+      "primary_group": "RG-INFRA",
+      "secondary_groups": []
+    },
+    {
+      "component_id": "EXT-PAYMENT",
+      "primary_group": "RG-PAYMENTS",
+      "secondary_groups": ["RG-OPS"]
+    },
+    {
+      "component_id": "EXT-COMMS",
+      "primary_group": "RG-MESSAGING",
+      "secondary_groups": ["RG-OPS"]
+    }
+  ]
+}

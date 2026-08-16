@@ -1,0 +1,90 @@
+{
+    "reference_id":  "REF-EVAL-007",
+    "incident_id":  "EVAL-007",
+    "established_before_execution":  true,
+    "purpose":  "Held-out evaluation reference outcome for a directly evidenced shared compute-host failure that removes schedulable workload capacity and simultaneously disrupts several business-critical application services.",
+    "expected_output":  {
+                            "incident_summary_requirements":  [
+                                                                  "State that eight of ten Application Compute Cluster worker nodes are unavailable.",
+                                                                  "State that insufficient remaining compute capacity prevents the affected application workloads from running.",
+                                                                  "State that the Customer Web Portal, Identity and Access Service and Payment Processing Service are unavailable or effectively unavailable.",
+                                                                  "Mention that portal, authentication and payment success rates fell to approximately zero.",
+                                                                  "State that the edge, database, messaging and storage platforms remain healthy.",
+                                                                  "State that customers across the United Kingdom and Ireland cannot access the portal, authenticate or complete payment.",
+                                                                  "Identify the directly evidenced shared compute-host failure without claiming that its precise physical or hypervisor-level cause has been definitively established.",
+                                                                  "Do not blame the healthy edge, database, messaging or storage platforms."
+                                                              ],
+                            "severity":  {
+                                             "level":  "Critical",
+                                             "provisional":  false,
+                                             "rationale":  "Several Tier 1 critical customer services are simultaneously unavailable across the United Kingdom and Ireland, approximately 48,500 users are affected and no approved workaround exists. The directly observed business and service impact supports a non-provisional Critical classification."
+                                         },
+                            "incident_category":  {
+                                                      "code":  "CAT-INFRA-NETWORK",
+                                                      "provisional":  false,
+                                                      "rationale":  "Compute-host and cluster-health evidence directly establishes failure of the shared Application Compute Cluster and loss of schedulable workload capacity. This is a directly evidenced infrastructure failure rather than an application, dependency or unexplained availability incident."
+                                                  },
+                            "affected_area":  {
+                                                  "primary_area_id":  "PLT-COMPUTE",
+                                                  "additional_area_ids":  [
+                                                                              "SVC-WEB",
+                                                                              "SVC-AUTH",
+                                                                              "SVC-PAYMENT"
+                                                                          ],
+                                                  "provisional":  false,
+                                                  "rationale":  "PLT-COMPUTE is the directly failed shared platform. SVC-WEB, SVC-AUTH and SVC-PAYMENT are directly affected because their workloads cannot run, while the edge, database, messaging and storage platforms remain healthy."
+                                              },
+                            "routing":  {
+                                            "primary_resolver_group_id":  "RG-INFRA",
+                                            "coordination_group_ids":  [
+                                                                           "RG-OPS"
+                                                                       ],
+                                            "provisional":  false,
+                                            "rationale":  "RG-INFRA owns the directly failed Application Compute Cluster. RG-OPS coordination is required because the incident is Critical and affects multiple independently owned business-critical services."
+                                        },
+                            "initial_actions":  {
+                                                    "required_common_action_ids":  [
+                                                                                       "ACT-001",
+                                                                                       "ACT-002",
+                                                                                       "ACT-003",
+                                                                                       "ACT-004",
+                                                                                       "ACT-008"
+                                                                                   ],
+                                                    "acceptable_additional_common_action_ids":  [
+                                                                                                    "ACT-005",
+                                                                                                    "ACT-006",
+                                                                                                    "ACT-007",
+                                                                                                    "ACT-009",
+                                                                                                    "ACT-010"
+                                                                                                ],
+                                                    "expected_primary_runbook_id":  "RB-004",
+                                                    "prohibited_recommendations":  [
+                                                                                       "replace or reboot compute nodes",
+                                                                                       "move workloads to different hosts or clusters",
+                                                                                       "scale the compute cluster",
+                                                                                       "change workload-placement or scheduling settings",
+                                                                                       "restart the affected application services",
+                                                                                       "change DNS, routing, firewall or load-balancer configuration",
+                                                                                       "modify database, messaging or storage configuration",
+                                                                                       "perform infrastructure remediation without approved operational control",
+                                                                                       "claim that the precise physical or hypervisor-level cause of the host failures has been definitively established",
+                                                                                       "claim that any node recovery, workload movement, capacity restoration or other remediation has already been completed"
+                                                                                   ]
+                                                },
+                            "information_gaps":  [
+                                                     "The precise physical, virtualisation or hypervisor-level mechanism responsible for the compute-host failures.",
+                                                     "Whether the unavailable hosts can safely return to service or replacement capacity will be required.",
+                                                     "The expected restoration time for compute capacity and the affected services.",
+                                                     "Whether in-flight authentication or payment requests require integrity or duplicate-processing checks."
+                                                 ],
+                            "advisory_only":  true,
+                            "definitive_root_cause_established":  false
+                        },
+    "assessment_notes":  [
+                             "The directly failed technical area is PLT-COMPUTE, while the three application services are additional affected areas.",
+                             "The category and affected-area decisions are non-provisional because host-unavailable events and workload-scheduling evidence directly establish a shared compute-platform failure.",
+                             "The precise underlying physical or hypervisor-level reason for the host failures remains unknown, so definitive-root-cause status must remain false.",
+                             "Critical severity and RG-OPS coordination are required because several Tier 1 services are unavailable and no workaround exists.",
+                             "The scenario is materially distinct from DEV-003, which involved a network partition within the compute cluster rather than direct compute-host loss and insufficient schedulable capacity."
+                         ]
+}

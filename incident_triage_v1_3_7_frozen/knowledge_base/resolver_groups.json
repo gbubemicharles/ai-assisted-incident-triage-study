@@ -1,0 +1,100 @@
+{
+  "resolver_groups": [
+    {
+      "id": "RG-OPS",
+      "name": "Cloud Operations Coordination Team",
+      "responsibilities": [
+        "initial coordination where ownership is unclear",
+        "coordination of Critical multi-service incidents",
+        "cross-team escalation"
+      ],
+      "technical_owner": false
+    },
+    {
+      "id": "RG-DIGITAL",
+      "name": "Digital Experience Team",
+      "responsibilities": [
+        "customer web portal",
+        "frontend application code",
+        "customer-interface behaviour"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-NETWORK",
+      "name": "Network and Edge Team",
+      "responsibilities": [
+        "DNS",
+        "CDN",
+        "load balancing",
+        "routing",
+        "firewall rules",
+        "API gateway platform"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-IAM",
+      "name": "Identity and Access Team",
+      "responsibilities": [
+        "authentication",
+        "token issuance",
+        "identity integrations",
+        "access policies"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-COMMERCE",
+      "name": "Commerce Applications Team",
+      "responsibilities": [
+        "Order Management Service",
+        "Inventory Service",
+        "commerce application logic"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-PAYMENTS",
+      "name": "Payments and Integrations Team",
+      "responsibilities": [
+        "Payment Processing Service",
+        "external payment integration",
+        "payment credentials and endpoints"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-DATA",
+      "name": "Data Platform Team",
+      "responsibilities": [
+        "transaction database availability",
+        "database performance",
+        "database storage",
+        "database-level access and configuration"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-INFRA",
+      "name": "Cloud Infrastructure Team",
+      "responsibilities": [
+        "application compute cluster",
+        "object storage",
+        "infrastructure capacity",
+        "cloud resource configuration"
+      ],
+      "technical_owner": true
+    },
+    {
+      "id": "RG-MESSAGING",
+      "name": "Messaging and Communications Team",
+      "responsibilities": [
+        "message broker",
+        "Notification Service",
+        "external email and SMS integration"
+      ],
+      "technical_owner": true
+    }
+  ]
+}

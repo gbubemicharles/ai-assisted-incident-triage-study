@@ -1,0 +1,138 @@
+﻿{
+    "record_type":  "primary_phase_completion",
+    "evaluation_candidate":  "incident_triage_v1.3.7_frozen",
+    "phase_status":  "closed",
+    "completed_at_utc":  "2026-07-26T08:24:27.5697551Z",
+    "primary_run_count":  12,
+    "valid_primary_count":  3,
+    "invalid_primary_count":  9,
+    "structural_validity_note":  "Valid and invalid refer to automated output validation status, not substantive triage accuracy.",
+    "effectiveness_dataset":  "The twelve primary runs are the fixed dataset for effectiveness scoring.",
+    "repeat_dataset":  "Predetermined repeat runs are for stability assessment only and must not replace primary results.",
+    "total_validation_errors":  12,
+    "total_guardrail_changes":  146,
+    "total_elapsed_seconds":  6377.616,
+    "first_primary_incident_id":  "EVAL-001",
+    "final_primary_incident_id":  "EVAL-012",
+    "first_primary_run_id":  "c060b1c8-8c31-40be-b510-328f2a1e6718",
+    "final_primary_run_id":  "858da7e3-56d1-421d-bc75-fdb86b6ddbfc",
+    "execution_ledger_file":  "EXECUTION_LEDGER_v1_0.csv",
+    "execution_ledger_sha256":  "25848bc60848089120fde2eb660ef5f6950d7ae42e0235d690bc4e8801971498",
+    "primary_output_manifest_file":  "PRIMARY_OUTPUT_MANIFEST_SHA256.csv",
+    "primary_output_manifest_sha256":  "60389f622e74821717976f3104d4c739d8c4fd6feeb6b47a08a747de1105b87a",
+    "frozen_archive_sha256":  "bcd179c135619638412ed372f662c5a91033444aaba2c7d59666cbab7a2928c8",
+    "evaluation_input_manifest_sha256":  "173597eeabfcdd924867130499eee48765f4e641fdc7f93c49f99570bda014ba",
+    "evaluation_seal_record_sha256":  "8730d2924e5eb4dd606262c0b9f319177e0e6d4cb06055680a429d4cb19a3ec6",
+    "schema_validation_report_sha256":  "7c785437dcf4b7a3310a4ecb0bd32762b6ff43f8df0ced9626c49dd45728a8fe",
+    "frozen_configuration":  {
+                                 "model":  "qwen2.5:7b",
+                                 "ollama_model_id":  "845dbda0ea48",
+                                 "prompt_version":  "triage-system-v1.3",
+                                 "context_selection_version":  "context-selection-v1.6",
+                                 "guardrail_version":  "hybrid-guardrails-v1.7",
+                                 "input_schema_version":  "incident-input-v1.2",
+                                 "output_schema_version":  "triage-output-v1.2",
+                                 "temperature":  0,
+                                 "num_predict":  1400,
+                                 "num_ctx":  12288,
+                                 "knowledge_base_sha256":  "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099"
+                             },
+    "primary_runs":  [
+                         {
+                             "official_run_order":  1,
+                             "incident_id":  "EVAL-001",
+                             "run_id":  "c060b1c8-8c31-40be-b510-328f2a1e6718",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-001_c060b1c8-8c31-40be-b510-328f2a1e6718_invalid.json",
+                             "run_record_sha256":  "60606e8fd0314d05e3ce9464599be4b6c075205d0d8f4d39bc14227998a4230d"
+                         },
+                         {
+                             "official_run_order":  2,
+                             "incident_id":  "EVAL-002",
+                             "run_id":  "d58be983-e456-4ec0-a0f9-dc77de49a04c",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-002_d58be983-e456-4ec0-a0f9-dc77de49a04c_invalid.json",
+                             "run_record_sha256":  "8096cb81094fac66a4275436d97688783ef1c03398565145c60fb41b1345ea23"
+                         },
+                         {
+                             "official_run_order":  3,
+                             "incident_id":  "EVAL-003",
+                             "run_id":  "311fde46-7664-4b5b-9562-2feea85185d3",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-003_311fde46-7664-4b5b-9562-2feea85185d3_invalid.json",
+                             "run_record_sha256":  "cfe5a13e0ac92d75b069453cc92766ae5ed2881e58fcdb189de5cd69d168d1e5"
+                         },
+                         {
+                             "official_run_order":  4,
+                             "incident_id":  "EVAL-004",
+                             "run_id":  "4a6fe803-0a2b-45a2-a55a-3a4b4616e5da",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-004_4a6fe803-0a2b-45a2-a55a-3a4b4616e5da_invalid.json",
+                             "run_record_sha256":  "11d717d149f94d03f035e0d84381c606a33d9996bfeb015c29fa1f179ed520c4"
+                         },
+                         {
+                             "official_run_order":  5,
+                             "incident_id":  "EVAL-005",
+                             "run_id":  "4a3e56db-5462-4a0d-9648-f5a5c7cf1d18",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-005_4a3e56db-5462-4a0d-9648-f5a5c7cf1d18_invalid.json",
+                             "run_record_sha256":  "b3d2c98da48f2bcd355f9e4a681dc8e2d8a9c49b2ab68513928c39d744ab3c91"
+                         },
+                         {
+                             "official_run_order":  6,
+                             "incident_id":  "EVAL-006",
+                             "run_id":  "4e0e03ff-a122-4396-a19c-408e3e34d2ad",
+                             "status":  "valid",
+                             "run_record_file":  "EVAL-006_4e0e03ff-a122-4396-a19c-408e3e34d2ad_valid.json",
+                             "run_record_sha256":  "ddfbf2bf8e219dee1dde8837b0c3f76712c81ce4f2ba91469106ae406d16162a"
+                         },
+                         {
+                             "official_run_order":  7,
+                             "incident_id":  "EVAL-007",
+                             "run_id":  "908e2535-d716-479a-9cbf-db45d1796902",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-007_908e2535-d716-479a-9cbf-db45d1796902_invalid.json",
+                             "run_record_sha256":  "1ef15a390b3e20052da48c01223d8f54de7bc17dd22401330147d751e5a1284f"
+                         },
+                         {
+                             "official_run_order":  8,
+                             "incident_id":  "EVAL-008",
+                             "run_id":  "ba7892a2-2f16-401b-ba38-125db5802833",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-008_ba7892a2-2f16-401b-ba38-125db5802833_invalid.json",
+                             "run_record_sha256":  "cb437f8d7812eeccb9a8adb226b19ce327556b14c4b5411dd3d34014e24389dd"
+                         },
+                         {
+                             "official_run_order":  9,
+                             "incident_id":  "EVAL-009",
+                             "run_id":  "c1fda30c-43a3-4bb4-9cb2-97e37ab7d95d",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-009_c1fda30c-43a3-4bb4-9cb2-97e37ab7d95d_invalid.json",
+                             "run_record_sha256":  "cd42702b12302ddd1cda9cbb56f49f87a3391451b9276088c7975470ea00ee2c"
+                         },
+                         {
+                             "official_run_order":  10,
+                             "incident_id":  "EVAL-010",
+                             "run_id":  "ee109f9e-ce38-4a2c-beb4-a55b1391342b",
+                             "status":  "valid",
+                             "run_record_file":  "EVAL-010_ee109f9e-ce38-4a2c-beb4-a55b1391342b_valid.json",
+                             "run_record_sha256":  "4d99fc6b3017b8587ffeac7f879f05725befbd5978ab1a9c66bae7649c849e2b"
+                         },
+                         {
+                             "official_run_order":  11,
+                             "incident_id":  "EVAL-011",
+                             "run_id":  "b1148d38-0a05-416e-94f4-839c2cc76e58",
+                             "status":  "invalid",
+                             "run_record_file":  "EVAL-011_b1148d38-0a05-416e-94f4-839c2cc76e58_invalid.json",
+                             "run_record_sha256":  "e02eeba68feb2edfbe21f4246efa9aec171c680745b07dc0e4d35b91a7da53ce"
+                         },
+                         {
+                             "official_run_order":  12,
+                             "incident_id":  "EVAL-012",
+                             "run_id":  "858da7e3-56d1-421d-bc75-fdb86b6ddbfc",
+                             "status":  "valid",
+                             "run_record_file":  "EVAL-012_858da7e3-56d1-421d-bc75-fdb86b6ddbfc_valid.json",
+                             "run_record_sha256":  "d864bb0c5f3dd2484923a76c4f5a490b0579dff13c55fdb89a313a1b8a508cc3"
+                         }
+                     ]
+}

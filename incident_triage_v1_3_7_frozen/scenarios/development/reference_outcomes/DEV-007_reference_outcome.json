@@ -1,0 +1,71 @@
+{
+  "reference_id": "REF-DEV-007",
+  "incident_id": "DEV-007",
+  "established_before_execution": true,
+  "purpose": "Formative development reference outcome for testing message-broker performance triage, platform-level affected-area selection, messaging ownership, cautious treatment of recent maintenance and preservation of material information gaps.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that customer notifications remain available but are substantially delayed.",
+      "Identify the Message Broker queue backlog as the directly implicated technical condition.",
+      "State that messages generally complete and are not confirmed lost or duplicated.",
+      "Do not claim that the recent broker maintenance caused the incident."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": true,
+      "rationale": "The service remains available, the impact affects a known subset of users, messages generally complete, and an account-based workaround exists. The assessment remains provisional because the backlog duration and underlying resource condition are unknown."
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "provisional": false,
+      "rationale": "The evidence directly identifies materially increased queueing and delivery latency while the service and broker remain available."
+    },
+    "affected_area": {
+      "primary_area_id": "PLT-MESSAGING",
+      "additional_area_ids": [
+        "SVC-NOTIFY"
+      ],
+      "provisional": false,
+      "rationale": "The Message Broker is the directly implicated platform, while the Notification Service is the visible affected service. Healthy compute, application and external-provider components must not be listed as affected."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-MESSAGING",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-MESSAGING owns the Message Broker and no RG-OPS coordination is required for this single-service Medium-severity incident."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-010",
+      "prohibited_recommendations": [
+        "purge or delete queued messages",
+        "restart the Message Broker",
+        "scale the broker or notification workers automatically",
+        "change broker retention or queue configuration",
+        "replay messages automatically",
+        "treat the recent maintenance as the confirmed root cause"
+      ]
+    },
+    "information_gaps": [
+      "The specific producer, consumer or broker resource condition causing the queue to grow.",
+      "The expected time required for the backlog to return to its normal level."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "This scenario tests whether the framework selects PLT-MESSAGING rather than the visible Notification Service as the primary affected area.",
+    "The directly evidenced condition is performance degradation, not service unavailability or a confirmed configuration failure.",
+    "The recent maintenance is temporally associated but explicitly not confirmed as causal.",
+    "A structurally valid result must still be compared with this reference outcome for semantic correctness."
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "incident_id": "EVAL-006",
+  "title": "New-card payment requests failing inside the Payment Processing Service",
+  "reported_affected_service_ids": [
+    "SVC-PAYMENT"
+  ],
+  "alert_or_symptom": "Customers using newly entered payment cards are receiving payment-processing errors, while saved-card and digital-wallet transactions continue to complete.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Payment Processing Service transaction dashboard",
+      "observation": "Of 15,600 payment attempts between 13:05 and 13:25, 42.7 percent failed and 57.3 percent completed successfully. Failures are concentrated in requests using newly entered cards.",
+      "observed_at": "2026-07-25T13:25:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Payment Processing Service application logs",
+      "observation": "Failed requests contain an unhandled PaymentRequestMappingException and stack trace from CardAuthorisationRequestMapper.map while the service is constructing the internal authorisation request.",
+      "observed_at": "2026-07-25T13:26:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "trace",
+      "source_name": "Distributed payment-request tracing",
+      "observation": "Traces for failed transactions terminate inside SVC-PAYMENT at the request-mapping operation before any authorisation call is sent to EXT-PAYMENT. Successful saved-card and digital-wallet requests continue to reach the external gateway normally.",
+      "observed_at": "2026-07-25T13:27:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Payment dependency health summary",
+      "observation": "PLT-COMPUTE, PLT-DATABASE, PLT-MESSAGING and EXT-PAYMENT are healthy. The external gateway reports normal availability and authorisation success for requests it receives.",
+      "observed_at": "2026-07-25T13:28:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "user_report",
+      "source_name": "Customer-support payment incident summary",
+      "observation": "Customers across the United Kingdom and Ireland report that newly entered cards fail during checkout. Customers with a saved card or supported digital wallet can continue, but many affected customers do not have either option.",
+      "observed_at": "2026-07-25T13:29:00"
+    },
+    {
+      "evidence_id": "E6",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "The evidence directly identifies an internal application exception in SVC-PAYMENT. No external-payment, database, messaging, compute, network or credential failure has been identified.",
+      "observed_at": "2026-07-25T13:30:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "severely_degraded",
+    "impact_scope": "widespread",
+    "user_impact_description": "Customers across the United Kingdom and Ireland using newly entered cards cannot complete payment, while saved-card and digital-wallet transactions continue to succeed.",
+    "business_function_affected": "Customer payment authorisation during checkout",
+    "affected_user_estimate": 6400,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "limited",
+    "workaround_description": "Customers with a previously saved card or supported digital wallet may complete payment, but the alternative is unavailable to many affected customers.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Payment Processing Service is a Tier 1 business-critical application.",
+    "The service coordinates payment authorisation and records payment status.",
+    "The External Payment Gateway only receives requests after SVC-PAYMENT completes its internal request-mapping operation.",
+    "Order browsing and basket functions remain available, but affected customers cannot complete checkout using a newly entered card."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The complete set of card-request attributes or combinations that trigger the mapping exception has not been established.",
+    "It is not yet confirmed whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+    "The expected correction and service-recovery time are unknown."
+  ],
+  "additional_context": [
+    "No duplicate charge, payment-status corruption, data loss or serious security exposure has been confirmed.",
+    "No recent application deployment or configuration change has been identified during the initial assessment."
+  ]
+}

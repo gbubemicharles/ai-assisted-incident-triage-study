@@ -1,0 +1,55 @@
+{
+    "record_type":  "held_out_evaluation_input_seal",
+    "seal_version":  "1.0",
+    "status":  "SEALED BEFORE EXECUTION",
+    "sealed_at_utc":  "2026-07-25T16:46:18.7778203Z",
+    "prototype":  {
+                      "version":  "1.3.7",
+                      "frozen_archive":  "C:\\Users\\FemiC\\FGC_Projects\\incident_triage_releases\\incident_triage_v1_3_7_frozen.zip",
+                      "frozen_archive_sha256":  "bcd179c135619638412ed372f662c5a91033444aaba2c7d59666cbab7a2928c8",
+                      "model":  "qwen2.5:7b",
+                      "ollama_model_id":  "845dbda0ea48",
+                      "prompt_version":  "triage-system-v1.3",
+                      "context_selection_version":  "context-selection-v1.6",
+                      "guardrail_version":  "hybrid-guardrails-v1.7",
+                      "input_schema_version":  "incident-input-v1.2",
+                      "output_schema_version":  "triage-output-v1.2",
+                      "temperature":  0,
+                      "num_predict":  1400,
+                      "num_ctx":  12288,
+                      "knowledge_base_hash":  "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099"
+                  },
+    "evaluation_design":  {
+                              "protocol_version":  "1.0",
+                              "design_manifest":  "protocol/DESIGN_MANIFEST_SHA256.csv",
+                              "design_manifest_sha256":  "35db9509048a91698d0e3c8b164a96c0cb667e4835d4065001f59269b26fd129",
+                              "scenario_matrix_rows":  12,
+                              "primary_run_order":  "EVAL-001 through EVAL-012",
+                              "repeat_run_order":  "EVAL-001 through EVAL-012 after all primary runs"
+                          },
+    "sealed_materials":  {
+                             "scenario_count":  12,
+                             "reference_outcome_count":  12,
+                             "total_manifested_files":  24,
+                             "manifest":  "sealed_inputs/EVALUATION_INPUT_MANIFEST_SHA256.csv",
+                             "manifest_sha256":  "173597eeabfcdd924867130499eee48765f4e641fdc7f93c49f99570bda014ba",
+                             "scenario_directory":  "sealed_inputs/scenarios",
+                             "reference_directory":  "sealed_inputs/reference_outcomes"
+                         },
+    "pre_execution_audit":  {
+                                "result":  "PASS",
+                                "audited_scenarios":  12,
+                                "report":  "logs/PRE_EXECUTION_AUDIT_v1_0.csv",
+                                "report_sha256":  "7fa69201ae067766ef69d42a585d74a893f24d73aba634b3a8fb602f7d986b43",
+                                "primary_outputs_present":  0,
+                                "repeat_outputs_present":  0
+                            },
+    "planned_execution":  {
+                              "official_primary_runs":  12,
+                              "predetermined_repeat_runs":  12,
+                              "total_runs":  24,
+                              "primary_runs_determine_effectiveness_results":  true,
+                              "repeat_runs_measure_stability_only":  true
+                          },
+    "change_control":  "No scenario, reference outcome, protocol, metric definition, matrix, prototype component, knowledge-base file or runtime configuration may be modified after this seal. All official executions must use the files under sealed_inputs."
+}

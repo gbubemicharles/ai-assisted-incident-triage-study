@@ -1,0 +1,70 @@
+{
+  "incident_id": "DEV-007",
+  "title": "Delayed customer notifications associated with message-broker backlog",
+  "reported_affected_service_ids": [
+    "SVC-NOTIFY"
+  ],
+  "alert_or_symptom": "Customer order-confirmation and shipping-update notifications remain available but are being delivered substantially later than normal.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Notification delivery latency",
+      "observation": "Notification delivery p95 increased from 42 seconds to 18 minutes at 06:14, while 98.7 percent of messages continued to complete successfully.",
+      "observed_at": "2026-07-24T06:14:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Message Broker queue depth",
+      "observation": "The outbound-notification queue depth increased from 1,240 to 184,600 messages, and the oldest queued message age reached 17 minutes. The broker continues to accept and persist new messages.",
+      "observed_at": "2026-07-24T06:15:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "trace",
+      "source_name": "Notification processing traces",
+      "observation": "Delayed notification traces spend approximately 93 percent of elapsed time waiting in the Message Broker queue; Notification Service processing time remains within its normal range.",
+      "observed_at": "2026-07-24T06:16:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Notification Service application instances, Application Compute Cluster and External Email and SMS Provider are healthy and operating normally.",
+      "observed_at": "2026-07-24T06:17:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "subset_of_users",
+    "user_impact_description": "Approximately 24 percent of order-confirmation and shipping-update messages are delivered between 12 and 20 minutes late, but messages generally arrive.",
+    "business_function_affected": "Customer order and shipping notifications",
+    "affected_user_estimate": 2800,
+    "geographic_scope": "United Kingdom storefront",
+    "workaround_status": "available",
+    "workaround_description": "Customers can view current order and shipping status in their online account.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Notification Service consumes outbound notification events from the Message Broker before sending them through the External Email and SMS Provider.",
+    "The application and external communications provider remain healthy."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "message broker maintenance",
+      "description": "Routine Message Broker node maintenance completed at 05:40.",
+      "occurred_at": "2026-07-24T05:40:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [
+    "The specific producer, consumer or broker resource condition causing the queue to grow has not been identified.",
+    "The expected time required for the queue backlog to return to its normal level is not yet known."
+  ],
+  "additional_context": [
+    "No messages are confirmed lost or duplicated, and no data corruption or security exposure has been observed."
+  ]
+}

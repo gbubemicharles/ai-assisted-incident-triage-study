@@ -1,0 +1,790 @@
+{
+  "run_id": "f170dbd1-6d52-42f0-923d-4ccf64d74cca",
+  "recorded_at_utc": "2026-07-26T11:13:51.813595+00:00",
+  "status": "valid",
+  "incident": {
+    "incident_id": "EVAL-012",
+    "title": "Customer reports describe an API outage after deployment, but telemetry shows partial degradation",
+    "reported_affected_service_ids": [
+      "SVC-API"
+    ],
+    "alert_or_symptom": "Customer-support reports describe the Public API Gateway as being down following a recent deployment, although platform telemetry continues to record successful requests.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "user_report",
+        "source_name": "Customer-support incident summary",
+        "observation": "Some customers describe the digital service as completely down and state that the problem began shortly after the Public API Gateway observability package was deployed.",
+        "observed_at": "2026-07-25T19:20:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "metric",
+        "source_name": "Public API Gateway request-outcome dashboard",
+        "observation": "Of 84,600 API requests between 19:00 and 19:20, 8.7 percent timed out or returned transient gateway errors while 91.3 percent completed successfully.",
+        "observed_at": "2026-07-25T19:21:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "metric",
+        "source_name": "Public API Gateway latency dashboard",
+        "observation": "The API gateway p95 response time increased from a normal baseline of 720 milliseconds to 6.9 seconds. Successful requests continued throughout the affected interval.",
+        "observed_at": "2026-07-25T19:22:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "status",
+        "source_name": "Cross-channel digital-service monitoring",
+        "observation": "Web and mobile synthetic transactions continued to complete, although some experienced elevated latency or transient failure. No interval of complete API unavailability was detected.",
+        "observed_at": "2026-07-25T19:23:00"
+      },
+      {
+        "evidence_id": "E5",
+        "source_type": "change_record",
+        "source_name": "Public API Gateway deployment record",
+        "observation": "An observability-package update was deployed to the Public API Gateway at 18:32. The deployment changed diagnostic logging and tracing instrumentation but was not intended to alter request routing or transaction processing.",
+        "observed_at": "2026-07-25T19:24:00"
+      },
+      {
+        "evidence_id": "E6",
+        "source_type": "trace",
+        "source_name": "Pre-deployment and post-deployment trace comparison",
+        "observation": "The available traces show elevated request duration across several request paths, but no exception, route failure or processing stage consistently associated with the new observability package has been identified.",
+        "observed_at": "2026-07-25T19:25:00"
+      },
+      {
+        "evidence_id": "E7",
+        "source_type": "status",
+        "source_name": "Supporting-platform health summary",
+        "observation": "DNS, load balancing, compute, database, messaging and storage high-level health checks remain successful. Their individual latency contributions have not yet been independently established.",
+        "observed_at": "2026-07-25T19:26:00"
+      },
+      {
+        "evidence_id": "E8",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The evidence establishes partial API performance degradation rather than a complete outage. The temporal relationship with the observability deployment does not establish that the deployment caused the incident.",
+        "observed_at": "2026-07-25T19:27:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "partially_degraded",
+      "impact_scope": "service_wide",
+      "user_impact_description": "Customers across the United Kingdom and Ireland may experience slow responses or transient API failures, but most requests and digital transactions continue to complete successfully.",
+      "business_function_affected": "Customer-facing digital browsing and transaction requests",
+      "affected_user_estimate": 2400,
+      "geographic_scope": "United Kingdom and Ireland",
+      "workaround_status": "limited",
+      "workaround_description": "Customers may succeed by waiting and trying later, but repeated submission of transactional requests is discouraged and no workaround restores normal response performance.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Public API Gateway is a Tier 1 business-critical platform service.",
+      "The gateway remains materially available and continues to process most requests successfully.",
+      "The recent deployment changed observability instrumentation rather than intended request-processing behaviour.",
+      "No supporting platform has been directly established as failed."
+    ],
+    "recent_changes": [
+      {
+        "change_id": "C1",
+        "change_type": "observability-package deployment",
+        "description": "A diagnostic logging and tracing update was deployed to the Public API Gateway approximately 28 minutes before the incident was reported.",
+        "occurred_at": "2026-07-25T18:32:00",
+        "confirmed_related_to_incident": false
+      }
+    ],
+    "reported_unknowns": [
+      "The directly responsible performance bottleneck or technical condition.",
+      "Whether the recent observability deployment has any technical relationship to the degradation.",
+      "The independently verified latency contribution of the API gateway and its supporting dependencies.",
+      "The expected duration and recovery time for normal API performance.",
+      "Whether any failed transactional requests created partial records or duplicate-processing risk."
+    ],
+    "additional_context": [
+      "No complete outage, data loss, corruption or serious security exposure has been confirmed.",
+      "No rollback or production configuration change has been approved."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-012",
+    "incident_summary": "The Public API Gateway is experiencing partial performance degradation, with elevated latency and transient errors, but no complete service unavailability has been observed.",
+    "summary_source_refs": [
+      "KB:CAT-PERFORMANCE",
+      "KB:SVC-API"
+    ],
+    "severity": {
+      "level": "Medium",
+      "rationale": "The incident involves partial performance degradation without a complete outage or widespread impact, and there is an available workaround for users to retry their requests.",
+      "source_refs": [
+        "KB:SEVERITY:Medium",
+        "KB:CAT-PERFORMANCE",
+        "KB:SVC-API"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "rationale": "The evidence indicates partial performance degradation rather than a complete service unavailability or application failure.",
+      "source_refs": [
+        "KB:CAT-PERFORMANCE",
+        "KB:SVC-API"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-API",
+      "additional_area_ids": [
+        "SVC-AUTH",
+        "SVC-ORDER",
+        "SVC-PAYMENT",
+        "SVC-INVENTORY"
+      ],
+      "rationale": "The Public API Gateway is the directly affected component, with impacts on dependent services due to its role in processing requests.",
+      "source_refs": [
+        "KB:SVC-API",
+        "KB:DEP:SVC-API:SVC-AUTH",
+        "KB:DEP:SVC-API:SVC-ORDER",
+        "KB:DEP:SVC-API:SVC-PAYMENT",
+        "KB:DEP:SVC-API:SVC-INVENTORY"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [
+        "RG-OPS"
+      ],
+      "rationale": "The Network and Edge Team is primarily responsible for the Public API Gateway, while RG-OPS should be involved due to the partial service degradation.",
+      "source_refs": [
+        "KB:RG-NETWORK",
+        "KB:RG-OPS"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "This action will help validate the extent of the performance degradation and identify any specific user groups impacted.",
+        "source_refs": [
+          "KB:ACT-001",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "This will provide context on when the degradation began and if it correlates with any recent changes or events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Analyzing these will help identify any patterns or anomalies that could be causing the performance degradation.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "This will help determine if the observability package update is related to the performance degradation.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "This will ensure that any dependent services are functioning correctly and not contributing to the performance issues.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E7"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The directly responsible performance bottleneck or technical condition.",
+        "why_needed": "To fully understand the cause of the performance degradation and implement a sustainable workaround.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs, metrics, and traces from the Public API Gateway and its dependencies."
+      },
+      {
+        "missing_information": "Whether the recent observability deployment has any technical relationship to the degradation.",
+        "why_needed": "To determine if the update is related to the performance issues and whether it should be rolled back or modified.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Logs and metrics from before and after the observability package deployment."
+      },
+      {
+        "missing_information": "The independently verified latency contribution of the API gateway and its supporting dependencies.",
+        "why_needed": "To accurately assess the performance impact and identify which components are contributing to the degradation.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed latency metrics from the Public API Gateway and its dependencies."
+      },
+      {
+        "missing_information": "The expected duration and recovery time for normal API performance.",
+        "why_needed": "To provide users with a clear timeline of when to expect resolution or improvement in service performance.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Historical performance data from the Public API Gateway."
+      },
+      {
+        "missing_information": "Whether any failed transactional requests created partial records or duplicate-processing risk.",
+        "why_needed": "To assess potential data integrity issues and ensure that no partial transactions are causing further problems.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Transaction logs and database integrity checks."
+      }
+    ],
+    "uncertainty_statement": "The current severity and category classification is provisional due to the lack of definitive evidence supporting a more specific technical failure or cause.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-012",
+    "incident_summary": "The Public API Gateway is experiencing partial performance degradation, with elevated latency and transient errors, but no complete service unavailability has been observed. Customers across the United Kingdom and Ireland may experience slow responses or transient API failures.",
+    "summary_source_refs": [
+      "E4",
+      "E8",
+      "E1",
+      "KB:SVC-API"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "High severity is supported by service-wide degradation of a critical business function with no reliable workaround.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:SVC-API",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+      "source_refs": [
+        "KB:CAT-APPLICATION",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-API",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-API",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-NETWORK",
+        "KB:SVC-API"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E5",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E7",
+          "KB:ACT-005",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-005"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The directly responsible performance bottleneck or technical condition.",
+        "why_needed": "To fully understand the cause of the performance degradation and implement a sustainable workaround.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs, metrics, and traces from the Public API Gateway and its dependencies."
+      },
+      {
+        "missing_information": "Whether the recent observability deployment has any technical relationship to the degradation.",
+        "why_needed": "To determine if the update is related to the performance issues and whether it should be rolled back or modified.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Logs and metrics from before and after the observability package deployment."
+      },
+      {
+        "missing_information": "The independently verified latency contribution of the API gateway and its supporting dependencies.",
+        "why_needed": "To accurately assess the performance impact and identify which components are contributing to the degradation.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed latency metrics from the Public API Gateway and its dependencies."
+      },
+      {
+        "missing_information": "The expected duration and recovery time for normal API performance.",
+        "why_needed": "To provide users with a clear timeline of when to expect resolution or improvement in service performance.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Historical performance data from the Public API Gateway."
+      },
+      {
+        "missing_information": "Whether any failed transactional requests created partial records or duplicate-processing risk.",
+        "why_needed": "To assess potential data integrity issues and ensure that no partial transactions are causing further problems.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Transaction logs and database integrity checks."
+      }
+    ],
+    "uncertainty_statement": "Severity remains provisional because material scope or duration information is unresolved. The category, affected area and routing decisions are supported by the supplied evidence, but a definitive root cause has not been established.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-012\",\n  \"incident_summary\": \"The Public API Gateway is experiencing partial performance degradation, with elevated latency and transient errors, but no complete service unavailability has been observed.\",\n  \"summary_source_refs\": [\"KB:CAT-PERFORMANCE\", \"KB:SVC-API\"],\n  \"severity\": {\n    \"level\": \"Medium\",\n    \"rationale\": \"The incident involves partial performance degradation without a complete outage or widespread impact, and there is an available workaround for users to retry their requests.\",\n    \"source_refs\": [\"KB:SEVERITY:Medium\", \"KB:CAT-PERFORMANCE\", \"KB:SVC-API\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-PERFORMANCE\",\n    \"rationale\": \"The evidence indicates partial performance degradation rather than a complete service unavailability or application failure.\",\n    \"source_refs\": [\"KB:CAT-PERFORMANCE\", \"KB:SVC-API\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-API\",\n    \"additional_area_ids\": [\"SVC-AUTH\", \"SVC-ORDER\", \"SVC-PAYMENT\", \"SVC-INVENTORY\"],\n    \"rationale\": \"The Public API Gateway is the directly affected component, with impacts on dependent services due to its role in processing requests.\",\n    \"source_refs\": [\"KB:SVC-API\", \"KB:DEP:SVC-API:SVC-AUTH\", \"KB:DEP:SVC-API:SVC-ORDER\", \"KB:DEP:SVC-API:SVC-PAYMENT\", \"KB:DEP:SVC-API:SVC-INVENTORY\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-NETWORK\",\n    \"coordination_group_ids\": [\"RG-OPS\"],\n    \"rationale\": \"The Network and Edge Team is primarily responsible for the Public API Gateway, while RG-OPS should be involved due to the partial service degradation.\",\n    \"source_refs\": [\"KB:RG-NETWORK\", \"KB:RG-OPS\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Confirm the current service impact, affected users and geographical scope.\",\n      \"rationale\": \"This action will help validate the extent of the performance degradation and identify any specific user groups impacted.\",\n      \"source_refs\": [\"KB:ACT-001\", \"E4\"],\n      \"common_action_id\": \"ACT-001\"\n    },\n    {\n      \"action\": \"Review the triggering alerts and their timestamps.\",\n      \"rationale\": \"This will provide context on when the degradation began and if it correlates with any recent changes or events.\",\n      \"source_refs\": [\"KB:ACT-002\", \"E5\"],\n      \"common_action_id\": \"ACT-002\"\n    },\n    {\n      \"action\": \"Examine relevant logs, metrics and traces for the affected service.\",\n      \"rationale\": \"Analyzing these will help identify any patterns or anomalies that could be causing the performance degradation.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E6\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events.\",\n      \"rationale\": \"This will help determine if the observability package update is related to the performance degradation.\",\n      \"source_refs\": [\"KB:ACT-004\", \"E5\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies.\",\n      \"rationale\": \"This will ensure that any dependent services are functioning correctly and not contributing to the performance issues.\",\n      \"source_refs\": [\"KB:ACT-005\", \"E7\"],\n      \"common_action_id\": \"ACT-005\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The directly responsible performance bottleneck or technical condition.\",\n      \"why_needed\": \"To fully understand the cause of the performance degradation and implement a sustainable workaround.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Detailed logs, metrics, and traces from the Public API Gateway and its dependencies.\"\n    },\n    {\n      \"missing_information\": \"Whether the recent observability deployment has any technical relationship to the degradation.\",\n      \"why_needed\": \"To determine if the update is related to the performance issues and whether it should be rolled back or modified.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Logs and metrics from before and after the observability package deployment.\"\n    },\n    {\n      \"missing_information\": \"The independently verified latency contribution of the API gateway and its supporting dependencies.\",\n      \"why_needed\": \"To accurately assess the performance impact and identify which components are contributing to the degradation.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Detailed latency metrics from the Public API Gateway and its dependencies.\"\n    },\n    {\n      \"missing_information\": \"The expected duration and recovery time for normal API performance.\",\n      \"why_needed\": \"To provide users with a clear timeline of when to expect resolution or improvement in service performance.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Historical performance data from the Public API Gateway.\"\n    },\n    {\n      \"missing_information\": \"Whether any failed transactional requests created partial records or duplicate-processing risk.\",\n      \"why_needed\": \"To assess potential data integrity issues and ensure that no partial transactions are causing further problems.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Transaction logs and database integrity checks.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The current severity and category classification is provisional due to the lack of definitive evidence supporting a more specific technical failure or cause.\",\n  \"advisory_only\": true,\n  \"definitive_root_cause_established\": false\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "Medium",
+        "rationale": "The incident involves partial performance degradation without a complete outage or widespread impact, and there is an available workaround for users to retry their requests.",
+        "source_refs": [
+          "KB:SEVERITY:Medium",
+          "KB:CAT-PERFORMANCE",
+          "KB:SVC-API"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "High",
+        "rationale": "High severity is supported by service-wide degradation of a critical business function with no reliable workaround.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:SVC-API",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-PERFORMANCE",
+        "rationale": "The evidence indicates partial performance degradation rather than a complete service unavailability or application failure.",
+        "source_refs": [
+          "KB:CAT-PERFORMANCE",
+          "KB:SVC-API"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-APPLICATION",
+        "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+        "source_refs": [
+          "KB:CAT-APPLICATION",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-API",
+        "additional_area_ids": [
+          "SVC-AUTH",
+          "SVC-ORDER",
+          "SVC-PAYMENT",
+          "SVC-INVENTORY"
+        ],
+        "rationale": "The Public API Gateway is the directly affected component, with impacts on dependent services due to its role in processing requests.",
+        "source_refs": [
+          "KB:SVC-API",
+          "KB:DEP:SVC-API:SVC-AUTH",
+          "KB:DEP:SVC-API:SVC-ORDER",
+          "KB:DEP:SVC-API:SVC-PAYMENT",
+          "KB:DEP:SVC-API:SVC-INVENTORY"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-API",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-API",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-NETWORK",
+        "coordination_group_ids": [
+          "RG-OPS"
+        ],
+        "rationale": "The Network and Edge Team is primarily responsible for the Public API Gateway, while RG-OPS should be involved due to the partial service degradation.",
+        "source_refs": [
+          "KB:RG-NETWORK",
+          "KB:RG-OPS"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-NETWORK",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-NETWORK",
+          "KB:SVC-API"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "The Public API Gateway is experiencing partial performance degradation, with elevated latency and transient errors, but no complete service unavailability has been observed.",
+      "revised": "The Public API Gateway is experiencing partial performance degradation, with elevated latency and transient errors, but no complete service unavailability has been observed. Customers across the United Kingdom and Ireland may experience slow responses or transient API failures.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-PERFORMANCE",
+        "KB:SVC-API"
+      ],
+      "revised": [
+        "E4",
+        "E8",
+        "E1",
+        "KB:SVC-API"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "This action will help validate the extent of the performance degradation and identify any specific user groups impacted.",
+        "source_refs": [
+          "KB:ACT-001",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "revised": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E4",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "This will provide context on when the degradation began and if it correlates with any recent changes or events.",
+        "source_refs": [
+          "KB:ACT-002",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-002"
+      },
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E5",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Analyzing these will help identify any patterns or anomalies that could be causing the performance degradation.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "This will help determine if the observability package update is related to the performance degradation.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E5"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E5",
+          "KB:ACT-004",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[4]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "This will ensure that any dependent services are functioning correctly and not contributing to the performance issues.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E7"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": {
+        "action": "Validate the health of relevant service dependencies.",
+        "rationale": "Verify the health of the directly relevant dependencies and distinguish local symptoms from dependency failure.",
+        "source_refs": [
+          "E7",
+          "KB:ACT-005",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-005"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-009"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The current severity and category classification is provisional due to the lack of definitive evidence supporting a more specific technical failure or cause.",
+      "revised": "Severity remains provisional because material scope or duration information is unresolved. The category, affected area and routing decisions are supported by the supplied evidence, but a definitive root cause has not been established.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [],
+  "elapsed_seconds": 474.1981446000282,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-26T11:13:51.7366552Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 474125283500,
+    "load_duration": 14301792900,
+    "prompt_eval_count": 5258,
+    "prompt_eval_duration": 24675190000,
+    "eval_count": 1327,
+    "eval_duration": 434981744000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-009",
+    "KB:ACT-010",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-API:PLT-COMPUTE",
+    "KB:DEP:SVC-API:SVC-AUTH",
+    "KB:DEP:SVC-API:SVC-INVENTORY",
+    "KB:DEP:SVC-API:SVC-ORDER",
+    "KB:DEP:SVC-API:SVC-PAYMENT",
+    "KB:PLT-COMPUTE",
+    "KB:RB-003",
+    "KB:RB-005",
+    "KB:RG-COMMERCE",
+    "KB:RG-DATA",
+    "KB:RG-IAM",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-NETWORK",
+    "KB:RG-OPS",
+    "KB:RG-PAYMENTS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-API",
+    "KB:SVC-AUTH",
+    "KB:SVC-INVENTORY",
+    "KB:SVC-ORDER",
+    "KB:SVC-PAYMENT"
+  ],
+  "selected_runbook_ids": [
+    "RB-003",
+    "RB-005"
+  ]
+}

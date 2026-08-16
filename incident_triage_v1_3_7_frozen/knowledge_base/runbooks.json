@@ -1,0 +1,391 @@
+{
+  "version": "1.0",
+  "purpose": "Provide safe, advisory initial-response guidance for controlled cloud incident triage.",
+  "global_rules": {
+    "advisory_only": true,
+    "execute_actions": false,
+    "require_evidence_support": true,
+    "identify_information_gaps": true,
+    "do_not_claim_action_completed": true,
+    "do_not_claim_definitive_root_cause": true,
+    "protect_sensitive_information": true
+  },
+  "common_actions": [
+    {
+      "id": "ACT-001",
+      "action": "Confirm the current service impact, affected users and geographical scope."
+    },
+    {
+      "id": "ACT-002",
+      "action": "Review the triggering alerts and their timestamps."
+    },
+    {
+      "id": "ACT-003",
+      "action": "Examine relevant logs, metrics and traces for the affected service."
+    },
+    {
+      "id": "ACT-004",
+      "action": "Check for recent deployments, configuration changes or infrastructure events."
+    },
+    {
+      "id": "ACT-005",
+      "action": "Validate the health of relevant service dependencies."
+    },
+    {
+      "id": "ACT-006",
+      "action": "Confirm the current service owner and resolver group."
+    },
+    {
+      "id": "ACT-007",
+      "action": "Check whether a documented and approved workaround exists."
+    },
+    {
+      "id": "ACT-008",
+      "action": "Escalate for cross-team coordination where multiple critical services are affected."
+    },
+    {
+      "id": "ACT-009",
+      "action": "Record missing evidence and request the information required for further triage."
+    },
+    {
+      "id": "ACT-010",
+      "action": "Preserve the incident output and supporting evidence for subsequent investigation."
+    }
+  ],
+  "runbooks": [
+    {
+      "id": "RB-001",
+      "name": "Unexplained service unavailability",
+      "applicable_categories": ["CAT-AVAILABILITY"],
+      "trigger_conditions": [
+        "service or essential function unavailable",
+        "technical cause not established"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "conditional_action_ids": ["ACT-008"],
+      "prohibited_actions": [
+        "restart service",
+        "rollback deployment",
+        "modify infrastructure",
+        "declare definitive root cause"
+      ]
+    },
+    {
+      "id": "RB-002",
+      "name": "Performance degradation",
+      "applicable_categories": ["CAT-PERFORMANCE"],
+      "trigger_conditions": [
+        "service remains available",
+        "latency throughput error rate or queue depth materially degraded"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-007",
+        "ACT-009"
+      ],
+      "prohibited_actions": [
+        "scale resources automatically",
+        "restart components",
+        "suppress alerts by changing thresholds",
+        "assume utilisation is the root cause"
+      ]
+    },
+    {
+      "id": "RB-003",
+      "name": "Application exception or deployment-related failure",
+      "applicable_categories": ["CAT-APPLICATION"],
+      "trigger_conditions": [
+        "application exception or crash evidence",
+        "deployment associated with incident"
+      ],
+      "recommended_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-006",
+        "ACT-010"
+      ],
+      "prohibited_actions": [
+        "rollback deployment",
+        "modify application code",
+        "restart application instances",
+        "declare deployment as confirmed root cause without evidence"
+      ]
+    },
+    {
+      "id": "RB-004",
+      "name": "Compute-cluster or host failure",
+      "applicable_categories": ["CAT-INFRA-NETWORK"],
+      "trigger_conditions": [
+        "compute node or host unavailable",
+        "shared compute failure affects services"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-006"
+      ],
+      "conditional_action_ids": ["ACT-008"],
+      "primary_resolver_group": "RG-INFRA",
+      "prohibited_actions": [
+        "replace or reboot nodes",
+        "move workloads",
+        "scale cluster",
+        "change placement settings"
+      ]
+    },
+    {
+      "id": "RB-005",
+      "name": "DNS routing firewall or load-balancing failure",
+      "applicable_categories": ["CAT-INFRA-NETWORK"],
+      "trigger_conditions": [
+        "DNS resolution failure",
+        "routing or firewall evidence",
+        "load-balancer evidence"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "primary_resolver_group": "RG-NETWORK",
+      "prohibited_actions": [
+        "change firewall rules",
+        "modify routes",
+        "modify DNS records",
+        "disable security controls"
+      ]
+    },
+    {
+      "id": "RB-006",
+      "name": "Transaction database availability or connectivity failure",
+      "applicable_categories": [
+        "CAT-INFRA-NETWORK",
+        "CAT-DEPENDENCY-CONFIG"
+      ],
+      "trigger_conditions": [
+        "database unavailable",
+        "database connectivity failure",
+        "database-level access failure"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "primary_resolver_group": "RG-DATA",
+      "prohibited_actions": [
+        "restart database",
+        "fail over database",
+        "modify connection limits",
+        "change credentials",
+        "expose connection strings"
+      ]
+    },
+    {
+      "id": "RB-007",
+      "name": "Transaction database performance degradation",
+      "applicable_categories": [
+        "CAT-PERFORMANCE",
+        "CAT-INFRA-NETWORK"
+      ],
+      "trigger_conditions": [
+        "database latency",
+        "connection saturation",
+        "query contention",
+        "database-related service degradation"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "primary_resolver_group": "RG-DATA",
+      "prohibited_actions": [
+        "terminate queries",
+        "change database parameters",
+        "add capacity",
+        "rebuild indexes",
+        "restart database"
+      ]
+    },
+    {
+      "id": "RB-008",
+      "name": "External payment gateway failure",
+      "applicable_categories": ["CAT-DEPENDENCY-CONFIG"],
+      "trigger_conditions": [
+        "external payment gateway unavailable",
+        "external gateway returning errors",
+        "local payment service otherwise healthy"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-006",
+        "ACT-007"
+      ],
+      "conditional_action_ids": ["ACT-008"],
+      "primary_resolver_group": "RG-PAYMENTS",
+      "prohibited_actions": [
+        "retry customer transactions automatically",
+        "switch payment providers",
+        "modify payment credentials",
+        "contact provider automatically"
+      ]
+    },
+    {
+      "id": "RB-009",
+      "name": "Invalid expired or missing credential token or certificate",
+      "applicable_categories": ["CAT-DEPENDENCY-CONFIG"],
+      "trigger_conditions": [
+        "credential invalid or expired",
+        "token expired",
+        "certificate expired",
+        "service authentication configuration failure"
+      ],
+      "recommended_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "prohibited_actions": [
+        "display secret values",
+        "rotate credentials",
+        "renew certificates",
+        "disable authentication",
+        "bypass access controls"
+      ]
+    },
+    {
+      "id": "RB-010",
+      "name": "Message-broker backlog or unavailability",
+      "applicable_categories": [
+        "CAT-PERFORMANCE",
+        "CAT-INFRA-NETWORK"
+      ],
+      "trigger_conditions": [
+        "message broker unavailable",
+        "queue backlog",
+        "consumer processing delay"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-005",
+        "ACT-006"
+      ],
+      "primary_resolver_group": "RG-MESSAGING",
+      "prohibited_actions": [
+        "delete messages",
+        "purge queues",
+        "restart broker",
+        "change retention settings",
+        "replay messages automatically"
+      ]
+    },
+    {
+      "id": "RB-011",
+      "name": "Object-storage or web-asset failure",
+      "applicable_categories": [
+        "CAT-INFRA-NETWORK",
+        "CAT-DEPENDENCY-CONFIG"
+      ],
+      "trigger_conditions": [
+        "object storage unavailable",
+        "web assets inaccessible",
+        "storage-access configuration failure"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-006",
+        "ACT-009"
+      ],
+      "prohibited_actions": [
+        "change storage permissions",
+        "make storage public",
+        "replace or delete objects",
+        "bypass access controls"
+      ]
+    },
+    {
+      "id": "RB-012",
+      "name": "Multi-service incident with unclear ownership",
+      "applicable_categories": [
+        "CAT-AVAILABILITY",
+        "CAT-PERFORMANCE",
+        "CAT-APPLICATION",
+        "CAT-INFRA-NETWORK",
+        "CAT-DEPENDENCY-CONFIG"
+      ],
+      "trigger_conditions": [
+        "multiple services affected",
+        "common cause not established",
+        "ownership unclear"
+      ],
+      "recommended_action_ids": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-003",
+        "ACT-005",
+        "ACT-008",
+        "ACT-009",
+        "ACT-010"
+      ],
+      "primary_resolver_group": "RG-OPS",
+      "prohibited_actions": [
+        "declare definitive root cause",
+        "route arbitrarily to one application team",
+        "initiate broad remediation",
+        "change multiple systems simultaneously"
+      ]
+    }
+  ],
+  "globally_prohibited_actions": [
+    "restart service host node or database",
+    "modify infrastructure or application configuration",
+    "rotate credentials tokens or certificates",
+    "change firewall route or DNS settings",
+    "scale resources",
+    "rollback or redeploy software",
+    "purge queues or delete messages",
+    "disable authentication or security controls",
+    "contact external providers automatically",
+    "declare a definitive root cause",
+    "expose secrets tokens or credentials"
+  ]
+}

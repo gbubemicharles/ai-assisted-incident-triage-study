@@ -1,0 +1,32 @@
+# Python-generated files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments and environment variables
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# IDE configuration
+.idea/
+.vscode/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.bak

@@ -1,0 +1,53 @@
+{
+  "incident_id": "DEV-001",
+  "title": "Payment authorisation failures",
+  "reported_affected_service_ids": [
+    "SVC-PAYMENT"
+  ],
+  "alert_or_symptom": "Customers are unable to complete card payments.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Payment authorisation success rate",
+      "observation": "Success rate fell from 97 percent to 4 percent at 10:15.",
+      "observed_at": "2026-07-20T10:15:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Payment service log",
+      "observation": "Requests to the external payment gateway return HTTP 503.",
+      "observed_at": "2026-07-20T10:16:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "status",
+      "source_name": "Local payment service health",
+      "observation": "The local payment application and transaction database are healthy.",
+      "observed_at": "2026-07-20T10:17:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "unavailable",
+    "impact_scope": "service_wide",
+    "user_impact_description": "Customers using card payments cannot complete purchases.",
+    "business_function_affected": "Customer checkout",
+    "affected_user_estimate": null,
+    "geographic_scope": null,
+    "workaround_status": "unknown",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Payment Processing Service depends on the External Payment Gateway.",
+    "The local payment application and database are currently healthy."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The geographical scope has not been confirmed.",
+    "No approved payment workaround has yet been confirmed."
+  ],
+  "additional_context": []
+}

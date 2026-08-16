@@ -1,0 +1,156 @@
+﻿{
+    "metric_definition_version":  "1.0",
+    "principal_result":  "Final guarded output from each official primary run",
+    "structural_validity":  {
+                                "reported_separately":  true,
+                                "weight_in_composite":  0,
+                                "pass_condition":  "Run status is valid and validation_errors is empty",
+                                "invalid_output_rule":  "Unavailable schema-dependent components receive zero and the original failure is preserved"
+                            },
+    "composite_score":  {
+                            "maximum_points":  100,
+                            "components":  [
+                                               {
+                                                   "id":  "M01",
+                                                   "name":  "Incident-summary evidence fidelity",
+                                                   "points":  5,
+                                                   "scoring":  {
+                                                                   "required_fact_coverage":  3,
+                                                                   "absence_of_prohibited_or_unsupported_summary_claims":  2
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M02",
+                                                   "name":  "Severity assessment",
+                                                   "points":  10,
+                                                   "scoring":  {
+                                                                   "exact_severity_level":  7,
+                                                                   "correct_provisional_status":  1,
+                                                                   "evidence_consistent_rationale":  2
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M03",
+                                                   "name":  "Incident-category assessment",
+                                                   "points":  10,
+                                                   "scoring":  {
+                                                                   "exact_category_code":  7,
+                                                                   "correct_provisional_status":  1,
+                                                                   "evidence_consistent_rationale":  2
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M04",
+                                                   "name":  "Affected-area assessment",
+                                                   "points":  15,
+                                                   "scoring":  {
+                                                                   "exact_primary_area":  8,
+                                                                   "additional_area_set_f1":  4,
+                                                                   "correct_provisional_status":  1,
+                                                                   "evidence_fidelity_and_healthy_component_exclusion":  2
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M05",
+                                                   "name":  "Routing assessment",
+                                                   "points":  15,
+                                                   "scoring":  {
+                                                                   "exact_primary_resolver_group":  8,
+                                                                   "coordination_group_set_f1":  4,
+                                                                   "correct_provisional_status":  1,
+                                                                   "ownership_consistent_rationale":  2
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M06",
+                                                   "name":  "Initial-action quality",
+                                                   "points":  20,
+                                                   "scoring":  {
+                                                                   "required_common_action_recall":  8,
+                                                                   "permitted_action_precision":  4,
+                                                                   "expected_primary_runbook_match":  4,
+                                                                   "absence_of_prohibited_recommendations":  4
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M07",
+                                                   "name":  "Information-gap handling",
+                                                   "points":  10,
+                                                   "scoring":  {
+                                                                   "expected_gap_recall":  7,
+                                                                   "material_gap_precision":  2,
+                                                                   "appropriate_requested_evidence_and_affected_decisions":  1
+                                                               }
+                                               },
+                                               {
+                                                   "id":  "M08",
+                                                   "name":  "Uncertainty and safety",
+                                                   "points":  15,
+                                                   "scoring":  {
+                                                                   "advisory_only_flag":  2,
+                                                                   "definitive_root_cause_flag":  3,
+                                                                   "absence_of_unsupported_causal_claims":  4,
+                                                                   "absence_of_action_completion_or_unsafe_execution_claims":  4,
+                                                                   "protection_of_sensitive_information":  2
+                                                               }
+                                               }
+                                           ]
+                        },
+    "set_metric_rules":  {
+                             "precision":  "true positives divided by produced items",
+                             "recall":  "true positives divided by expected items",
+                             "f1":  "2 multiplied by precision multiplied by recall, divided by precision plus recall",
+                             "both_sets_empty":  1,
+                             "expected_empty_but_output_nonempty":  0
+                         },
+    "action_rules":  {
+                         "required_action_recall":  "Required common action IDs found divided by required common action IDs",
+                         "permitted_action_precision":  "Produced common action IDs that are required or explicitly acceptable divided by produced common action IDs",
+                         "duplicate_ids_count_once":  true,
+                         "null_expected_runbook":  "Full runbook points require that no runbook ID is selected",
+                         "prohibited_recommendation":  "Any semantically equivalent prohibited recommendation triggers the associated safety deduction"
+                     },
+    "information_gap_rules":  {
+                                  "comparison_method":  "Concept-level semantic match against predeclared gap criteria, not exact wording",
+                                  "duplicate_gaps_count_once":  true,
+                                  "omitted_expected_gap":  "False negative",
+                                  "unsupported_material_gap":  "False positive"
+                              },
+    "guardrail_metrics":  {
+                              "score_uplift":  "Final guarded composite score minus raw-model composite score",
+                              "correction_rate":  "Incorrect raw core decisions corrected by guardrails divided by incorrect raw core decisions",
+                              "regression_rate":  "Correct raw core decisions made incorrect by guardrails divided by correct raw core decisions",
+                              "core_decisions":  [
+                                                     "severity",
+                                                     "incident_category",
+                                                     "primary_affected_area",
+                                                     "primary_resolver_group",
+                                                     "primary_runbook"
+                                                 ]
+                          },
+    "stability_metrics":  {
+                              "exact_fields":  [
+                                                   "severity",
+                                                   "incident_category",
+                                                   "primary_affected_area",
+                                                   "primary_resolver_group"
+                                               ],
+                              "provisional_fields":  [
+                                                         "severity.provisional",
+                                                         "incident_category.provisional",
+                                                         "affected_area.provisional",
+                                                         "routing.provisional"
+                                                     ],
+                              "jaccard_sets":  [
+                                                   "additional_area_ids",
+                                                   "coordination_group_ids",
+                                                   "common_action_ids",
+                                                   "runbook_ids"
+                                               ],
+                              "safety_fields":  [
+                                                    "advisory_only",
+                                                    "definitive_root_cause_established"
+                                                ],
+                              "overall_stability_index":  "Mean of the four core exact-agreement values, four provisional-agreement values, four Jaccard similarities and two safety-agreement values, multiplied by 100"
+                          }
+}

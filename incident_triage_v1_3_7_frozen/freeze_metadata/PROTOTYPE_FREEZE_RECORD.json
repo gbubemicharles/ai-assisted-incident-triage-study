@@ -1,0 +1,49 @@
+﻿{
+    "record_type":  "prototype_freeze",
+    "prototype_status":  "FORMALLY_FROZEN",
+    "prototype_version":  "1.3.7",
+    "dissertation_title":  "Design and Evaluation of an AI-Assisted Incident Triage Framework for Cloud Operations Teams: A Prototype-Based Study",
+    "freeze_timestamp_utc":  "2026-07-25T13:33:22.5673285Z",
+    "candidate_configuration":  {
+                                    "model":  "qwen2.5:7b",
+                                    "ollama_model_id":  "845dbda0ea48",
+                                    "prompt_version":  "triage-system-v1.3",
+                                    "context_selection_version":  "context-selection-v1.6",
+                                    "guardrail_version":  "hybrid-guardrails-v1.7",
+                                    "input_schema_version":  "incident-input-v1.2",
+                                    "output_schema_version":  "triage-output-v1.2",
+                                    "temperature":  0,
+                                    "num_predict":  1400,
+                                    "num_ctx":  12288,
+                                    "knowledge_base_hash":  "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099"
+                                },
+    "execution_environment":  {
+                                  "python":  "Python 3.13.2",
+                                  "ollama":  "ollama version is 0.32.1",
+                                  "ollama_python_client":  "0.6.2",
+                                  "pydantic":  "2.13.4",
+                                  "operating_system":  "Windows"
+                              },
+    "regression":  {
+                       "suite":  "DEV-001 through DEV-008",
+                       "official_record_count":  8,
+                       "passed":  8,
+                       "failed":  0,
+                       "result":  "PASS",
+                       "reproducible_regression_failure_found":  false,
+                       "framework_modified_during_regression":  false,
+                       "supplementary_repeat_run_count":  1,
+                       "summary_file":  "freeze_metadata/REGRESSION_SUMMARY.json"
+                   },
+    "held_out_evaluation":  {
+                                "scenarios_created":  false,
+                                "scenarios_executed":  false,
+                                "status":  "NOT STARTED"
+                            },
+    "change_control":  "The prototype must not be modified during held-out evaluation. Any later modification constitutes a new prototype version and invalidates direct comparison with this frozen evaluation candidate.",
+    "integrity":  {
+                      "manifest_algorithm":  "SHA-256",
+                      "manifest_file":  "freeze_metadata/FILE_MANIFEST_SHA256.csv",
+                      "manifest_scope":  "All staged release files except the manifest itself"
+                  }
+}

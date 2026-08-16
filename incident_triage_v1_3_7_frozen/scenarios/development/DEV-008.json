@@ -1,0 +1,70 @@
+{
+  "incident_id": "DEV-008",
+  "title": "Widespread order-submission failures in the Order Management Service",
+  "reported_affected_service_ids": [
+    "SVC-ORDER"
+  ],
+  "alert_or_symptom": "A large proportion of customer order submissions are failing, while customers can still browse products, authenticate and view existing orders.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Order creation success rate",
+      "observation": "Order creation success fell from 99.5 percent to 27.8 percent at 10:12 across the United Kingdom and Ireland storefronts.",
+      "observed_at": "2026-07-24T10:12:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "log",
+      "source_name": "Order Management Service application log",
+      "observation": "Failed order submissions generate an unhandled PromotionValidationException in the Order Management Service before the order persistence stage.",
+      "observed_at": "2026-07-24T10:13:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "trace",
+      "source_name": "Order-submission traces",
+      "observation": "Failed requests stop inside the Order Management Service promotion-validation handler before calls are made to the Transaction Database Cluster, Inventory Service or Message Broker.",
+      "observed_at": "2026-07-24T10:14:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "status",
+      "source_name": "Related component health",
+      "observation": "The Transaction Database Cluster, Inventory Service, Message Broker, Application Compute Cluster and Public API Gateway are healthy and operating normally.",
+      "observed_at": "2026-07-24T10:15:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "partially_degraded",
+    "impact_scope": "service_wide",
+    "user_impact_description": "Approximately 72 percent of customer order submissions fail before an order is created, although browsing, authentication and existing-order retrieval remain available.",
+    "business_function_affected": "Customer order creation and checkout completion",
+    "affected_user_estimate": 11800,
+    "geographic_scope": "United Kingdom and Ireland storefronts",
+    "workaround_status": "none",
+    "workaround_description": null,
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Order Management Service calls the Transaction Database Cluster, Inventory Service and Message Broker after application-level order validation.",
+    "The supplied traces show that failed requests do not reach those dependencies."
+  ],
+  "recent_changes": [
+    {
+      "change_id": "C1",
+      "change_type": "application deployment",
+      "description": "An Order Management Service promotion-rule library update was deployed at 09:35.",
+      "occurred_at": "2026-07-24T09:35:00",
+      "confirmed_related_to_incident": false
+    }
+  ],
+  "reported_unknowns": [
+    "It has not been confirmed whether the business-to-business order API is affected by the same application failure.",
+    "The expected duration of the order-submission degradation is not yet known."
+  ],
+  "additional_context": [
+    "No duplicate orders, unintended order records, data loss or security exposure have been observed."
+  ]
+}

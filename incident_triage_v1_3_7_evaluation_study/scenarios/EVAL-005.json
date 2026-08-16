@@ -1,0 +1,74 @@
+{
+    "incident_id":  "EVAL-005",
+    "title":  "Optional product-comparison panel fails in the customer portal",
+    "reported_affected_service_ids":  [
+                                          "SVC-WEB"
+                                      ],
+    "alert_or_symptom":  "Some customers cannot open the optional product-comparison panel in the customer web portal, while product browsing, sign-in, basket and checkout functions remain available.",
+    "technical_evidence":  [
+                               {
+                                   "evidence_id":  "E1",
+                                   "source_type":  "user_report",
+                                   "source_name":  "Digital customer-support summary",
+                                   "observation":  "Fourteen customers reported that selecting Compare Products causes the comparison panel to remain blank. No reports indicate failure of product pages, sign-in, basket or checkout.",
+                                   "observed_at":  "2026-07-25T12:15:00"
+                               },
+                               {
+                                   "evidence_id":  "E2",
+                                   "source_type":  "trace",
+                                   "source_name":  "Browser telemetry",
+                                   "observation":  "Affected browser sessions record an unhandled JavaScript TypeError in comparison-panel.js when the comparison panel attempts to render a product attribute whose display label is null.",
+                                   "observed_at":  "2026-07-25T12:16:00"
+                               },
+                               {
+                                   "evidence_id":  "E3",
+                                   "source_type":  "status",
+                                   "source_name":  "Customer portal synthetic monitoring",
+                                   "observation":  "Portal home-page loading, product search, product-detail viewing, sign-in, basket updates and checkout synthetic transactions all remained successful.",
+                                   "observed_at":  "2026-07-25T12:17:00"
+                               },
+                               {
+                                   "evidence_id":  "E4",
+                                   "source_type":  "metric",
+                                   "source_name":  "Portal server and API monitoring",
+                                   "observation":  "Customer Web Portal server error rates and Public API Gateway request outcomes remained within normal operating thresholds during the affected period.",
+                                   "observed_at":  "2026-07-25T12:18:00"
+                               },
+                               {
+                                   "evidence_id":  "E5",
+                                   "source_type":  "incident_record",
+                                   "source_name":  "Initial technical assessment",
+                                   "observation":  "The directly observed failure is confined to client-side comparison-panel rendering. No supporting service, platform or infrastructure failure has been identified.",
+                                   "observed_at":  "2026-07-25T12:19:00"
+                               }
+                           ],
+    "service_impact":  {
+                           "availability_state":  "partially_degraded",
+                           "impact_scope":  "subset_of_users",
+                           "user_impact_description":  "Fourteen customers cannot use the optional product-comparison panel, while all core portal functions and customer purchasing journeys remain available.",
+                           "business_function_affected":  "Optional product-comparison feature",
+                           "affected_user_estimate":  14,
+                           "geographic_scope":  "United Kingdom customer portal",
+                           "workaround_status":  "available",
+                           "workaround_description":  "Customers can review product-detail pages individually and continue shopping without using the comparison panel.",
+                           "data_loss_or_corruption_confirmed":  false,
+                           "serious_security_exposure_confirmed":  false
+                       },
+    "environmental_context":  [
+                                  "The Customer Web Portal is a Tier 1 service, but the affected product-comparison panel is an optional convenience feature.",
+                                  "Product browsing, authentication, basket management, payment and checkout remain operational.",
+                                  "The comparison feature does not modify customer, product or transaction data."
+                              ],
+    "recent_changes":  [
+
+                       ],
+    "reported_unknowns":  [
+                              "The complete set of product records containing the null display label has not yet been established.",
+                              "It is not known whether the defect affects any browser versions not represented in the current reports.",
+                              "The time required to correct and release the client-side rendering defect is unknown."
+                          ],
+    "additional_context":  [
+                               "No data loss, corruption, security exposure or interruption to purchasing has been reported.",
+                               "The issue can be reproduced without changing production data or configuration."
+                           ]
+}

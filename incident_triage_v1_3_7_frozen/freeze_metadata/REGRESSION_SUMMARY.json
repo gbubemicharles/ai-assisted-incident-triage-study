@@ -1,0 +1,107 @@
+﻿{
+    "suite":  "DEV-001 through DEV-008",
+    "purpose":  "Clean regression check under candidate prototype v1.3.7",
+    "result":  "PASS",
+    "pass_count":  8,
+    "fail_count":  0,
+    "framework_modifications_required":  false,
+    "official_runs":  [
+                          {
+                              "incident_id":  "DEV-001",
+                              "result":  "PASS",
+                              "run_id":  "c5f0e095-ae1a-4886-8d98-3188025885a3",
+                              "recorded_at_utc":  "2026-07-25T11:11:02.575606+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  12,
+                              "elapsed_seconds":  327.162,
+                              "record_file":  "DEV-001_c5f0e095-ae1a-4886-8d98-3188025885a3_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-002",
+                              "result":  "PASS",
+                              "run_id":  "84ef4692-f0ac-4b10-800f-f1fb6cb70fb3",
+                              "recorded_at_utc":  "2026-07-25T11:29:05.336197+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  10,
+                              "elapsed_seconds":  505.204,
+                              "record_file":  "DEV-002_84ef4692-f0ac-4b10-800f-f1fb6cb70fb3_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-003",
+                              "result":  "PASS",
+                              "run_id":  "1c9c28ff-4c4f-44e5-a239-2f8b30de4be1",
+                              "recorded_at_utc":  "2026-07-25T11:59:24.412211+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  14,
+                              "elapsed_seconds":  297.737,
+                              "record_file":  "DEV-003_1c9c28ff-4c4f-44e5-a239-2f8b30de4be1_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-004",
+                              "result":  "PASS",
+                              "run_id":  "7f08b716-b5ef-4478-a461-203608b219e8",
+                              "recorded_at_utc":  "2026-07-25T12:13:29.945351+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  13,
+                              "elapsed_seconds":  300.27,
+                              "record_file":  "DEV-004_7f08b716-b5ef-4478-a461-203608b219e8_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-005",
+                              "result":  "PASS",
+                              "run_id":  "96335e3c-4dde-4455-bcec-2d9e628863c8",
+                              "recorded_at_utc":  "2026-07-25T12:27:35.637723+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  12,
+                              "elapsed_seconds":  391.683,
+                              "record_file":  "DEV-005_96335e3c-4dde-4455-bcec-2d9e628863c8_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-006",
+                              "result":  "PASS",
+                              "run_id":  "0c175555-6134-47fe-912e-61e6d3308076",
+                              "recorded_at_utc":  "2026-07-25T12:39:33.752284+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  12,
+                              "elapsed_seconds":  330.976,
+                              "record_file":  "DEV-006_0c175555-6134-47fe-912e-61e6d3308076_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-007",
+                              "result":  "PASS",
+                              "run_id":  "16800bb2-c492-4a4a-9f76-0fd9f994c59c",
+                              "recorded_at_utc":  "2026-07-25T12:51:23.551103+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  12,
+                              "elapsed_seconds":  379.871,
+                              "record_file":  "DEV-007_16800bb2-c492-4a4a-9f76-0fd9f994c59c_valid.json"
+                          },
+                          {
+                              "incident_id":  "DEV-008",
+                              "result":  "PASS",
+                              "run_id":  "cbda1f93-5244-4a9b-a3ff-e695d7480751",
+                              "recorded_at_utc":  "2026-07-25T13:03:22.232108+00:00",
+                              "status":  "valid",
+                              "validation_error_count":  0,
+                              "guardrail_change_count":  13,
+                              "elapsed_seconds":  393.281,
+                              "record_file":  "DEV-008_cbda1f93-5244-4a9b-a3ff-e695d7480751_valid.json"
+                          }
+                      ],
+    "supplementary_repeat_runs":  [
+                                      {
+                                          "incident_id":  "DEV-008",
+                                          "run_id":  "0ffa556e-a3e0-4441-8327-f740729d5c19",
+                                          "status":  "valid",
+                                          "purpose":  "Supplementary repeat-run evidence; not counted as a separate regression scenario",
+                                          "record_file":  "DEV-008_0ffa556e-a3e0-4441-8327-f740729d5c19_valid.json"
+                                      }
+                                  ]
+}

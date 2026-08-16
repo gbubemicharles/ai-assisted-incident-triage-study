@@ -1,0 +1,72 @@
+{
+  "incident_id": "EVAL-003",
+  "title": "Public API experiencing severe latency and intermittent timeouts",
+  "reported_affected_service_ids": [
+    "SVC-API"
+  ],
+  "alert_or_symptom": "The Public API Gateway remains reachable, but customer-facing API requests are experiencing severe latency and intermittent timeouts across multiple business operations.",
+  "technical_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "metric",
+      "source_name": "Public API Gateway latency dashboard",
+      "observation": "The API gateway p95 response time increased from a normal baseline of 650 milliseconds to 18.4 seconds between 10:06 and 10:26.",
+      "observed_at": "2026-07-25T10:26:00"
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "metric",
+      "source_name": "Public API Gateway request outcomes",
+      "observation": "Of 96,400 requests during the affected interval, 31.8 percent timed out while 68.2 percent completed successfully. Successful responses continued throughout the interval.",
+      "observed_at": "2026-07-25T10:27:00"
+    },
+    {
+      "evidence_id": "E3",
+      "source_type": "trace",
+      "source_name": "Distributed request tracing summary",
+      "observation": "Elevated end-to-end duration is present across product, authentication, inventory and order request paths. The traces do not isolate a single directly responsible downstream service or technical condition.",
+      "observed_at": "2026-07-25T10:28:00"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "user_report",
+      "source_name": "Digital customer-support summary",
+      "observation": "Customers using both the web and mobile channels report very slow page updates, intermittent request failures and abandoned shopping sessions.",
+      "observed_at": "2026-07-25T10:29:00"
+    },
+    {
+      "evidence_id": "E5",
+      "source_type": "incident_record",
+      "source_name": "Initial technical assessment",
+      "observation": "No application exception, DNS failure, routing failure, compute failure, database failure, authentication failure, deployment defect or configuration error has been directly established.",
+      "observed_at": "2026-07-25T10:30:00"
+    }
+  ],
+  "service_impact": {
+    "availability_state": "severely_degraded",
+    "impact_scope": "widespread",
+    "user_impact_description": "The Public API Gateway remains available, but severe latency and intermittent timeouts are disrupting customer browsing, authentication, stock checks and order submission across the United Kingdom and Ireland.",
+    "business_function_affected": "Customer-facing digital shopping and transaction processing",
+    "affected_user_estimate": 11500,
+    "geographic_scope": "United Kingdom and Ireland",
+    "workaround_status": "limited",
+    "workaround_description": "Some requests succeed when attempted later, but no approved workaround restores reliable service and repeated transaction submission is discouraged.",
+    "data_loss_or_corruption_confirmed": false,
+    "serious_security_exposure_confirmed": false
+  },
+  "environmental_context": [
+    "The Public API Gateway is a Tier 1 business-critical platform service.",
+    "It routes external requests to authentication, order, payment and inventory services.",
+    "Successful API responses continue to be recorded, so the service is not completely unavailable."
+  ],
+  "recent_changes": [],
+  "reported_unknowns": [
+    "The directly responsible technical component or performance bottleneck has not been identified.",
+    "The individual latency contribution and health of each relevant dependency have not been independently established.",
+    "The expected duration and recovery time for the degradation are unknown."
+  ],
+  "additional_context": [
+    "No data loss, corruption or serious security exposure has been confirmed.",
+    "No complete outage of the Public API Gateway has occurred during the observed interval."
+  ]
+}

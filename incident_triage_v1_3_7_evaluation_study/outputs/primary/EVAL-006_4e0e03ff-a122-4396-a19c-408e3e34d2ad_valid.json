@@ -1,0 +1,739 @@
+{
+  "run_id": "4e0e03ff-a122-4396-a19c-408e3e34d2ad",
+  "recorded_at_utc": "2026-07-25T18:19:35.306174+00:00",
+  "status": "valid",
+  "incident": {
+    "incident_id": "EVAL-006",
+    "title": "New-card payment requests failing inside the Payment Processing Service",
+    "reported_affected_service_ids": [
+      "SVC-PAYMENT"
+    ],
+    "alert_or_symptom": "Customers using newly entered payment cards are receiving payment-processing errors, while saved-card and digital-wallet transactions continue to complete.",
+    "technical_evidence": [
+      {
+        "evidence_id": "E1",
+        "source_type": "metric",
+        "source_name": "Payment Processing Service transaction dashboard",
+        "observation": "Of 15,600 payment attempts between 13:05 and 13:25, 42.7 percent failed and 57.3 percent completed successfully. Failures are concentrated in requests using newly entered cards.",
+        "observed_at": "2026-07-25T13:25:00"
+      },
+      {
+        "evidence_id": "E2",
+        "source_type": "log",
+        "source_name": "Payment Processing Service application logs",
+        "observation": "Failed requests contain an unhandled PaymentRequestMappingException and stack trace from CardAuthorisationRequestMapper.map while the service is constructing the internal authorisation request.",
+        "observed_at": "2026-07-25T13:26:00"
+      },
+      {
+        "evidence_id": "E3",
+        "source_type": "trace",
+        "source_name": "Distributed payment-request tracing",
+        "observation": "Traces for failed transactions terminate inside SVC-PAYMENT at the request-mapping operation before any authorisation call is sent to EXT-PAYMENT. Successful saved-card and digital-wallet requests continue to reach the external gateway normally.",
+        "observed_at": "2026-07-25T13:27:00"
+      },
+      {
+        "evidence_id": "E4",
+        "source_type": "status",
+        "source_name": "Payment dependency health summary",
+        "observation": "PLT-COMPUTE, PLT-DATABASE, PLT-MESSAGING and EXT-PAYMENT are healthy. The external gateway reports normal availability and authorisation success for requests it receives.",
+        "observed_at": "2026-07-25T13:28:00"
+      },
+      {
+        "evidence_id": "E5",
+        "source_type": "user_report",
+        "source_name": "Customer-support payment incident summary",
+        "observation": "Customers across the United Kingdom and Ireland report that newly entered cards fail during checkout. Customers with a saved card or supported digital wallet can continue, but many affected customers do not have either option.",
+        "observed_at": "2026-07-25T13:29:00"
+      },
+      {
+        "evidence_id": "E6",
+        "source_type": "incident_record",
+        "source_name": "Initial technical assessment",
+        "observation": "The evidence directly identifies an internal application exception in SVC-PAYMENT. No external-payment, database, messaging, compute, network or credential failure has been identified.",
+        "observed_at": "2026-07-25T13:30:00"
+      }
+    ],
+    "service_impact": {
+      "availability_state": "severely_degraded",
+      "impact_scope": "widespread",
+      "user_impact_description": "Customers across the United Kingdom and Ireland using newly entered cards cannot complete payment, while saved-card and digital-wallet transactions continue to succeed.",
+      "business_function_affected": "Customer payment authorisation during checkout",
+      "affected_user_estimate": 6400,
+      "geographic_scope": "United Kingdom and Ireland",
+      "workaround_status": "limited",
+      "workaround_description": "Customers with a previously saved card or supported digital wallet may complete payment, but the alternative is unavailable to many affected customers.",
+      "data_loss_or_corruption_confirmed": false,
+      "serious_security_exposure_confirmed": false
+    },
+    "environmental_context": [
+      "The Payment Processing Service is a Tier 1 business-critical application.",
+      "The service coordinates payment authorisation and records payment status.",
+      "The External Payment Gateway only receives requests after SVC-PAYMENT completes its internal request-mapping operation.",
+      "Order browsing and basket functions remain available, but affected customers cannot complete checkout using a newly entered card."
+    ],
+    "recent_changes": [],
+    "reported_unknowns": [
+      "The complete set of card-request attributes or combinations that trigger the mapping exception has not been established.",
+      "It is not yet confirmed whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+      "The expected correction and service-recovery time are unknown."
+    ],
+    "additional_context": [
+      "No duplicate charge, payment-status corruption, data loss or serious security exposure has been confirmed.",
+      "No recent application deployment or configuration change has been identified during the initial assessment."
+    ]
+  },
+  "model_output": {
+    "incident_id": "EVAL-006",
+    "incident_summary": "Payment Processing Service is failing to process new card payments, while saved-card and digital-wallet transactions continue to succeed.",
+    "summary_source_refs": [
+      "KB:CAT-AVAILABILITY",
+      "KB:SVC-PAYMENT"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "The service is experiencing severe degradation with widespread impact, but a workaround exists for affected users. No confirmed data loss or serious security exposure has been reported.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:SVC-PAYMENT",
+        "KB:CAT-AVAILABILITY",
+        "E6",
+        "E5"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "rationale": "The evidence directly identifies an unhandled exception in the Payment Processing Service application code.",
+      "source_refs": [
+        "KB:CAT-APPLICATION",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-PAYMENT",
+      "additional_area_ids": [
+        "EXT-PAYMENT",
+        "PLT-COMPUTE",
+        "PLT-DATABASE",
+        "PLT-MESSAGING"
+      ],
+      "rationale": "The Payment Processing Service is the primary area affected, with dependencies remaining healthy.",
+      "source_refs": [
+        "KB:SVC-PAYMENT",
+        "E4",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": true
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-PAYMENTS",
+      "coordination_group_ids": [],
+      "rationale": "The Payments and Integrations Team is the primary technical owner of SVC-PAYMENT.",
+      "source_refs": [
+        "KB:RG-PAYMENTS",
+        "SVC-PAYMENT"
+      ],
+      "provisional": true
+    },
+    "initial_actions": [
+      {
+        "action": "Review relevant logs, metrics and traces for the affected service to identify the root cause of the application exception.",
+        "rationale": "The Payment Processing Service is experiencing unhandled exceptions during request mapping. Logs and traces will help pinpoint the exact issue.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that might have introduced this failure.",
+        "rationale": "No recent changes were identified during the initial assessment. However, a thorough review is necessary to rule out any overlooked factors.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      {
+        "action": "Validate the health of relevant service dependencies to ensure they are not contributing to the issue.",
+        "rationale": "The external payment gateway and other dependencies are reported as healthy. However, a full validation is necessary to confirm their status.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      {
+        "action": "Examine the complete set of card-request attributes or combinations that trigger the mapping exception to understand the failure pattern.",
+        "rationale": "The exact conditions leading to the exception are not yet known. This information is crucial for diagnosing and resolving the issue.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Confirm whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+        "rationale": "This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.",
+        "source_refs": [
+          "KB:ACT-009",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The complete set of card-request attributes or combinations that trigger the mapping exception has not been established.",
+        "why_needed": "To fully understand and resolve the issue, we need to identify all conditions leading to the application exception.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs of failed transactions or a comprehensive test plan."
+      },
+      {
+        "missing_information": "It is not yet confirmed whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+        "why_needed": "This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Database logs or transaction records."
+      },
+      {
+        "missing_information": "The expected correction and service-recovery time are unknown.",
+        "why_needed": "This information is necessary for planning the resolution and communicating with stakeholders.",
+        "affected_decisions": [
+          "initial_actions"
+        ],
+        "requested_evidence": "Estimates from technical teams or historical data on similar issues."
+      }
+    ],
+    "uncertainty_statement": "The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "output": {
+    "incident_id": "EVAL-006",
+    "incident_summary": "Payment Processing Service is failing to process new card payments, while saved-card and digital-wallet transactions continue to succeed. Customers across the United Kingdom and Ireland using newly entered cards cannot complete payment.",
+    "summary_source_refs": [
+      "E5",
+      "E1",
+      "E3",
+      "KB:SVC-PAYMENT"
+    ],
+    "severity": {
+      "level": "High",
+      "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+      "source_refs": [
+        "KB:SEVERITY:High",
+        "KB:SVC-PAYMENT",
+        "E1",
+        "E2"
+      ],
+      "provisional": true
+    },
+    "incident_category": {
+      "code": "CAT-APPLICATION",
+      "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+      "source_refs": [
+        "KB:CAT-APPLICATION",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-PAYMENT",
+      "additional_area_ids": [],
+      "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+      "source_refs": [
+        "KB:SVC-PAYMENT",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "provisional": false
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-PAYMENTS",
+      "coordination_group_ids": [],
+      "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+      "source_refs": [
+        "KB:RG-PAYMENTS",
+        "KB:SVC-PAYMENT"
+      ],
+      "provisional": false
+    },
+    "initial_actions": [
+      {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-009"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      },
+      {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-004",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-004"
+      }
+    ],
+    "information_gaps": [
+      {
+        "missing_information": "The complete set of card-request attributes or combinations that trigger the mapping exception has not been established.",
+        "why_needed": "To fully understand and resolve the issue, we need to identify all conditions leading to the application exception.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Detailed logs of failed transactions or a comprehensive test plan."
+      },
+      {
+        "missing_information": "It is not yet confirmed whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+        "why_needed": "This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.",
+        "affected_decisions": [
+          "incident_category",
+          "severity"
+        ],
+        "requested_evidence": "Database logs or transaction records."
+      },
+      {
+        "missing_information": "The expected correction and service-recovery time are unknown.",
+        "why_needed": "This information is necessary for planning the resolution and communicating with stakeholders.",
+        "affected_decisions": [
+          "initial_actions"
+        ],
+        "requested_evidence": "Estimates from technical teams or historical data on similar issues."
+      }
+    ],
+    "uncertainty_statement": "Severity remains provisional because material scope or duration information is unresolved. The category, affected area and routing decisions are supported by the supplied evidence, but a definitive root cause has not been established.",
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "raw_output": "{\n  \"incident_id\": \"EVAL-006\",\n  \"incident_summary\": \"Payment Processing Service is failing to process new card payments, while saved-card and digital-wallet transactions continue to succeed.\",\n  \"summary_source_refs\": [\"KB:CAT-AVAILABILITY\", \"KB:SVC-PAYMENT\"],\n  \"severity\": {\n    \"level\": \"High\",\n    \"rationale\": \"The service is experiencing severe degradation with widespread impact, but a workaround exists for affected users. No confirmed data loss or serious security exposure has been reported.\",\n    \"source_refs\": [\"KB:SEVERITY:High\", \"KB:SVC-PAYMENT\", \"KB:CAT-AVAILABILITY\", \"E6\", \"E5\"],\n    \"provisional\": true\n  },\n  \"incident_category\": {\n    \"code\": \"CAT-APPLICATION\",\n    \"rationale\": \"The evidence directly identifies an unhandled exception in the Payment Processing Service application code.\",\n    \"source_refs\": [\"KB:CAT-APPLICATION\", \"E2\", \"E3\"],\n    \"provisional\": true\n  },\n  \"affected_area\": {\n    \"primary_area_id\": \"SVC-PAYMENT\",\n    \"additional_area_ids\": [\"EXT-PAYMENT\", \"PLT-COMPUTE\", \"PLT-DATABASE\", \"PLT-MESSAGING\"],\n    \"rationale\": \"The Payment Processing Service is the primary area affected, with dependencies remaining healthy.\",\n    \"source_refs\": [\"KB:SVC-PAYMENT\", \"E4\", \"E1\", \"E2\", \"E3\"],\n    \"provisional\": true\n  },\n  \"routing\": {\n    \"primary_resolver_group_id\": \"RG-PAYMENTS\",\n    \"coordination_group_ids\": [],\n    \"rationale\": \"The Payments and Integrations Team is the primary technical owner of SVC-PAYMENT.\",\n    \"source_refs\": [\"KB:RG-PAYMENTS\", \"SVC-PAYMENT\"],\n    \"provisional\": true\n  },\n  \"initial_actions\": [\n    {\n      \"action\": \"Review relevant logs, metrics and traces for the affected service to identify the root cause of the application exception.\",\n      \"rationale\": \"The Payment Processing Service is experiencing unhandled exceptions during request mapping. Logs and traces will help pinpoint the exact issue.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E2\", \"E3\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Check for recent deployments, configuration changes or infrastructure events that might have introduced this failure.\",\n      \"rationale\": \"No recent changes were identified during the initial assessment. However, a thorough review is necessary to rule out any overlooked factors.\",\n      \"source_refs\": [\"KB:ACT-004\", \"E6\"],\n      \"common_action_id\": \"ACT-004\"\n    },\n    {\n      \"action\": \"Validate the health of relevant service dependencies to ensure they are not contributing to the issue.\",\n      \"rationale\": \"The external payment gateway and other dependencies are reported as healthy. However, a full validation is necessary to confirm their status.\",\n      \"source_refs\": [\"KB:ACT-005\", \"E4\"],\n      \"common_action_id\": \"ACT-005\"\n    },\n    {\n      \"action\": \"Examine the complete set of card-request attributes or combinations that trigger the mapping exception to understand the failure pattern.\",\n      \"rationale\": \"The exact conditions leading to the exception are not yet known. This information is crucial for diagnosing and resolving the issue.\",\n      \"source_refs\": [\"KB:ACT-003\", \"E6\"],\n      \"common_action_id\": \"ACT-003\"\n    },\n    {\n      \"action\": \"Confirm whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.\",\n      \"rationale\": \"This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.\",\n      \"source_refs\": [\"KB:ACT-009\", \"E6\"],\n      \"common_action_id\": \"ACT-009\"\n    }\n  ],\n  \"information_gaps\": [\n    {\n      \"missing_information\": \"The complete set of card-request attributes or combinations that trigger the mapping exception has not been established.\",\n      \"why_needed\": \"To fully understand and resolve the issue, we need to identify all conditions leading to the application exception.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Detailed logs of failed transactions or a comprehensive test plan.\"\n    },\n    {\n      \"missing_information\": \"It is not yet confirmed whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.\",\n      \"why_needed\": \"This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.\",\n      \"affected_decisions\": [\"incident_category\", \"severity\"],\n      \"requested_evidence\": \"Database logs or transaction records.\"\n    },\n    {\n      \"missing_information\": \"The expected correction and service-recovery time are unknown.\",\n      \"why_needed\": \"This information is necessary for planning the resolution and communicating with stakeholders.\",\n      \"affected_decisions\": [\"initial_actions\"],\n      \"requested_evidence\": \"Estimates from technical teams or historical data on similar issues.\"\n    }\n  ],\n  \"uncertainty_statement\": \"The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.\",\n  \"advisory_only\": true\n}",
+  "guardrail_changes": [
+    {
+      "field": "severity",
+      "original": {
+        "level": "High",
+        "rationale": "The service is experiencing severe degradation with widespread impact, but a workaround exists for affected users. No confirmed data loss or serious security exposure has been reported.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:SVC-PAYMENT",
+          "KB:CAT-AVAILABILITY",
+          "E6",
+          "E5"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "level": "High",
+        "rationale": "High severity is supported because major service functionality is unavailable or severely degraded. The assessment remains provisional where scope or workaround availability is unconfirmed.",
+        "source_refs": [
+          "KB:SEVERITY:High",
+          "KB:SVC-PAYMENT",
+          "E1",
+          "E2"
+        ],
+        "provisional": true
+      },
+      "reason": "Severity was derived from the approved structured impact matrix.",
+      "rule_id": "GR-SEV-001"
+    },
+    {
+      "field": "incident_category",
+      "original": {
+        "code": "CAT-APPLICATION",
+        "rationale": "The evidence directly identifies an unhandled exception in the Payment Processing Service application code.",
+        "source_refs": [
+          "KB:CAT-APPLICATION",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "code": "CAT-APPLICATION",
+        "rationale": "Application Failure is selected because the evidence directly identifies application code, runtime or processing failure.",
+        "source_refs": [
+          "KB:CAT-APPLICATION",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Specific directly evidenced technical categories override symptom categories.",
+      "rule_id": "GR-CAT-001"
+    },
+    {
+      "field": "affected_area",
+      "original": {
+        "primary_area_id": "SVC-PAYMENT",
+        "additional_area_ids": [
+          "EXT-PAYMENT",
+          "PLT-COMPUTE",
+          "PLT-DATABASE",
+          "PLT-MESSAGING"
+        ],
+        "rationale": "The Payment Processing Service is the primary area affected, with dependencies remaining healthy.",
+        "source_refs": [
+          "KB:SVC-PAYMENT",
+          "E4",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_area_id": "SVC-PAYMENT",
+        "additional_area_ids": [],
+        "rationale": "The selected primary area is the reported service most directly supported as affected by the available evidence.",
+        "source_refs": [
+          "KB:SVC-PAYMENT",
+          "E1",
+          "E2",
+          "E3"
+        ],
+        "provisional": false
+      },
+      "reason": "Healthy components were excluded and the directly implicated component was prioritised.",
+      "rule_id": "GR-AREA-001"
+    },
+    {
+      "field": "routing",
+      "original": {
+        "primary_resolver_group_id": "RG-PAYMENTS",
+        "coordination_group_ids": [],
+        "rationale": "The Payments and Integrations Team is the primary technical owner of SVC-PAYMENT.",
+        "source_refs": [
+          "KB:RG-PAYMENTS",
+          "SVC-PAYMENT"
+        ],
+        "provisional": true
+      },
+      "revised": {
+        "primary_resolver_group_id": "RG-PAYMENTS",
+        "coordination_group_ids": [],
+        "rationale": "The resolver group is selected from the ownership record for the directly implicated technical area.",
+        "source_refs": [
+          "KB:RG-PAYMENTS",
+          "KB:SVC-PAYMENT"
+        ],
+        "provisional": false
+      },
+      "reason": "Routing was derived from the ownership map and coordination policy.",
+      "rule_id": "GR-ROUTE-001"
+    },
+    {
+      "field": "incident_summary",
+      "original": "Payment Processing Service is failing to process new card payments, while saved-card and digital-wallet transactions continue to succeed.",
+      "revised": "Payment Processing Service is failing to process new card payments, while saved-card and digital-wallet transactions continue to succeed. Customers across the United Kingdom and Ireland using newly entered cards cannot complete payment.",
+      "reason": "Definitive causal wording was softened and material structured impact context was added to the incident summary.",
+      "rule_id": "GR-LANG-001"
+    },
+    {
+      "field": "summary_source_refs",
+      "original": [
+        "KB:CAT-AVAILABILITY",
+        "KB:SVC-PAYMENT"
+      ],
+      "revised": [
+        "E5",
+        "E1",
+        "E3",
+        "KB:SVC-PAYMENT"
+      ],
+      "reason": "Summary references were aligned with the supplied evidence and final affected area.",
+      "rule_id": "GR-REF-001"
+    },
+    {
+      "field": "initial_actions[0]",
+      "original": {
+        "action": "Review relevant logs, metrics and traces for the affected service to identify the root cause of the application exception.",
+        "rationale": "The Payment Processing Service is experiencing unhandled exceptions during request mapping. Logs and traces will help pinpoint the exact issue.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E2",
+          "E3"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E2",
+          "E3",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[1]",
+      "original": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events that might have introduced this failure.",
+        "rationale": "No recent changes were identified during the initial assessment. However, a thorough review is necessary to rule out any overlooked factors.",
+        "source_refs": [
+          "KB:ACT-004",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-004"
+      },
+      "revised": {
+        "action": "Check for recent deployments, configuration changes or infrastructure events.",
+        "rationale": "Check whether recent changes coincide with the incident without treating correlation as confirmed causation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-004",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-004"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[2]",
+      "original": {
+        "action": "Validate the health of relevant service dependencies to ensure they are not contributing to the issue.",
+        "rationale": "The external payment gateway and other dependencies are reported as healthy. However, a full validation is necessary to confirm their status.",
+        "source_refs": [
+          "KB:ACT-005",
+          "E4"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-005"
+      },
+      "revised": null,
+      "reason": "Dependency-validation action was removed because every relevant dependency is explicitly reported healthy.",
+      "rule_id": "GR-ACTION-006"
+    },
+    {
+      "field": "initial_actions[3]",
+      "original": {
+        "action": "Examine the complete set of card-request attributes or combinations that trigger the mapping exception to understand the failure pattern.",
+        "rationale": "The exact conditions leading to the exception are not yet known. This information is crucial for diagnosing and resolving the issue.",
+        "source_refs": [
+          "KB:ACT-003",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-003"
+      },
+      "revised": {
+        "action": "Examine relevant logs, metrics and traces for the affected service.",
+        "rationale": "Review relevant telemetry to verify the observed failure pattern and gather evidence for further investigation.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-003",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-003"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions[4]",
+      "original": {
+        "action": "Confirm whether any failed attempts created incomplete internal payment records or could create duplicate-processing risk if customers retry.",
+        "rationale": "This information is critical for understanding the potential impact on customer data and transactions. It will help in formulating a comprehensive resolution plan.",
+        "source_refs": [
+          "KB:ACT-009",
+          "E6"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      },
+      "revised": {
+        "action": "Record missing evidence and request the information required for further triage.",
+        "rationale": "Obtain the missing evidence required to refine the provisional triage assessment.",
+        "source_refs": [
+          "E6",
+          "KB:ACT-009"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-009"
+      },
+      "reason": "Action text, rationale and traceability were normalised to approved runbook guidance.",
+      "rule_id": "GR-ACTION-002"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Review the triggering alerts and their timestamps.",
+        "rationale": "Establish the incident timeline and correlate the supplied operational evidence.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-002",
+          "KB:RB-003"
+        ],
+        "runbook_id": "RB-003",
+        "common_action_id": "ACT-002"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "initial_actions",
+      "original": null,
+      "revised": {
+        "action": "Confirm the current service impact, affected users and geographical scope.",
+        "rationale": "Confirm the scale and scope of the reported impact before finalising severity and coordination requirements.",
+        "source_refs": [
+          "E1",
+          "E2",
+          "KB:ACT-001"
+        ],
+        "runbook_id": null,
+        "common_action_id": "ACT-001"
+      },
+      "reason": "A safe action recommended by the selected primary runbook was added to address the incident evidence or a reported information gap.",
+      "rule_id": "GR-ACTION-004"
+    },
+    {
+      "field": "uncertainty_statement",
+      "original": "The severity and category are provisionally assigned based on the available evidence. Further investigation is required to confirm these classifications.",
+      "revised": "Severity remains provisional because material scope or duration information is unresolved. The category, affected area and routing decisions are supported by the supplied evidence, but a definitive root cause has not been established.",
+      "reason": "The uncertainty statement was aligned with the final provisional status and bounded root-cause claim.",
+      "rule_id": "GR-LANG-002"
+    }
+  ],
+  "validation_errors": [],
+  "elapsed_seconds": 498.4452857999713,
+  "model_metadata": {
+    "model": "qwen2.5:7b",
+    "created_at": "2026-07-25T18:19:35.2178833Z",
+    "done": true,
+    "done_reason": "stop",
+    "total_duration": 498358455500,
+    "load_duration": 771680800,
+    "prompt_eval_count": 4824,
+    "prompt_eval_duration": 21228471000,
+    "eval_count": 1200,
+    "eval_duration": 470376979000
+  },
+  "configuration": {
+    "model": "qwen2.5:7b",
+    "ollama_host": "http://127.0.0.1:11434",
+    "temperature": 0.0,
+    "num_predict": 1400,
+    "num_ctx": 12288,
+    "prompt_version": "triage-system-v1.3",
+    "context_selection_version": "context-selection-v1.6",
+    "guardrail_version": "hybrid-guardrails-v1.7",
+    "input_schema_version": "incident-input-v1.2",
+    "output_schema_version": "triage-output-v1.2"
+  },
+  "knowledge_base_hash": "aec7e81447a14bf90f2d1bcab03d11540d79a92d9d681e123bf057c67a52e099",
+  "selected_knowledge_refs": [
+    "KB:ACT-001",
+    "KB:ACT-002",
+    "KB:ACT-003",
+    "KB:ACT-004",
+    "KB:ACT-005",
+    "KB:ACT-006",
+    "KB:ACT-007",
+    "KB:ACT-008",
+    "KB:ACT-009",
+    "KB:ACT-010",
+    "KB:CAT-APPLICATION",
+    "KB:CAT-AVAILABILITY",
+    "KB:CAT-DEPENDENCY-CONFIG",
+    "KB:CAT-INFRA-NETWORK",
+    "KB:CAT-PERFORMANCE",
+    "KB:DEP:SVC-PAYMENT:EXT-PAYMENT",
+    "KB:DEP:SVC-PAYMENT:PLT-COMPUTE",
+    "KB:DEP:SVC-PAYMENT:PLT-DATABASE",
+    "KB:DEP:SVC-PAYMENT:PLT-MESSAGING",
+    "KB:EXT-PAYMENT",
+    "KB:PLT-COMPUTE",
+    "KB:PLT-DATABASE",
+    "KB:PLT-MESSAGING",
+    "KB:RB-003",
+    "KB:RB-008",
+    "KB:RG-DATA",
+    "KB:RG-INFRA",
+    "KB:RG-MESSAGING",
+    "KB:RG-OPS",
+    "KB:RG-PAYMENTS",
+    "KB:SEVERITY:Critical",
+    "KB:SEVERITY:High",
+    "KB:SEVERITY:Low",
+    "KB:SEVERITY:Medium",
+    "KB:SVC-PAYMENT"
+  ],
+  "selected_runbook_ids": [
+    "RB-003",
+    "RB-008"
+  ]
+}

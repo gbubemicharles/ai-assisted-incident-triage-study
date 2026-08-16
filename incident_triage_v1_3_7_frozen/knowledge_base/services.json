@@ -1,0 +1,132 @@
+{
+  "organisation": "Asteria Commerce",
+  "environment": "Asteria Commerce Cloud Platform",
+  "services": [
+    {
+      "id": "SVC-WEB",
+      "name": "Customer Web Portal",
+      "type": "application",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Customer-facing online shopping interface.",
+      "primary_resolver_group": "RG-DIGITAL"
+    },
+    {
+      "id": "SVC-API",
+      "name": "Public API Gateway",
+      "type": "platform_service",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Receives, validates and routes external application requests.",
+      "primary_resolver_group": "RG-NETWORK"
+    },
+    {
+      "id": "SVC-AUTH",
+      "name": "Identity and Access Service",
+      "type": "application",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Authenticates users and issues access tokens.",
+      "primary_resolver_group": "RG-IAM"
+    },
+    {
+      "id": "SVC-ORDER",
+      "name": "Order Management Service",
+      "type": "application",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Creates, validates and tracks customer orders.",
+      "primary_resolver_group": "RG-COMMERCE"
+    },
+    {
+      "id": "SVC-PAYMENT",
+      "name": "Payment Processing Service",
+      "type": "application",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Coordinates payment authorisation and records payment status.",
+      "primary_resolver_group": "RG-PAYMENTS"
+    },
+    {
+      "id": "SVC-INVENTORY",
+      "name": "Inventory Service",
+      "type": "application",
+      "business_criticality": "Important",
+      "service_tier": 2,
+      "description": "Maintains product availability and stock reservations.",
+      "primary_resolver_group": "RG-COMMERCE"
+    },
+    {
+      "id": "SVC-NOTIFY",
+      "name": "Notification Service",
+      "type": "application",
+      "business_criticality": "Standard",
+      "service_tier": 3,
+      "description": "Sends customer order confirmations and operational messages.",
+      "primary_resolver_group": "RG-MESSAGING"
+    },
+    {
+      "id": "PLT-COMPUTE",
+      "name": "Application Compute Cluster",
+      "type": "infrastructure",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Hosts the application-service workloads.",
+      "primary_resolver_group": "RG-INFRA"
+    },
+    {
+      "id": "PLT-DATABASE",
+      "name": "Transaction Database Cluster",
+      "type": "data_platform",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Stores customer, order, inventory and payment records.",
+      "primary_resolver_group": "RG-DATA"
+    },
+    {
+      "id": "PLT-MESSAGING",
+      "name": "Message Broker",
+      "type": "platform_service",
+      "business_criticality": "Important",
+      "service_tier": 2,
+      "description": "Supports asynchronous communication between services.",
+      "primary_resolver_group": "RG-MESSAGING"
+    },
+    {
+      "id": "PLT-EDGE",
+      "name": "DNS, CDN and Load-Balancing Platform",
+      "type": "network_platform",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Provides name resolution, traffic distribution and external access.",
+      "primary_resolver_group": "RG-NETWORK"
+    },
+    {
+      "id": "PLT-STORAGE",
+      "name": "Object Storage Platform",
+      "type": "infrastructure",
+      "business_criticality": "Important",
+      "service_tier": 2,
+      "description": "Stores web assets and non-transactional objects.",
+      "primary_resolver_group": "RG-INFRA"
+    },
+    {
+      "id": "EXT-PAYMENT",
+      "name": "External Payment Gateway",
+      "type": "external_dependency",
+      "business_criticality": "Critical",
+      "service_tier": 1,
+      "description": "Provides external payment-authorisation services.",
+      "primary_resolver_group": "RG-PAYMENTS"
+    },
+    {
+      "id": "EXT-COMMS",
+      "name": "External Email and SMS Provider",
+      "type": "external_dependency",
+      "business_criticality": "Standard",
+      "service_tier": 3,
+      "description": "Delivers email and SMS messages.",
+      "primary_resolver_group": "RG-MESSAGING"
+    }
+  ]
+}

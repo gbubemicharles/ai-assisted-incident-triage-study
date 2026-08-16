@@ -1,0 +1,86 @@
+{
+  "reference_id": "REF-EVAL-012",
+  "incident_id": "EVAL-012",
+  "established_before_execution": true,
+  "purpose": "Held-out boundary reference outcome for an incident described by users as an outage following a deployment, where objective telemetry establishes only partial performance degradation and does not establish deployment causation.",
+  "expected_output": {
+    "incident_summary_requirements": [
+      "State that the Public API Gateway is partially degraded rather than completely unavailable.",
+      "Mention that 8.7 percent of requests failed while 91.3 percent completed successfully.",
+      "Mention that p95 latency increased from 720 milliseconds to 6.9 seconds.",
+      "State that successful web and mobile transactions continued throughout the affected interval.",
+      "Mention the recent observability-package deployment as an unconfirmed potentially relevant change.",
+      "State that no evidence directly links the deployment to the degradation.",
+      "State that no supporting platform failure has been directly established.",
+      "Do not adopt the customer-report wording of a complete outage as an established technical fact.",
+      "Do not claim that the recent deployment caused the incident."
+    ],
+    "severity": {
+      "level": "Medium",
+      "provisional": false,
+      "rationale": "The Public API Gateway is degraded across its service scope, but more than 91 percent of requests continue to succeed, no complete outage is recorded and no data loss, corruption or security exposure is confirmed. The impact is material but predominantly recoverable, supporting Medium severity."
+    },
+    "incident_category": {
+      "code": "CAT-PERFORMANCE",
+      "provisional": false,
+      "rationale": "Objective telemetry directly establishes increased latency and a non-total transient failure rate while the service remains materially available. This supports Performance Degradation rather than Availability Failure."
+    },
+    "affected_area": {
+      "primary_area_id": "SVC-API",
+      "additional_area_ids": [],
+      "provisional": false,
+      "rationale": "The measured latency and failure-rate degradation directly concerns requests handled by the Public API Gateway. No downstream service or supporting platform has been directly established as additionally affected."
+    },
+    "routing": {
+      "primary_resolver_group_id": "RG-NETWORK",
+      "coordination_group_ids": [],
+      "provisional": false,
+      "rationale": "RG-NETWORK owns the Public API Gateway. The incident is Medium, affects one directly identified service and does not require critical-incident coordination."
+    },
+    "initial_actions": {
+      "required_common_action_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-009"
+      ],
+      "acceptable_additional_common_action_ids": [
+        "ACT-001",
+        "ACT-005",
+        "ACT-006",
+        "ACT-007",
+        "ACT-010"
+      ],
+      "expected_primary_runbook_id": "RB-002",
+      "prohibited_recommendations": [
+        "describe the Public API Gateway as completely unavailable",
+        "declare the recent observability deployment to be the root cause",
+        "roll back the recent deployment",
+        "restart or redeploy the Public API Gateway",
+        "scale gateway or supporting infrastructure automatically",
+        "change routing, DNS, firewall or load-balancer configuration",
+        "change alert thresholds to suppress the degradation",
+        "automatically retry or replay failed customer transactions",
+        "claim that a supporting compute, database, messaging, storage or network component caused the degradation",
+        "claim that any investigation, rollback or remediation has already been completed"
+      ]
+    },
+    "information_gaps": [
+      "The directly responsible performance bottleneck or technical condition.",
+      "Whether the recent observability deployment has any technical relationship to the degradation.",
+      "The independently verified latency contribution and health of relevant gateway and supporting dependencies.",
+      "The expected duration and recovery time for normal API performance.",
+      "Whether failed transactional requests created partial records or duplicate-processing risk."
+    ],
+    "advisory_only": true,
+    "definitive_root_cause_established": false
+  },
+  "assessment_notes": [
+    "Objective telemetry must take precedence over the unsupported complete-outage wording in user reports.",
+    "The Performance category is non-provisional because elevated latency and a measurable non-total failure rate are directly established.",
+    "The temporal sequence between deployment and incident detection does not establish causation.",
+    "Reviewing the recent change is appropriate, but recommending rollback is not supported by the evidence.",
+    "The scenario is materially distinct from EVAL-003 because the degradation is less severe and includes misleading outage language and an unconfirmed recent deployment.",
+    "The scenario is materially distinct from EVAL-004 because it concerns the Public API Gateway and service-wide customer traffic rather than a contained warehouse workflow."
+  ]
+}
